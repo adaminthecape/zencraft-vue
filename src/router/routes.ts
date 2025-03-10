@@ -26,7 +26,7 @@ const routes: RouteRecordRaw[] = [
   {
     path: '/admin',
     name: 'admin',
-    component: () => import('src/components/views/KanbanDashboard.vue'),
+    component: () => import('src/components/views/AdminDashboard.vue'),
     beforeEnter(to, from, next)
     {
       // console.log('beforeRouteEnter:', { to, from });
@@ -54,7 +54,7 @@ const routes: RouteRecordRaw[] = [
   // but you can also remove it
   {
     path: '/:catchAll(.*)*',
-    component: () => import('src/components/nav/ImmediateRedirect.vue'),
+    component: () => import('src/components/views/UserFacingLayout.vue'),
   },
 ];
 
