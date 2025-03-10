@@ -8,7 +8,7 @@ import {
   Block,
   Module,
   Page,
-  BlockDefinition,
+  Blueprint,
   sharedTypes,
   utils,
 } from 'zencraft-core';
@@ -21,7 +21,7 @@ export type ItemHandlerType = (
   Module.ModuleHandler |
   Page.PageHandler |
   Archetype.ArchetypeHandler |
-  BlockDefinition.BlockDefinitionHandler |
+  Blueprint.BlueprintHandler |
   AccessRole.AccessRoleHandler |
   CustomItem.CustomHandler
 );

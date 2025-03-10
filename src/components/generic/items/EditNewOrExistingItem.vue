@@ -46,7 +46,7 @@
 
 <script setup lang="ts">
 import { CssClassProp, UUID } from 'src/types/generic';
-import { Block, BlockDefinition, sharedTypes, utils } from 'zencraft-core';
+import { Block, Blueprint, sharedTypes, utils } from 'zencraft-core';
 import { computed, onMounted, ref, watch } from 'vue';
 import FormFields from 'src/components/form/FormFields.vue';
 import cloneDeep from 'lodash/cloneDeep';
@@ -135,28 +135,28 @@ onMounted(async () =>
       const definitionId = (blockStore.getItem(
         props.existingItemId,
         sharedTypes.KnownItemType.Block
-      ) as Block.BlockItem)?.blockDefinitionId;
+      ) as Block.BlockItem)?.blueprintId;
 
       if(definitionId)
       {
-        const blockDefinitionStore = deriveStoreForItemType(sharedTypes.KnownItemType.BlockDefinition);
+        const blueprintStore = deriveStoreForItemType(sharedTypes.KnownItemType.Blueprint);
 
-        await blockDefinitionStore.loadItem({
+        await blueprintStore.loadItem({
           id: definitionId,
-          itemType: sharedTypes.KnownItemType.BlockDefinition,
+          itemType: sharedTypes.KnownItemType.Blueprint,
         });
 
         // now we should be able to get its fields
-        const def = blockDefinitionStore.getItem(
+        const def = blueprintStore.getItem(
           definitionId,
-          sharedTypes.KnownItemType.BlockDefinition
-        ) as BlockDefinition.BlockDefinitionItem | undefined;
+          sharedTypes.KnownItemType.Blueprint
+        ) as Blueprint.BlueprintItem | undefined;
 
         if(def?.attachedFields?.length)
         {
           fieldsForDefinition.value = (
-            await BlockDefinition.BlockDefinitionHandler.loadFields({
-              db: await blockDefinitionStore.getDb(),
+            await Blueprint.BlueprintHandler.loadFields({
+              db: await blueprintStore.getDb(),
               fieldIds: def.attachedFields,
             })
           );
@@ -316,7 +316,7 @@ onMounted(() =>
     generateNewOrExistingItemForm().then(saveState);
 });
 
-// Handle definitions (e.g. BlockDefinition) and show their fields
+// Handle definitions (e.g. Blueprint) and show their fields
 // Ensure their fields are saved as `config` (reserved property)
 </script>
 

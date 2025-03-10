@@ -180,7 +180,7 @@ export const itemTypeIcons: Record<string, string | undefined> = {
   Ticket: 'task',
   Todo: 'task_alt',
   Tour: 'route',
-  BlockDefinition: 'apartment',
+  Blueprint: 'apartment',
   AccessRole: 'key',
 };
 
@@ -199,6 +199,6 @@ export const itemTypePrimaryFieldKeys: Record<string, string[]> = {
   Ticket: ['title', 'id'],
   Todo: ['id'],
   Tour: ['title', 'id'],
-  BlockDefinition: ['blockType', 'id'],
+  Blueprint: ['blockType', 'id'],
   AccessRole: ['title', 'id'],
 };

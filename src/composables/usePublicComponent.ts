@@ -1,6 +1,6 @@
-import { BlockDefinitionStore } from 'src/pinia/blockDefinitionStore';
+import { BlueprintStore } from 'src/pinia/blueprintStore';
 import { BlockStore } from 'src/pinia/blockStore';
-import { Block, BlockDefinition, sharedTypes, utils } from 'zencraft-core';
+import { Block, Blueprint, sharedTypes, utils } from 'zencraft-core';
 import { computed, ComputedRef, defineAsyncComponent, onMounted, watch } from 'vue';
 import { BlockType, blockTypeConfig, BlockTypeConfigOpts } from 'src/models/BlockTypes';
 import useAdminStore from 'src/pinia/adminStore';
@@ -46,9 +46,9 @@ export default function usePublicComponent<
   componentToUse: ComputedRef<ReturnType<typeof defineAsyncComponent> | undefined>;
   block: ComputedRef<Block.BlockItem | undefined>;
   blockConfig: ComputedRef<Record<string, unknown>>;
-  blockDefinition: ComputedRef<BlockDefinition.BlockDefinitionItem | undefined>;
+  blueprint: ComputedRef<Blueprint.BlueprintItem | undefined>;
   blockStore: BlockStore;
-  blockDefinitionStore: BlockDefinitionStore;
+  blueprintStore: BlueprintStore;
   blockConfigForType: ComputedRef<BlockTypeConfigOpts | undefined>;
   onItemSelected: (e: ItemResultClick) => void;
   mergedContext: ComputedRef<Record<string, unknown>>;
@@ -63,9 +63,9 @@ export default function usePublicComponent<
   const blockStore = deriveStoreForItemType(
     sharedTypes.KnownItemType.Block
   ) as BlockStore;
-  const blockDefinitionStore = deriveStoreForItemType(
-    sharedTypes.KnownItemType.BlockDefinition
-  ) as BlockDefinitionStore;
+  const blueprintStore = deriveStoreForItemType(
+    sharedTypes.KnownItemType.Blueprint
+  ) as BlueprintStore;
   const pageStore = deriveStoreForItemType(
     sharedTypes.KnownItemType.Page
   ) as PageStore;
@@ -85,17 +85,17 @@ export default function usePublicComponent<
       ) :
       undefined
   ));
-  const blockDefinition = computed(() => (
-    (typeof block.value?.blockDefinitionId === 'string') ?
-      blockDefinitionStore.getItem(
-        block.value.blockDefinitionId,
-        sharedTypes.KnownItemType.BlockDefinition
+  const blueprint = computed(() => (
+    (typeof block.value?.blueprintId === 'string') ?
+      blueprintStore.getItem(
+        block.value.blueprintId,
+        sharedTypes.KnownItemType.Blueprint
       ) :
       undefined
   ));
   const blockConfigForType = computed(() => (
-    blockDefinition.value?.blockType ?
-      blockTypeConfig[blockDefinition.value.blockType as BlockType] :
+    blueprint.value?.blockType ?
+      blockTypeConfig[blueprint.value.blockType as BlockType] :
       undefined
   ));
   const blockConfig = computed(() => (block.value?.config || {}));
@@ -122,8 +122,8 @@ export default function usePublicComponent<
     createNewItemAvatar: defineAsyncComponent(() => import('src/components/public/CreateNewItemAvatar.vue')),
   };
   const componentToUse = computed(() => (
-    blockDefinition.value?.blockType ?
-      components[blockDefinition.value.blockType as BlockType] :
+    blueprint.value?.blockType ?
+      components[blueprint.value.blockType as BlockType] :
       undefined
   ));
 
@@ -237,19 +237,19 @@ export default function usePublicComponent<
   }
 
 
-  async function loadBlockDefinitionData(newId: unknown)
+  async function loadBlueprintData(newId: unknown)
   {
     if(utils.uuid.isUuid(newId))
     {
-      await blockDefinitionStore.loadItem({
+      await blueprintStore.loadItem({
         id: newId as string,
-        itemType: sharedTypes.KnownItemType.BlockDefinition,
+        itemType: sharedTypes.KnownItemType.Blueprint,
       });
     }
   }
 
   watch(() => opts.props.blockId, loadBlockData);
-  watch(() => block.value?.blockDefinitionId, loadBlockDefinitionData);
+  watch(() => block.value?.blueprintId, loadBlueprintData);
 
   onMounted(async () =>
   {
@@ -258,9 +258,9 @@ export default function usePublicComponent<
       await loadBlockData(opts.props.blockId);
     }
 
-    if(block.value?.blockDefinitionId)
+    if(block.value?.blueprintId)
     {
-      await loadBlockDefinitionData(block.value.blockDefinitionId);
+      await loadBlueprintData(block.value.blueprintId);
     }
   });
 
@@ -300,9 +300,9 @@ export default function usePublicComponent<
     componentToUse,
     block,
     blockConfig,
-    blockDefinition,
+    blueprint,
     blockStore,
-    blockDefinitionStore,
+    blueprintStore,
     blockConfigForType,
     onItemSelected,
     mergedContext,

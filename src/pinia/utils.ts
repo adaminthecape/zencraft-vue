@@ -5,7 +5,7 @@ export enum PiniaStoreName
   pageStore = 'pageStore',
   blockStore = 'blockStore',
   archetypeStore = 'archetypeStore',
-  blockDefinitionStore = 'blockDefinitionStore',
+  blueprintStore = 'blueprintStore',
   accessRoleStore = 'accessRoleStore',
   customItemStore = 'customItemStore',
   firebaseAuthStore = 'firebaseAuthStore',

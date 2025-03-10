@@ -67,7 +67,7 @@ import { computed, onMounted, ref } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { useQuasar } from 'quasar';
 import useThemeStore from 'src/pinia/themeStore';
-import { dbFilters, dbPagination, BlockDefinition, sharedTypes } from 'zencraft-core';
+import { dbFilters, dbPagination, Blueprint, sharedTypes } from 'zencraft-core';
 import { deriveStoreForItemType } from 'src/logic/utils/stores';
 import ThemeButton from 'src/components/generic/buttons/ThemeButton.vue';
 import ThemeIcon from 'src/components/ui/ThemeIcon.vue';
@@ -77,9 +77,9 @@ const $q = useQuasar();
 
 const themeStore = useThemeStore();
 
-const selectedBlockDefinitionId = ref<string | undefined>();
+const selectedBlueprintId = ref<string | undefined>();
 
-const blockDefinitionStore = deriveStoreForItemType(sharedTypes.KnownItemType.BlockDefinition);
+const blueprintStore = deriveStoreForItemType(sharedTypes.KnownItemType.Blueprint);
 
 const emit = defineEmits<{
   (name: 'selectedId', e: string): void;
@@ -87,7 +87,7 @@ const emit = defineEmits<{
 
 function selectDefinition(id: string)
 {
-  selectedBlockDefinitionId.value = id;
+  selectedBlueprintId.value = id;
   emit('selectedId', id);
 }
 
@@ -96,7 +96,7 @@ const numColumnsToShow = computed(() => (
 ));
 
 const searchTerm = ref('');
-const searchResults = ref<BlockDefinition.BlockDefinitionItem[]>([]);
+const searchResults = ref<Blueprint.BlueprintItem[]>([]);
 const paginationHandler = ref(new dbPagination.PaginationHandler({}));
 const pagination = computed(() => paginationHandler.value.pagination);
 const searchFilters = computed<dbFilters.DbFilters | undefined>(() => (
@@ -132,8 +132,8 @@ async function searchDefinitions()
     results,
     totalItems,
     hasMore,
-  } = await blockDefinitionStore.searchItems({
-    itemType: sharedTypes.KnownItemType.BlockDefinition,
+  } = await blueprintStore.searchItems({
+    itemType: sharedTypes.KnownItemType.Blueprint,
     filters: searchFilters.value,
     pagination: pagination.value,
   });
@@ -142,7 +142,7 @@ async function searchDefinitions()
 
   if(Array.isArray(results))
   {
-    searchResults.value = results as BlockDefinition.BlockDefinitionItem[];
+    searchResults.value = results as Blueprint.BlueprintItem[];
   }
 }
 

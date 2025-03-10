@@ -17,14 +17,14 @@
     <template #content="{close}">
       <BlockLibrary
         label=""
-        @selected-id="(id) => onBlockDefinitionSelected(id, close)"
+        @selected-id="(id) => onBlueprintSelected(id, close)"
       />
     </template>
   </SimpleModal>
 </template>
 
 <script setup lang="ts">
-import { BlockDefinition } from 'zencraft-core';
+import { Blueprint } from 'zencraft-core';
 import SimpleModal from 'src/components/ui/SimpleModal.vue';
 import BlockLibrary from './BlockLibrary.vue';
 import { QBtnProps } from 'quasar';
@@ -39,10 +39,10 @@ defineProps<{
 }>();
 
 const emit = defineEmits<{
-  (e: 'selected', value: { id: BlockDefinition.BlockDefinitionItem['id'] }): void;
+  (e: 'selected', value: { id: Blueprint.BlueprintItem['id'] }): void;
 }>();
 
-function onBlockDefinitionSelected(id: string, closeModal: () => void): void
+function onBlueprintSelected(id: string, closeModal: () => void): void
 {
   emit('selected', { id });
   closeModal?.();

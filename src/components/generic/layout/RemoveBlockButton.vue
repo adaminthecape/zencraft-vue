@@ -25,7 +25,7 @@
 
 <script setup lang="ts">
 import { deriveStoreForItemType } from 'src/logic/utils/stores';
-import { sharedTypes, dbFilters, Block, BlockDefinition } from 'zencraft-core';
+import { sharedTypes, dbFilters, Block, Blueprint } from 'zencraft-core';
 import { PageStore } from 'src/pinia/pageStore';
 import ThemeButton from 'src/components/generic/buttons/ThemeButton.vue';
 import ListItem from 'src/components/ui/ListItem.vue';
@@ -35,7 +35,7 @@ const { t: $t } = useI18n();
 
 const props = defineProps<{
   blockId: Block.BlockItem['id'];
-  parentId: Block.BlockItem['id'] | BlockDefinition.BlockDefinitionItem['id'];
+  parentId: Block.BlockItem['id'] | Blueprint.BlueprintItem['id'];
   position?: {
     id: Block.BlockItem['id'];
     col?: number;

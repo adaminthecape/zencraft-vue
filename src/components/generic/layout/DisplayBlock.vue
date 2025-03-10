@@ -15,11 +15,11 @@
     >
       <!-- Block Icon -->
       <ThemeIcon size="xs" name="description" class="q-mr-xs" />
-      <!-- Block and BlockDefinition ID -->
+      <!-- Block and Blueprint ID -->
       <div>
         <span class="text-caption text-muted">{{(
           block?.title || (
-            blockDefinitionStore.getTitle(block?.blockDefinitionId ?? '')
+            blueprintStore.getTitle(block?.blueprintId ?? '')
           ) || block?.id?.split('-')[0] || 'Unknown'
         )}}</span>
       </div>
@@ -115,8 +115,8 @@ const emit = defineEmits<{
 
 const {
   block,
-  blockDefinition,
-  blockDefinitionStore,
+  blueprint,
+  blueprintStore,
   blockStore,
   blockConfigForType,
   componentToUse,
@@ -158,11 +158,11 @@ onMounted(async () =>
     });
   }
 
-  if(blockDefinition.value?.id)
+  if(blueprint.value?.id)
   {
-    await blockDefinitionStore.loadItem({
-      id: blockDefinition.value.id,
-      itemType: sharedTypes.KnownItemType.BlockDefinition,
+    await blueprintStore.loadItem({
+      id: blueprint.value.id,
+      itemType: sharedTypes.KnownItemType.Blueprint,
     });
   }
 
@@ -177,7 +177,7 @@ onMounted(async () =>
 
 function printContext()
 {
-  const blockRef = `Block ${props.blockId} (${blockDefinition.value?.blockType})`;
+  const blockRef = `Block ${props.blockId} (${blueprint.value?.blockType})`;
   console.log(`${blockRef}: block`, { ...block.value });
   console.log(`${blockRef}: mergedContext`, { ...mergedContext.value });
 }

@@ -157,14 +157,14 @@
         <pre>{{ componentReference }}</pre>
       </div>
     </div>
-    <!-- Create a new BlockDefinition -->
+    <!-- Create a new Blueprint -->
     <div class="q-mt-md">
       <div :class="labelClass">
         <span>Add a new Definition</span>
       </div>
       <div :class="codeClass">
         <EditNewOrExistingItemModal
-          :item-type="sharedTypes.KnownItemType.BlockDefinition"
+          :item-type="sharedTypes.KnownItemType.Blueprint"
           :initial-data="initialDefinitionData"
         />
       </div>

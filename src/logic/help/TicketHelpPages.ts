@@ -303,7 +303,7 @@ const htmlContent = {
   searchResult: "{{#if result}}<div class=\"row items-start justify-between no-wrap q-ma-sm\">\n  <div\n    class=\"flex-col q-pa-sm\"\n    style=\"flex-grow:10;\"\n  >\n    <div class=\"row items-center q-mb-sm\">\n      <div class=\"text-h6\"><span class=\"text-secondary text-bold q-mr-sm\">{{ result.ticketType }}</span>{{ result.title }}</div>\n      <div class=\"q-space\" />\n      {{component 'ItemAvatar' 'itemId' result.id 'itemType' result.typeId 'labelOverride' 'Edit'}}\n    </div>\n    <div class=\"standout-0 q-pa-sm\">{{ result.description }}</div>\n  </div>\n  <div\n    class=\"flex-col q-pa-sm\"\n    style=\"max-width: 400px;flex-grow:0;\"\n  >\n    <div class=\"row no-wrap items-center justify-between standout-1 q-py-xs q-px-sm q-mb-sm\">\n      <span class=\"text-caption text-accent q-mr-sm\">Created</span>\n      <span>{{ date result.createdAt }}</span>\n    </div>\n    <div class=\"row no-wrap items-center justify-between standout-1 q-py-xs q-px-sm q-mb-sm\">\n      <span class=\"text-caption text-accent q-mr-sm\">ID</span>\n      <span>{{ shortenId result.id }}</span>\n    </div>\n    <div class=\"row no-wrap items-center justify-between standout-1 q-py-xs q-px-sm q-mb-sm\">\n      <span class=\"text-caption text-accent q-mr-sm\">Points</span>\n      <span>{{ result.points }}</span>\n    </div>\n    <div class=\"row no-wrap items-center justify-between standout-1 q-py-xs q-px-sm q-mb-sm\">\n      <span class=\"text-caption text-accent q-mr-sm\">Status</span>\n      <span>{{ result.status }}</span>\n    </div>\n    <div class=\"row no-wrap items-center justify-between standout-1 q-py-xs q-px-sm q-mb-sm\">\n      <span class=\"text-caption text-accent q-mr-sm\">Type</span>\n      <span>{{ result.ticketType }}</span>\n    </div>\n    <div class=\"row no-wrap items-center justify-between standout-1 q-py-xs q-px-sm q-mb-sm\">\n      <span class=\"text-caption text-accent q-mr-sm\">Deadline</span>\n      <span>{{ date result.deadline }}</span>\n    </div>\n    <div class=\"row no-wrap items-center justify-between standout-1 q-py-xs q-px-sm q-mb-sm\">\n      <span class=\"text-caption text-accent q-mr-sm\">Updated</span>\n      <span>{{ date result.updatedAt }}</span>\n    </div>\n  </div>\n</div>{{/if}}"
 };
 
-const blockDefinitionIds = {
+const blueprintIds = {
   searchContainer: '3a0740bc-ecf5-4900-af95-737090ecf469',
   searchResult: 'f6324cb3-4464-4931-869d-2a95bd734082',
 };
@@ -317,7 +317,7 @@ const blockDataByPage = {
       createdAt: 1740581152,
       createdBy: undefined,
       title: 'Search All',
-      blockDefinitionId: blockDefinitionIds.searchContainer,
+      blueprintId: blueprintIds.searchContainer,
       childBlocks: [
         { id: 'e3bffc72-e142-40ca-9c79-1f87e0a967f1', col: '0', row: '0' }
       ],
@@ -332,7 +332,7 @@ const blockDataByPage = {
       typeId: 'Block',
       updatedAt: getCurrentSecond(),
       title: 'Ticket Search Result',
-      blockDefinitionId: blockDefinitionIds.searchResult,
+      blueprintId: blueprintIds.searchResult,
       config: {
         htmlContent: htmlContent.searchResult
       },
@@ -347,7 +347,7 @@ const blockDataByPage = {
       createdAt: 1740581152,
       createdBy: undefined,
       title: 'Search All',
-      blockDefinitionId: blockDefinitionIds.searchContainer,
+      blueprintId: blueprintIds.searchContainer,
       childBlocks: null,
       config: {
         targetItemType: 'Ticket',
@@ -360,7 +360,7 @@ const blockDataByPage = {
       typeId: 'Block',
       updatedAt: getCurrentSecond(),
       title: 'Bug Search Result',
-      blockDefinitionId: blockDefinitionIds.searchResult,
+      blueprintId: blueprintIds.searchResult,
       childBlocks: null,
       config: {
         htmlContent: htmlContent.searchResult

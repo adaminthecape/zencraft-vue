@@ -32,19 +32,19 @@ export default function useAddBlock(options: {
     row?: number;
   }): Promise<void>
   {
-    const { id: blockDefinitionId, row, col } = opts;
+    const { id: blueprintId, row, col } = opts;
 
-    if(!blockDefinitionId || !options.parentId.value)
+    if(!blueprintId || !options.parentId.value)
     {
-      throw new Error(`No definition or parent ID ${blockDefinitionId}, ${options.parentId.value}`);
+      throw new Error(`No definition or parent ID ${blueprintId}, ${options.parentId.value}`);
     }
 
     const newBlockId = utils.uuid.generateUuid();
 
     // create a new Block
     const newBlockData: Partial<Omit<Block.BlockItem, keyof item.Item>> = {
-      blockDefinitionId,
-      // config: blockDefinition.defaultConfig // TODO: implement defaultConfig
+      blueprintId,
+      // config: blueprint.defaultConfig // TODO: implement defaultConfig
     };
 
     // save the new Block immediately (can be deleted or orphaned later)
