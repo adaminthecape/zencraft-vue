@@ -46,11 +46,11 @@
 
 <script setup lang="ts">
 import { CssClassProp, UUID } from 'src/types/generic';
-import { Block, BlockDefinition, sharedTypes, utils } from 'adam-firebase-tools';
+import { Block, BlockDefinition, sharedTypes, utils } from 'zencraft-core';
 import { computed, onMounted, ref, watch } from 'vue';
 import FormFields from 'src/components/form/FormFields.vue';
 import cloneDeep from 'lodash/cloneDeep';
-import { fields } from 'adam-firebase-tools';
+import { fields } from 'zencraft-core';
 import { QInputProps, QSelectProps } from 'quasar';
 import { deriveStoreForItemType, StoreTypes } from 'src/logic/utils/stores';
 import useFieldsForItemType from 'src/composables/useFieldsForItemType';

@@ -38,7 +38,7 @@
 
 <script setup lang="ts">
 import SelectInput from 'src/components/ui/SelectInput.vue';
-import { dbFilters } from 'adam-firebase-tools';
+import { dbFilters } from 'zencraft-core';
 import { ref, onMounted, computed } from 'vue';
 import ThemeButton from 'src/components/generic/buttons/ThemeButton.vue';
 

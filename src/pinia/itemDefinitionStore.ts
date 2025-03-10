@@ -7,7 +7,7 @@ import {
 import { Store } from 'pinia';
 import { PiniaStoreName } from './utils';
 import debounce from 'lodash/debounce';
-import { sharedTypes, ItemDefinition as m } from 'adam-firebase-tools';
+import { sharedTypes, ItemDefinition as m } from 'zencraft-core';
 
 export type ItemDefinitionRootState = GenericRootState<m.ItemDefinitionItem>;
 

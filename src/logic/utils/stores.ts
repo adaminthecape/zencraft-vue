@@ -1,4 +1,4 @@
-import { sharedTypes } from 'adam-firebase-tools';
+import { sharedTypes } from 'zencraft-core';
 import { GenericItemStore } from 'src/pinia/genericItemStore';
 import { ModuleStore, useModuleStore } from 'src/pinia/moduleStore';
 import { PageStore, usePageStore } from 'src/pinia/pageStore';

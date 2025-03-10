@@ -1,6 +1,6 @@
 import { deriveStoreForItemType } from 'src/logic/utils/stores';
 import { defineStore } from 'pinia';
-import { utils } from 'adam-firebase-tools';
+import { utils } from 'zencraft-core';
 import { Nullable } from 'src/types/generic';
 
 type ItemContextOpts = {

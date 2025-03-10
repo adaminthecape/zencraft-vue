@@ -28,8 +28,8 @@ import ItemSearchFilters from 'src/components/generic/search/ItemSearchFilters.v
 import { QInputProps, QSelectProps } from 'quasar';
 import useFormElement from 'src/composables/useFormElement';
 import { computed, ref } from 'vue';
-import { dbFilters, fields, sharedTypes } from 'adam-firebase-tools';
-import { GenericItemStore } from 'src/pinia/genericFirebaseStore';
+import { dbFilters, fields, sharedTypes } from 'zencraft-core';
+import { GenericItemStore } from 'src/pinia/genericItemStore';
 import { ItemHandlerType } from 'src/logic/utils/items';
 import { useCustomItemStore } from 'src/pinia/customItemStore';
 

@@ -160,8 +160,8 @@
 import { ref, computed, watch } from 'vue';
 import ItemDeleteButton from 'src/components/generic/items/ItemDeleteButton.vue';
 import { getTableColumns } from 'src/logic/utils/items';
-import { dbFilters, dbPagination, fields, utils } from 'adam-firebase-tools';
-import { GenericItemStore } from 'src/pinia/genericFirebaseStore';
+import { dbFilters, dbPagination, fields, utils } from 'zencraft-core';
+import { GenericItemStore } from 'src/pinia/genericItemStore';
 import { convertTimestampToDateTime } from 'src/logic/utils/dates';
 import EditNewOrExistingItemModal from '../items/EditNewOrExistingItemModal.vue';
 import { QTableProps } from 'quasar';

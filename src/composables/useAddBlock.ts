@@ -1,7 +1,7 @@
 import { BlockStore } from 'src/pinia/blockStore';
 import { PageStore } from 'src/pinia/pageStore';
 import useAdminStore from 'src/pinia/adminStore';
-import { Block, item, sharedTypes, utils } from 'adam-firebase-tools';
+import { Block, item, sharedTypes, utils } from 'zencraft-core';
 import { computed, ComputedRef, Ref, ref } from 'vue';
 import { deriveStoreForItemType } from 'src/logic/utils/stores';
 import { AppHelpers } from 'src/types/generic';

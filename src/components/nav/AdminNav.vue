@@ -45,7 +45,7 @@
 </template>
 
 <script setup lang="ts">
-import { sharedTypes } from 'adam-firebase-tools';
+import { sharedTypes } from 'zencraft-core';
 import { itemTypeIcons } from 'src/models/BlockTypes';
 import { useCustomItemStore } from 'src/pinia/customItemStore';
 import { computed } from 'vue';

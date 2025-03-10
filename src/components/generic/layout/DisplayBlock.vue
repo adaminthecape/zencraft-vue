@@ -90,7 +90,7 @@ import AddBlockButton from './AddBlockButton.vue';
 import { computed, inject, onMounted, ref } from 'vue';
 import useAddBlock from 'src/composables/useAddBlock';
 import RemoveBlockButton from './RemoveBlockButton.vue';
-import { sharedTypes } from 'adam-firebase-tools';
+import { sharedTypes } from 'zencraft-core';
 import { useI18n } from 'vue-i18n';
 import ThemeButton from 'src/components/generic/buttons/ThemeButton.vue';
 import ThemeIcon from 'src/components/ui/ThemeIcon.vue';

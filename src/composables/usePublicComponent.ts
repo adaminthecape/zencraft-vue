@@ -1,6 +1,6 @@
 import { BlockDefinitionStore } from 'src/pinia/blockDefinitionStore';
 import { BlockStore } from 'src/pinia/blockStore';
-import { Block, BlockDefinition, sharedTypes, utils } from 'adam-firebase-tools';
+import { Block, BlockDefinition, sharedTypes, utils } from 'zencraft-core';
 import { computed, ComputedRef, defineAsyncComponent, onMounted, watch } from 'vue';
 import { BlockType, blockTypeConfig, BlockTypeConfigOpts } from 'src/models/BlockTypes';
 import useAdminStore from 'src/pinia/adminStore';
@@ -103,7 +103,7 @@ export default function usePublicComponent<
   const components: PublicComponentReferenceMap = {
     testBlock: defineAsyncComponent(() => import('src/components/public/search/HeadlessSearchContainer.vue')),
     headlessItemSearch: defineAsyncComponent(() => import('src/components/public/search/HeadlessSearchContainer.vue')),
-    paletteTester: defineAsyncComponent(() => import('src/components/public/admin/TestPalettes.vue')),
+    // paletteTester: defineAsyncComponent(() => import('src/components/public/admin/TestPalettes.vue')),
     itemAvatar: defineAsyncComponent(() => import('src/components/public/admin/ItemAvatarBlock.vue')),
     tourCard: defineAsyncComponent(() => import('src/components/public/search/TourCard.vue')),
     contextProvider: defineAsyncComponent(() => import('src/components/public/ContextProvider.vue')),

@@ -24,7 +24,7 @@
 </template>
 
 <script setup lang="ts">
-import { BlockDefinition } from 'adam-firebase-tools';
+import { BlockDefinition } from 'zencraft-core';
 import SimpleModal from 'src/components/ui/SimpleModal.vue';
 import BlockLibrary from './BlockLibrary.vue';
 import { QBtnProps } from 'quasar';

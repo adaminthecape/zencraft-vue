@@ -104,9 +104,9 @@
 import { QInputProps } from 'quasar';
 import useFormElement from 'src/composables/useFormElement';
 import { computed, onMounted, ref } from 'vue';
-import { dbFilters, fields, sharedTypes } from 'adam-firebase-tools';
+import { dbFilters, fields, sharedTypes } from 'zencraft-core';
 import FormFields from './FormFields.vue';
-import { GenericItemStore } from 'src/pinia/genericFirebaseStore';
+import { GenericItemStore } from 'src/pinia/genericItemStore';
 import { deriveStoreForItemType } from 'src/logic/utils/stores';
 import ThemeButton from 'src/components/generic/buttons/ThemeButton.vue';
 import ListItem from '../ui/ListItem.vue';

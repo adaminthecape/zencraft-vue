@@ -1,4 +1,4 @@
-import { auth, rtdb } from 'adam-firebase-tools';
+import { auth, rtdb } from 'zencraft-core';
 import { defineStore } from 'pinia';
 import { DatabaseHandlerType } from './genericItemStore';
 

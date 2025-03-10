@@ -74,9 +74,9 @@
 </template>
 
 <script setup lang="ts">
-import { dbFilters, sharedTypes } from 'adam-firebase-tools';
+import { dbFilters, sharedTypes } from 'zencraft-core';
 import { ref, computed, watch } from 'vue';
-import { GenericItemStore } from 'src/pinia/genericFirebaseStore';
+import { GenericItemStore } from 'src/pinia/genericItemStore';
 import ItemSearch from './ItemSearch.vue';
 import ItemSearchFilters from './ItemSearchFilters.vue';
 import FormFields from 'src/components/form/FormFields.vue';

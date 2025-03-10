@@ -2,7 +2,7 @@ import { HelpStore } from "src/pinia/helpStore";
 import useQueueStore from "src/pinia/queueStore";
 import { checkDataSource } from "src/models/api/DataSource";
 import { Notify } from "quasar";
-import { dbFilters } from "adam-firebase-tools";
+import { dbFilters } from "zencraft-core";
 import { IndexedDbInterface } from "@/models/api/IndexedDbInterface";
 
 export type HelpStep = {

@@ -1,5 +1,5 @@
 import { computed, ComputedRef } from 'vue';
-import { fields } from 'adam-firebase-tools';
+import { fields } from 'zencraft-core';
 import { useCustomItemStore } from 'src/pinia/customItemStore';
 
 // Refactored to this after CustomItem made generic; fields no longer hardcoded

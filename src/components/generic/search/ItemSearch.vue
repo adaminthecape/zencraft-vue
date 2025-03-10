@@ -67,7 +67,7 @@
 </template>
 
 <script setup lang="ts">
-import { dbFilters, dbPagination, fields } from 'adam-firebase-tools';
+import { dbFilters, dbPagination, fields } from 'zencraft-core';
 import { computed, onMounted, watch } from 'vue';
 import SimpleModal from 'src/components/ui/SimpleModal.vue';
 import ItemSearchFilters from 'src/components/generic/search/ItemSearchFilters.vue';

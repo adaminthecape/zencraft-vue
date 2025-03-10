@@ -37,7 +37,7 @@
 </template>
 
 <script setup lang="ts">
-import { Module, sharedTypes, utils } from 'adam-firebase-tools';
+import { Module, sharedTypes, utils } from 'zencraft-core';
 import { computed, inject, onMounted } from 'vue';
 import useModulePageNavigation from 'src/composables/useModulePageNavigation';
 import { AppHelpers, UUID } from 'src/types/generic';

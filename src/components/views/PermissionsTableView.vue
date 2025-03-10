@@ -77,7 +77,7 @@ import { computed, onMounted, ref } from 'vue';
 import { ApiHandler } from 'src/models/api/ApiInterface';
 import { getTableColumns } from 'src/logic/utils/items';
 import { itemTypeIcons } from 'src/models/BlockTypes';
-import { fields, sharedTypes, utils } from 'adam-firebase-tools';
+import { fields, sharedTypes, utils } from 'zencraft-core';
 import FormFields from '../form/FormFields.vue';
 import SimpleModal from '../ui/SimpleModal.vue';
 import { useI18n } from 'vue-i18n';

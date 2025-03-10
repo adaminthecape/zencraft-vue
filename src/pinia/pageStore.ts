@@ -7,7 +7,7 @@ import {
 import { Store } from 'pinia';
 import { PiniaStoreName } from './utils';
 import debounce from 'lodash/debounce';
-import { sharedTypes, Page as p } from 'adam-firebase-tools';
+import { sharedTypes, Page as p } from 'zencraft-core';
 
 export type PageRootState = GenericRootState<p.PageItem> & {
   defaultSelectedPage: string | undefined;

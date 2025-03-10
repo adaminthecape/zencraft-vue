@@ -187,7 +187,7 @@ import { BlockCategory, BlockType, BlockTypeConfigOpts } from 'src/models/BlockT
 import { computed, ref } from 'vue';
 import AddBlockButton from 'src/components/generic/layout/AddBlockButton.vue';
 import EditNewOrExistingItemModal from 'src/components/generic/items/EditNewOrExistingItemModal.vue';
-import { fields, sharedTypes } from 'adam-firebase-tools';
+import { fields, sharedTypes } from 'zencraft-core';
 import { deriveStoreForItemType } from 'src/logic/utils/stores';
 import ThemeButton from 'src/components/generic/buttons/ThemeButton.vue';
 

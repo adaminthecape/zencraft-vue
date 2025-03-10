@@ -63,7 +63,7 @@
 <script setup lang="ts">
 import ThemeButton from 'src/components/generic/buttons/ThemeButton.vue';
 import { computed, ref } from 'vue';
-import { fields, item } from 'adam-firebase-tools';
+import { fields, item } from 'zencraft-core';
 import EditNewOrExistingItemModal from './EditNewOrExistingItemModal.vue';
 import { QCardProps } from 'quasar';
 import useFieldsForItemType from 'src/composables/useFieldsForItemType';

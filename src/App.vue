@@ -24,7 +24,7 @@ import EditNewOrExistingItemModal from './components/generic/items/EditNewOrExis
 import useAdminStore from 'src/pinia/adminStore';
 import handlebars from './boot/handlebars';
 import useBlockContextStore from './pinia/blockContextStore';
-import { utils } from 'adam-firebase-tools';
+import { utils } from 'zencraft-core';
 import HelpWizardModal from './HelpWizardModal.vue';
 // import { useCustomItemStore } from './pinia/customItemStore';
 import { checkDataSource } from './models/api/DataSource';

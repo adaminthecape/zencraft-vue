@@ -7,7 +7,7 @@ import {
 import { Store } from 'pinia';
 import { PiniaStoreName } from './utils';
 import debounce from 'lodash/debounce';
-import { sharedTypes, Module as m } from 'adam-firebase-tools';
+import { sharedTypes, Module as m } from 'zencraft-core';
 
 export type ModuleRootState = GenericRootState<m.ModuleItem> & {
   defaultSelectedModule: string | undefined;

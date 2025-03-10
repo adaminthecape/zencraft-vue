@@ -1,6 +1,6 @@
 import { ModuleStore } from 'src/pinia/moduleStore';
 import { PageStore } from 'src/pinia/pageStore';
-import { Module, Page, sharedTypes, utils } from 'adam-firebase-tools';
+import { Module, Page, sharedTypes, utils } from 'zencraft-core';
 import { computed, ComputedRef, onMounted } from 'vue';
 import { RouteLocation, useRoute, useRouter } from 'vue-router';
 import { deriveStoreForItemType } from 'src/logic/utils/stores';

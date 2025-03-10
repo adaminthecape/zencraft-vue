@@ -1,4 +1,4 @@
-import { fields } from 'adam-firebase-tools';
+import { fields } from 'zencraft-core';
 
 export enum BlockType
 {

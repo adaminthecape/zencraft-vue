@@ -1,9 +1,9 @@
 import { GenericItemStore } from 'src/pinia/genericItemStore';
-import { fields, item } from 'adam-firebase-tools';
+import { fields, item } from 'zencraft-core';
 import { QInputProps, ValidationRule } from 'quasar';
 import cloneDeep from 'lodash/cloneDeep';
 import { onMounted, ref, watch, defineEmits, Ref, computed } from 'vue';
-import { fieldValidation } from 'adam-firebase-tools';
+import { fieldValidation } from 'zencraft-core';
 
 export type FormElementProps<
   ModelType,

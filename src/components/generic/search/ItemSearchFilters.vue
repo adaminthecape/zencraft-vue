@@ -120,7 +120,7 @@
 </template>
 
 <script setup lang="ts">
-import { dbFilters, fields } from 'adam-firebase-tools';
+import { dbFilters, fields } from 'zencraft-core';
 import { ref, onMounted, computed, watch } from 'vue';
 import SelectInput from 'src/components/ui/SelectInput.vue';
 import ItemSearchFilterRule, { FilterKeyOpt } from 'src/components/generic/search/ItemSearchFilterRule.vue';

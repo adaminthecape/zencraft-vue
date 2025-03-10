@@ -60,7 +60,7 @@
 </template>
 
 <script setup lang="ts">
-import { dbFilters, dbPagination } from 'adam-firebase-tools';
+import { dbFilters, dbPagination } from 'zencraft-core';
 import { ref, computed, onMounted, watch } from 'vue';
 import { ItemResultClick } from 'src/components/generic/search/ItemSearchResultTable.vue';
 import { StoreTypes } from 'src/logic/utils/stores';

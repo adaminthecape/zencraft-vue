@@ -7,7 +7,7 @@ import {
 import { Store } from 'pinia';
 import { PiniaStoreName } from './utils';
 import debounce from 'lodash/debounce';
-import { sharedTypes, AccessRole as a } from 'adam-firebase-tools';
+import { sharedTypes, AccessRole as a } from 'zencraft-core';
 
 export type AccessRoleRootState = GenericRootState<a.AccessRoleItem> & {
   [key: string]: any;

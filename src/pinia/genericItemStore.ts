@@ -12,7 +12,7 @@ import
   genericDb,
   sharedTypes,
   item,
-} from 'adam-firebase-tools';
+} from 'zencraft-core';
 import debounce from 'lodash/debounce';
 import { ApiHandler, ApiHandlerDbInterface } from 'src/models/api/ApiInterface';
 import useAdminStore from './adminStore';

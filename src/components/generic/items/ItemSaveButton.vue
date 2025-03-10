@@ -7,8 +7,8 @@
 </template>
 
 <script setup lang="ts">
-import { GenericItemStore } from 'src/pinia/genericFirebaseStore';
-import { item } from 'adam-firebase-tools';
+import { GenericItemStore } from 'src/pinia/genericItemStore';
+import { item } from 'zencraft-core';
 import { QBtnProps } from 'quasar';
 import { useI18n } from 'vue-i18n';
 import ThemeButton from 'src/components/generic/buttons/ThemeButton.vue';

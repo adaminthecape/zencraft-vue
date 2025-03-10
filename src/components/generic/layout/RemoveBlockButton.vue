@@ -25,7 +25,7 @@
 
 <script setup lang="ts">
 import { deriveStoreForItemType } from 'src/logic/utils/stores';
-import { sharedTypes, dbFilters, Block, BlockDefinition } from 'adam-firebase-tools';
+import { sharedTypes, dbFilters, Block, BlockDefinition } from 'zencraft-core';
 import { PageStore } from 'src/pinia/pageStore';
 import ThemeButton from 'src/components/generic/buttons/ThemeButton.vue';
 import ListItem from 'src/components/ui/ListItem.vue';

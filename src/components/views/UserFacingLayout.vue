@@ -96,7 +96,7 @@ import useAdminStore from 'src/pinia/adminStore';
 import { useCustomItemStore } from 'src/pinia/customItemStore';
 // import CreateBlock from '../admin/CreateBlock.vue';
 import { deriveStoreForItemType } from 'src/logic/utils/stores';
-import { sharedTypes } from 'adam-firebase-tools';
+import { sharedTypes } from 'zencraft-core';
 import useHelpStore, { HelpStore } from 'src/pinia/helpStore';
 import { useRouter } from 'vue-router';
 import AvatarControls from '../nav/AvatarControls.vue';

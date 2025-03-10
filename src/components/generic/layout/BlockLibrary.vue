@@ -67,7 +67,7 @@ import { computed, onMounted, ref } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { useQuasar } from 'quasar';
 import useThemeStore from 'src/pinia/themeStore';
-import { dbFilters, dbPagination, BlockDefinition, sharedTypes } from 'adam-firebase-tools';
+import { dbFilters, dbPagination, BlockDefinition, sharedTypes } from 'zencraft-core';
 import { deriveStoreForItemType } from 'src/logic/utils/stores';
 import ThemeButton from 'src/components/generic/buttons/ThemeButton.vue';
 import ThemeIcon from 'src/components/ui/ThemeIcon.vue';

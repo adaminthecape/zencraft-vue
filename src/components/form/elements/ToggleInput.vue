@@ -15,8 +15,8 @@
 
 <script setup lang="ts">
 import { ItemHandlerType } from 'src/logic/utils/items';
-import { GenericItemStore } from 'src/pinia/genericFirebaseStore';
-import { fields } from 'adam-firebase-tools';
+import { GenericItemStore } from 'src/pinia/genericItemStore';
+import { fields } from 'zencraft-core';
 import { QInputProps, QSelectProps } from 'quasar';
 import useFormElement from 'src/composables/useFormElement';
 import { computed, ref } from 'vue';

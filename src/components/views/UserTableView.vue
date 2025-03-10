@@ -28,7 +28,7 @@ import { getTableColumns } from 'src/logic/utils/items';
 import ThemeIcon from 'src/components/ui/ThemeIcon.vue';
 import { checkDataSource } from 'src/models/api/DataSource';
 import { IndexedDbInterface } from 'src/models/api/IndexedDbInterface';
-import { utils } from 'adam-firebase-tools';
+import { utils } from 'zencraft-core';
 import { useI18n } from 'vue-i18n';
 
 const { t: $t } = useI18n();

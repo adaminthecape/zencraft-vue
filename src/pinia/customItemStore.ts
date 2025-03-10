@@ -8,7 +8,7 @@ import
 import { Store } from 'pinia';
 import { PiniaStoreName } from './utils';
 import debounce from 'lodash/debounce';
-import { CustomItem as c, fields, ItemDefinition, sharedTypes } from 'adam-firebase-tools';
+import { CustomItem as c, fields, ItemDefinition, sharedTypes } from 'zencraft-core';
 import { FieldStore } from './fieldStore';
 import { deriveStoreForItemType } from 'src/logic/utils/stores';
 import { ItemDefinitionStore } from './itemDefinitionStore';

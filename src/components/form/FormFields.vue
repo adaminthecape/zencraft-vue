@@ -55,10 +55,10 @@
 
 <script setup lang="ts">
 import { CssClassProp, UUID } from 'src/types/generic';
-import { fields, utils } from 'adam-firebase-tools';
+import { fields, utils } from 'zencraft-core';
 import { QInputProps } from 'quasar';
 import { defineAsyncComponent, onMounted, ref, watch } from 'vue';
-import { GenericItemStore } from 'src/pinia/genericFirebaseStore';
+import { GenericItemStore } from 'src/pinia/genericItemStore';
 
 const ItemTypeInput = defineAsyncComponent(() => import('src/components/form/elements/ItemTypeInput.vue'));
 const DropdownInput = defineAsyncComponent(() => import('src/components/form/elements/DropdownInput.vue'));

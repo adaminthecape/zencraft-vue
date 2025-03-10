@@ -1,5 +1,5 @@
 import { Nullable } from 'src/types/generic';
-import { dbFilters, dbPagination, genericDb, utils } from 'adam-firebase-tools';
+import { dbFilters, dbPagination, genericDb, utils } from 'zencraft-core';
 import axios, { AxiosError } from 'axios';
 
 // TODO: move to .env

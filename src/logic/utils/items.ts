@@ -11,7 +11,7 @@ import {
   BlockDefinition,
   sharedTypes,
   utils,
-} from 'adam-firebase-tools';
+} from 'zencraft-core';
 import { QTableProps } from 'quasar';
 
 export type ItemHandlerType = (

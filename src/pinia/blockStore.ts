@@ -7,7 +7,7 @@ import {
 import { Store } from 'pinia';
 import { PiniaStoreName } from './utils';
 import debounce from 'lodash/debounce';
-import { sharedTypes, Block as b } from 'adam-firebase-tools';
+import { sharedTypes, Block as b } from 'zencraft-core';
 
 export type BlockRootState = GenericRootState<b.BlockItem> & {
   [key: string]: any;

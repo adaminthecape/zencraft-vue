@@ -1,6 +1,6 @@
 import { deriveStoreForItemType, StoreTypes } from 'src/logic/utils/stores';
 import { CustomItemStore, useCustomItemStore } from 'src/pinia/customItemStore';
-import { genericDb, dbFilters, dbPagination, utils } from 'adam-firebase-tools';
+import { genericDb, dbFilters, dbPagination, utils } from 'zencraft-core';
 import * as Handlebars from 'handlebars';
 import useQueueStore from 'src/pinia/queueStore';
 

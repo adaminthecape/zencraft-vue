@@ -62,7 +62,7 @@ import AdminNav from '../nav/AdminNav.vue';
 import { RouterView, useRouter } from 'vue-router';
 import { deriveStoreForItemType } from 'src/logic/utils/stores';
 import { useCustomItemStore } from 'src/pinia/customItemStore';
-import { sharedTypes } from 'adam-firebase-tools';
+import { sharedTypes } from 'zencraft-core';
 import useHelpStore, { HelpStore } from 'src/pinia/helpStore';
 import ThemeButton from 'src/components/generic/buttons/ThemeButton.vue';
 import AvatarControls from '../nav/AvatarControls.vue';
