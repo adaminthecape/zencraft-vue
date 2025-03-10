@@ -1,5 +1,5 @@
 import { sharedTypes } from 'adam-firebase-tools';
-import { GenericItemStore } from 'src/pinia/genericFirebaseStore';
+import { GenericItemStore } from 'src/pinia/genericItemStore';
 import { ModuleStore, useModuleStore } from 'src/pinia/moduleStore';
 import { PageStore, usePageStore } from 'src/pinia/pageStore';
 import { BlockStore, useBlockStore } from 'src/pinia/blockStore';

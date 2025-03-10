@@ -1,4 +1,4 @@
-import { GenericItemStore } from 'src/pinia/genericFirebaseStore';
+import { GenericItemStore } from 'src/pinia/genericItemStore';
 import { fields, item } from 'adam-firebase-tools';
 import { QInputProps, ValidationRule } from 'quasar';
 import cloneDeep from 'lodash/cloneDeep';
