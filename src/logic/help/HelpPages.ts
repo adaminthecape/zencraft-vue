@@ -4,6 +4,7 @@ import { checkDataSource } from "src/models/api/DataSource";
 import { Notify } from "quasar";
 import { dbFilters } from "zencraft-core";
 import { IndexedDbInterface } from "@/models/api/IndexedDbInterface";
+import { ContextReference } from "@/pinia/blockContextStore";
 
 export type HelpStep = {
   id: number;
@@ -68,6 +69,7 @@ export function editItem(opts: {
   itemType: string;
   itemId: string;
   initialData?: Record<string, unknown>;
+  contextReference?: ContextReference;
   options?: {
     persistent?: boolean;
     isNew?: boolean;

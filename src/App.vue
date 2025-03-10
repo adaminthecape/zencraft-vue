@@ -7,6 +7,7 @@
     :initial-data="itemToEdit.initialData"
     :modal-props="editItemModalProps"
     :force-is-new="itemToEdit.options?.isNew"
+    :context-reference="itemToEdit.contextReference"
     @request-close="clearEditingItem"
   >
     <template #activator><span></span></template>
@@ -23,7 +24,7 @@ import { RouterView, useRoute, useRouter } from 'vue-router';
 import EditNewOrExistingItemModal from './components/generic/items/EditNewOrExistingItemModal.vue';
 import useAdminStore from 'src/pinia/adminStore';
 import handlebars from './boot/handlebars';
-import useBlockContextStore from './pinia/blockContextStore';
+import useBlockContextStore, { ContextReference } from './pinia/blockContextStore';
 import { utils } from 'zencraft-core';
 import HelpWizardModal from './HelpWizardModal.vue';
 // import { useCustomItemStore } from './pinia/customItemStore';
@@ -106,6 +107,7 @@ type ItemToEdit = {
   id: string;
   typeId: string;
   initialData?: Record<string, unknown>;
+  contextReference?: ContextReference;
   options?: {
     isNew?: boolean;
     persistent?: boolean;
@@ -150,6 +152,7 @@ useQueues<ItemToEdit>({
         id: item.id,
         typeId: item.typeId,
         initialData: item.initialData,
+        contextReference: item.contextReference,
         options: { isNew: item.options?.isNew }
       });
     }
@@ -161,10 +164,7 @@ useQueues<ItemToEdit>({
 });
 
 // Context store
-const ctx = useBlockContextStore({
-  containerId: 'all',
-  storeId: 'ctx-store-all',
-})();
+const ctx = useBlockContextStore()();
 const ctxItemData = computed(() => (
   typeof route.params.pageId === 'string' ?
     ctx.page?.[route.params.pageId]?.itemDataByType :

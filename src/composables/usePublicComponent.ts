@@ -72,10 +72,7 @@ export default function usePublicComponent<
 
   const currentPageId = computed(() => pageStore.selectedPage);
 
-  const contextStore = useBlockContextStore({
-    containerId: 'all',
-    storeId: 'ctx-store-all'
-  })();
+  const contextStore = useBlockContextStore()();
 
   const block = computed(() => (
     (typeof opts.props.blockId === 'string') ?

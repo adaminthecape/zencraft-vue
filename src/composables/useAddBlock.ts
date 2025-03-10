@@ -5,6 +5,7 @@ import { Block, item, sharedTypes, utils } from 'zencraft-core';
 import { computed, ComputedRef, Ref, ref } from 'vue';
 import { deriveStoreForItemType } from 'src/logic/utils/stores';
 import { AppHelpers } from 'src/types/generic';
+import useBlockContextStore, { BlockContextStore } from 'src/pinia/blockContextStore';
 
 export default function useAddBlock(options: {
   parentId: ComputedRef<string | undefined>;
@@ -21,9 +22,10 @@ export default function useAddBlock(options: {
 {
   const adminStore = useAdminStore();
   const blockStore = deriveStoreForItemType(sharedTypes.KnownItemType.Block) as BlockStore;
+  const pageStore = deriveStoreForItemType(sharedTypes.KnownItemType.Block) as PageStore;
+  const ctxStore = useBlockContextStore()() as BlockContextStore;
 
   const isEditMode = computed(() => adminStore.isEditMode);
-
   const itemIdToEdit = ref<string | undefined>();
 
   async function onBlockDefSelected(opts: {
@@ -40,6 +42,7 @@ export default function useAddBlock(options: {
     }
 
     const newBlockId = utils.uuid.generateUuid();
+    let parentPage;
 
     // create a new Block
     const newBlockData: Partial<Omit<Block.BlockItem, keyof item.Item>> = {
@@ -63,18 +66,14 @@ export default function useAddBlock(options: {
     // attach the Block to the current Block (or Page)
     if(!parentBlock)
     {
-      let pageStoreTemp: PageStore | undefined = deriveStoreForItemType(
-        sharedTypes.KnownItemType.Page
-      ) as PageStore;
-
-      const parentPage = pageStoreTemp.getItem(
+      parentPage = pageStore.getItem(
         options.parentId.value,
         sharedTypes.KnownItemType.Page
       );
 
       if(parentPage?.id && (parentPage?.typeId === sharedTypes.KnownItemType.Page))
       {
-        await pageStoreTemp.saveItem({
+        await pageStore.saveItem({
           id: parentPage.id,
           itemType: sharedTypes.KnownItemType.Page,
           data: {
@@ -82,8 +81,6 @@ export default function useAddBlock(options: {
           }
         });
       }
-
-      pageStoreTemp = undefined;
 
       if(!parentPage)
       {
@@ -99,8 +96,6 @@ export default function useAddBlock(options: {
         col,
       });
 
-      console.log({ newChildBlocks });
-
       await blockStore.saveItem({
         id: parentBlock.id,
         itemType: sharedTypes.KnownItemType.Block,
@@ -112,10 +107,17 @@ export default function useAddBlock(options: {
 
     itemIdToEdit.value = newBlockId;
 
+    const parentId = parentBlock?.id || parentPage?.id;
+
     // the block is displayed immediately, but we must open an editing form
     options.editItem({
       id: newBlockId,
       typeId: sharedTypes.KnownItemType.Block,
+      contextReference: ctxStore.generateContextReference({
+        parentId,
+        blockId: newBlockId,
+        pageId: parentPage?.id,
+      }),
     });
   }
 

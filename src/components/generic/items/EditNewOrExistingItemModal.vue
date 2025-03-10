@@ -60,6 +60,7 @@ import { QInputProps, QSelectProps, useQuasar } from 'quasar';
 import { computed, ref } from 'vue';
 import { CssClassProp } from 'src/types/generic';
 import ThemeButton from 'src/components/generic/buttons/ThemeButton.vue';
+import { ContextReference } from '@/pinia/blockContextStore';
 
 const $q = useQuasar();
 
@@ -76,6 +77,7 @@ const props = defineProps<{
   icon?: string;
   iconColor?: string;
   modalProps?: SimpleModalProps;
+  contextReference?: ContextReference;
 }>();
 
 const emit = defineEmits<{

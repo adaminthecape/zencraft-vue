@@ -48,7 +48,7 @@
         icon="edit"
         size="sm"
         flat
-        @click="() => editItem({ id: block?.id || '', typeId: sharedTypes.KnownItemType.Block })"
+        @click="editBlock"
       ><q-tooltip>{{ $t('admin.blocks.controls.edit') }}</q-tooltip></ThemeButton>
     </div>
     <q-separator v-if="isEditMode" class="q-ma-xs" />
@@ -128,6 +128,7 @@ const {
 const computedParentId = computed(() => props.blockId);
 
 const { editItem } = (inject('helpers') as AppHelpers['helpers']) || {};
+const $ctx = inject('context') as AppHelpers['$ctxStore'];
 
 const { onBlockDefSelected } = useAddBlock({
   parentId: computedParentId,
@@ -180,6 +181,22 @@ function printContext()
   const blockRef = `Block ${props.blockId} (${blueprint.value?.blockType})`;
   console.log(`${blockRef}: block`, { ...block.value });
   console.log(`${blockRef}: mergedContext`, { ...mergedContext.value });
+}
+
+function editBlock()
+{
+  if(!(block.value?.id && (typeof block.value.id === 'string')))
+  {
+    console.warn('Block not available');
+
+    return;
+  }
+
+  editItem({
+    id: block.value.id || '',
+    typeId: sharedTypes.KnownItemType.Block,
+    contextReference: $ctx.store.generateReference({ blockId: block.value.id }),
+  });
 }
 </script>
 

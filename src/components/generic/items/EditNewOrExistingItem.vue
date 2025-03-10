@@ -56,6 +56,9 @@ import { deriveStoreForItemType, StoreTypes } from 'src/logic/utils/stores';
 import useFieldsForItemType from 'src/composables/useFieldsForItemType';
 import ThemeButton from 'src/components/generic/buttons/ThemeButton.vue';
 import { useQueues } from 'src/composables/useQueues';
+import { ContextReference } from 'src/pinia/blockContextStore';
+
+// TODO: Implement context reference by opening a modal which renders the target block with the context in the store
 
 export type EditNewOrExistingItemProps = {
   itemType: string;
@@ -66,6 +69,7 @@ export type EditNewOrExistingItemProps = {
   qProps?: Partial<QInputProps & QSelectProps>;
   useStoreHandler?: boolean;
   forceIsNew?: boolean;
+  contextReference?: ContextReference;
 };
 
 const props = defineProps<EditNewOrExistingItemProps>();
