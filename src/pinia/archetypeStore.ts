@@ -7,35 +7,35 @@ import {
 import { Store } from 'pinia';
 import { PiniaStoreName } from './utils';
 import debounce from 'lodash/debounce';
-import { sharedTypes, ItemDefinition as m } from 'zencraft-core';
+import { sharedTypes, Archetype as a } from 'zencraft-core';
 
-export type ItemDefinitionRootState = GenericRootState<m.ItemDefinitionItem>;
+export type ArchetypeRootState = GenericRootState<a.ArchetypeItem>;
 
-export type ItemDefinitionStoreGetters = GenericStoreGetters<m.ItemDefinitionItem, m.ItemDefinitionHandler>;
+export type ArchetypeStoreGetters = GenericStoreGetters<a.ArchetypeItem, a.ArchetypeHandler>;
 
-export type ItemDefinitionStoreActions = GenericStoreActions<m.ItemDefinitionItem, m.ItemDefinitionHandler> & {
-  getHandler: (id: m.ItemDefinitionItem['id'], syncHandlerDataWithStore?: boolean) => m.ItemDefinitionHandler,
+export type ArchetypeStoreActions = GenericStoreActions<a.ArchetypeItem, a.ArchetypeHandler> & {
+  getHandler: (id: a.ArchetypeItem['id'], syncHandlerDataWithStore?: boolean) => a.ArchetypeHandler,
 };
 
-export type ItemDefinitionStore = Store<
+export type ArchetypeStore = Store<
   string,
-  ItemDefinitionRootState,
-  ItemDefinitionStoreGetters,
-  ItemDefinitionStoreActions
+  ArchetypeRootState,
+  ArchetypeStoreGetters,
+  ArchetypeStoreActions
 >;
 
-export function useItemDefinitionStore(storeOpts: Record<string, unknown>): () => ItemDefinitionStore
+export function useArchetypeStore(storeOpts: Record<string, unknown>): () => ArchetypeStore
 {
   // @ts-expect-error No need for perfect equality with Pinia store types
   return useGenericItemStore<
-    m.ItemDefinitionItem,
-    m.ItemDefinitionHandler,
-    ItemDefinitionRootState,
-    ItemDefinitionStoreGetters,
-    ItemDefinitionStoreActions
+    a.ArchetypeItem,
+    a.ArchetypeHandler,
+    ArchetypeRootState,
+    ArchetypeStoreGetters,
+    ArchetypeStoreActions
   >({
-    itemType: sharedTypes.KnownItemType.ItemDefinition,
-    storeName: String(PiniaStoreName.itemDefinitionStore),
+    itemType: sharedTypes.KnownItemType.Archetype,
+    storeName: String(PiniaStoreName.archetypeStore),
     rootState: {
     },
     getters: {
@@ -43,15 +43,15 @@ export function useItemDefinitionStore(storeOpts: Record<string, unknown>): () =
     actions: {
       getIsValidItemType(itemData: any)
       {
-        return itemData?.typeId === sharedTypes.KnownItemType.ItemDefinition;
+        return itemData?.typeId === sharedTypes.KnownItemType.Archetype;
       },
       getHandler(
-        id: m.ItemDefinitionItem['id'],
+        id: a.ArchetypeItem['id'],
         itemType: string,
         syncHandlerDataWithStore?: boolean
-      ): m.ItemDefinitionHandler
+      ): a.ArchetypeHandler
       {
-        if(this.itemHandlers[id] instanceof m.ItemDefinitionHandler)
+        if(this.itemHandlers[id] instanceof a.ArchetypeHandler)
         {
           /** NOTE: See base method */
           if(syncHandlerDataWithStore)
@@ -73,7 +73,7 @@ export function useItemDefinitionStore(storeOpts: Record<string, unknown>): () =
         const handler = this.getCustomHandler(
           id,
           itemType,
-          (opts: m.ItemDefinitionItemOpts) => (new m.ItemDefinitionHandler(opts)),
+          (opts: a.ArchetypeItemOpts) => (new a.ArchetypeHandler(opts)),
           syncHandlerDataWithStore ?? true
         );
 

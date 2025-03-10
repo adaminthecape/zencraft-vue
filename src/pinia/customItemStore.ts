@@ -8,13 +8,13 @@ import
 import { Store } from 'pinia';
 import { PiniaStoreName } from './utils';
 import debounce from 'lodash/debounce';
-import { CustomItem as c, fields, ItemDefinition, sharedTypes } from 'zencraft-core';
+import { CustomItem as c, fields, Archetype, sharedTypes } from 'zencraft-core';
 import { FieldStore } from './fieldStore';
 import { deriveStoreForItemType } from 'src/logic/utils/stores';
-import { ItemDefinitionStore } from './itemDefinitionStore';
+import { ArchetypeStore } from './archetypeStore';
 
 export type CustomItemRootState = GenericRootState<c.CustomItem> & {
-  itemTypeToItemDefinitionMap: Record<string, ItemDefinition.ItemDefinitionItem>;
+  itemTypeToArchetypeMap: Record<string, Archetype.ArchetypeItem>;
   /** Map of item IDs to their type ID for easy lookup by ID alone */
   itemIdToItemTypeMap: Record<string, string>;
   itemsByType: Record<string, c.CustomItem[]>;
@@ -54,7 +54,7 @@ export function useCustomItemStore(storeOpts: Record<string, unknown>): () => Cu
     itemType: sharedTypes.KnownItemType.CustomItem,
     storeName: String(PiniaStoreName.customItemStore),
     rootState: {
-      itemTypeToItemDefinitionMap: {},
+      itemTypeToArchetypeMap: {},
       definitionFieldsMap: {},
       itemIdToItemTypeMap: {},
       itemsByType: {},
@@ -78,7 +78,7 @@ export function useCustomItemStore(storeOpts: Record<string, unknown>): () => Cu
       },
       getFieldIdsForItemType: (state: CustomItemRootState) => (itemType: string) =>
       {
-        const definition = state.itemTypeToItemDefinitionMap[itemType];
+        const definition = state.itemTypeToArchetypeMap[itemType];
 
         if(!definition)
         {
@@ -97,7 +97,7 @@ export function useCustomItemStore(storeOpts: Record<string, unknown>): () => Cu
         return state.itemsByType[itemType];
       },
       getDefinitionNames: (state: CustomItemRootState) => (
-        Object.keys(state.itemTypeToItemDefinitionMap)
+        Object.keys(state.itemTypeToArchetypeMap)
       ),
     },
     actions: {
@@ -141,7 +141,7 @@ export function useCustomItemStore(storeOpts: Record<string, unknown>): () => Cu
         const table = this.getDb();
 
         // get the definition for this custom item type
-        const definition = this.itemTypeToItemDefinitionMap[itemType];
+        const definition = this.itemTypeToArchetypeMap[itemType];
 
         if(!definition)
         {
@@ -222,18 +222,18 @@ export function useCustomItemStore(storeOpts: Record<string, unknown>): () => Cu
       {
         const db = this.getDb();
 
-        const itemDefinitionStore = deriveStoreForItemType(
-          sharedTypes.KnownItemType.ItemDefinition,
+        const archetypeStore = deriveStoreForItemType(
+          sharedTypes.KnownItemType.Archetype,
           { db }
-        ) as ItemDefinitionStore;
+        ) as ArchetypeStore;
 
-        await itemDefinitionStore.loadAllItems(sharedTypes.KnownItemType.ItemDefinition);
+        await archetypeStore.loadAllItems(sharedTypes.KnownItemType.Archetype);
 
-        itemDefinitionStore.allItems.forEach((def) =>
+        archetypeStore.allItems.forEach((def) =>
         {
           if(def?.itemType)
           {
-            this.itemTypeToItemDefinitionMap[def.itemType] = def;
+            this.itemTypeToArchetypeMap[def.itemType] = def;
           }
         });
 
@@ -250,9 +250,9 @@ export function useCustomItemStore(storeOpts: Record<string, unknown>): () => Cu
 
         await fieldStore.loadAllItems(sharedTypes.KnownItemType.Field);
 
-        Object.keys(this.itemTypeToItemDefinitionMap).forEach((typeId) =>
+        Object.keys(this.itemTypeToArchetypeMap).forEach((typeId) =>
         {
-          const fieldIds = this.itemTypeToItemDefinitionMap[typeId]?.attachedFields;
+          const fieldIds = this.itemTypeToArchetypeMap[typeId]?.attachedFields;
 
           this.definitionFieldsMap[typeId] = (fieldIds || []).map((id: string) =>
           {

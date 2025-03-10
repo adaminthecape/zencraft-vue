@@ -7,13 +7,13 @@ import {
 import { Store } from 'pinia';
 import { PiniaStoreName } from './utils';
 import debounce from 'lodash/debounce';
-import { fields, ItemDefinition, sharedTypes } from 'zencraft-core';
-import { ItemDefinitionStore } from './itemDefinitionStore';
+import { fields, Archetype, sharedTypes } from 'zencraft-core';
+import { ArchetypeStore } from './archetypeStore';
 import { deriveStoreForItemType } from 'src/logic/utils/stores';
 
 export type FieldRootState = GenericRootState<fields.FieldData> & {
   definitionFieldsMap: Record<
-    ItemDefinition.ItemDefinitionItem['id'],
+    Archetype.ArchetypeItem['id'],
     Array<fields.FieldData['id']>
   >;
   itemTypeFieldsMap: Partial<Record<string, Array<fields.FieldData['id']>>>;
@@ -110,13 +110,13 @@ export function useFieldStore(storeOpts: Record<string, unknown>): () => FieldSt
       {
         // figure out which fields belong to which definitions
         // create a map of DefinitionId to FieldIds
-        const itemDefinitionStore = deriveStoreForItemType(
-          sharedTypes.KnownItemType.ItemDefinition
-        ) as ItemDefinitionStore;
+        const archetypeStore = deriveStoreForItemType(
+          sharedTypes.KnownItemType.Archetype
+        ) as ArchetypeStore;
 
-        const allItemDefinitions = itemDefinitionStore.allItems;
+        const allArchetypes = archetypeStore.allItems;
 
-        for(const def of allItemDefinitions)
+        for(const def of allArchetypes)
         {
           if(def?.id && !this.definitionFieldsMap[def.id])
           {

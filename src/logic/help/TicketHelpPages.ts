@@ -153,7 +153,7 @@ async function addExampleTickets(store: HelpStore)
 
 async function addTicketDefinition(store: HelpStore, step: HelpStep)
 {
-  store.router?.push('/admin/items/ItemDefinition');
+  store.router?.push('/admin/items/Archetype');
 
   store.addTextToStep(
     'This is a form to edit a new Item Definition. We will use this to \
@@ -162,7 +162,7 @@ define a Ticket. We can change this later if we need to.',
   );
 
   const itemId = '9815f0db-2909-46a8-9582-fc207366ea82';
-  const itemType = 'ItemDefinition';
+  const itemType = 'Archetype';
   const finalData = {
     id: itemId,
     typeId: itemType,
@@ -613,7 +613,7 @@ the things you can interact with.',
         actionCanTriggerMultipleTimes: true,
         action: (store) =>
         {
-          store.router?.push('/admin/items/ItemDefinition');
+          store.router?.push('/admin/items/Archetype');
         },
       },
       {
@@ -637,13 +637,13 @@ all the fields we have available. You can also make custom layouts to interact \
 with data in a more user-friendly way.',
         actionCanTriggerMultipleTimes: true,
         userTriggersAction: true,
-        actionCta: 'Edit the ItemDefinition definition',
+        actionCta: 'Edit the Archetype definition',
         action: async (store, step) =>
         {
-          store.router?.push('/admin/items/ItemDefinition');
+          store.router?.push('/admin/items/Archetype');
 
           const itemId = 'ecfda6ee-7d55-47d3-a2fd-da7b621c8679';
-          const itemType = 'ItemDefinition';
+          const itemType = 'Archetype';
 
           editItem({ itemType, itemId });
 
@@ -811,7 +811,7 @@ at once for different types of data.',
 data can be stored as an Item. The basis for this is in code is the Item class, \
 which contains a few essential methods and properties common to any Item, but \
 can be extended to include custom methods and properties. For example, the \
-ItemDefinition class is a subclass of Item which contains a list of Fields, \
+Archetype class is a subclass of Item which contains a list of Fields, \
 which are used to define the structure of a custom Item. By keeping the data \
 structure consistent, we can ensure that everywhere we use Items, we can \
 interact with them in a similar way.',
@@ -820,10 +820,10 @@ interact with them in a similar way.',
         prev: 3,
         id: 4,
         next: 5,
-        title: 'ItemDefinitions',
-        text: 'The ItemDefinition is, at its core, an Item with a list of \
+        title: 'Archetypes',
+        text: 'The Archetype is, at its core, an Item with a list of \
 Fields. These Fields determine the shape of data that can be stored with the \
-Item. Only the Fields specified on an ItemDefinition will allow data to be \
+Item. Only the Fields specified on an Archetype will allow data to be \
 stored, and their validation options determine what data will be rejected. \
 In this way, we can both prevent users from seeing bad data, and ensure that \
 only valid data is stored. This makes the back end and front end easier to \

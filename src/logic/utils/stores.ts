@@ -3,7 +3,7 @@ import { GenericItemStore } from 'src/pinia/genericItemStore';
 import { ModuleStore, useModuleStore } from 'src/pinia/moduleStore';
 import { PageStore, usePageStore } from 'src/pinia/pageStore';
 import { BlockStore, useBlockStore } from 'src/pinia/blockStore';
-import { ItemDefinitionStore, useItemDefinitionStore } from 'src/pinia/itemDefinitionStore';
+import { ArchetypeStore, useArchetypeStore } from 'src/pinia/archetypeStore';
 import { BlockDefinitionStore, useBlockDefinitionStore } from 'src/pinia/blockDefinitionStore';
 import { AccessRoleStore, useAccessRoleStore } from 'src/pinia/accessRoleStore';
 import { CustomItemStore, useCustomItemStore } from 'src/pinia/customItemStore';
@@ -15,7 +15,7 @@ export type StoreTypes = (
   PageStore |
   ModuleStore |
   BlockStore |
-  ItemDefinitionStore |
+  ArchetypeStore |
   BlockDefinitionStore |
   AccessRoleStore |
   CustomItemStore
@@ -41,8 +41,8 @@ export function deriveStoreForItemType(
       return useFieldStore(opts)();
     case sharedTypes.KnownItemType.Block:
       return useBlockStore(opts)();
-    case sharedTypes.KnownItemType.ItemDefinition:
-      return useItemDefinitionStore(opts)();
+    case sharedTypes.KnownItemType.Archetype:
+      return useArchetypeStore(opts)();
     case sharedTypes.KnownItemType.BlockDefinition:
       return useBlockDefinitionStore(opts)();
     case sharedTypes.KnownItemType.AccessRole:

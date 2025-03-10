@@ -2,7 +2,7 @@ import {
   dbPagination,
   fields,
   item,
-  ItemDefinition,
+  Archetype,
   CustomItem,
   AccessRole,
   Block,
@@ -20,7 +20,7 @@ export type ItemHandlerType = (
   Block.BlockHandler |
   Module.ModuleHandler |
   Page.PageHandler |
-  ItemDefinition.ItemDefinitionHandler |
+  Archetype.ArchetypeHandler |
   BlockDefinition.BlockDefinitionHandler |
   AccessRole.AccessRoleHandler |
   CustomItem.CustomHandler

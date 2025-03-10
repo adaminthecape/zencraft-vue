@@ -4,7 +4,7 @@ export enum PiniaStoreName
   moduleStore = 'moduleStore',
   pageStore = 'pageStore',
   blockStore = 'blockStore',
-  itemDefinitionStore = 'itemDefinitionStore',
+  archetypeStore = 'archetypeStore',
   blockDefinitionStore = 'blockDefinitionStore',
   accessRoleStore = 'accessRoleStore',
   customItemStore = 'customItemStore',

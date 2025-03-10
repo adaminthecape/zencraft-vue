@@ -220,16 +220,16 @@ async function getShouldImportEssentialData(): Promise<boolean>
   {
     const idb = new IndexedDbInterface({});
 
-    const itemDefinitions = await idb.selectMultiple({
-      itemType: 'ItemDefinition',
+    const archetypes = await idb.selectMultiple({
+      itemType: 'Archetype',
       filters: [{
         key: 'typeId',
         operator: dbFilters.DbFilterOperator.isEqual,
-        value: 'ItemDefinition',
+        value: 'Archetype',
       }]
     });
 
-    return (itemDefinitions?.results?.length > 0);
+    return (archetypes?.results?.length > 0);
   }
 
   return false;

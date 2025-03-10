@@ -112,12 +112,12 @@ const helpStore = useHelpStore({ router })() as HelpStore;
 const areDependenciesLoaded = ref(false);
 
 const fieldStore = deriveStoreForItemType(sharedTypes.KnownItemType.Field);
-const itemDefinitionStore = deriveStoreForItemType(sharedTypes.KnownItemType.ItemDefinition);
+const archetypeStore = deriveStoreForItemType(sharedTypes.KnownItemType.Archetype);
 const customItemStore = useCustomItemStore({})();
 
 onMounted(async () =>
 {
-  await itemDefinitionStore.loadAllItems(sharedTypes.KnownItemType.ItemDefinition);
+  await archetypeStore.loadAllItems(sharedTypes.KnownItemType.Archetype);
   await fieldStore.loadAllItems(sharedTypes.KnownItemType.Field);
 
   if('setDefinitionFieldsMap' in fieldStore)
