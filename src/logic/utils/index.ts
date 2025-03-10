@@ -7,7 +7,7 @@ export function printCleanStack(title?: string)
   Error.stackTraceLimit = 10;
 
   const stack = obj.stack?.split('\n').slice(2).filter((s) => (
-    !s.includes('node_modules') &&
+    !s.includes('node_hubs') &&
     !s.includes('webpack') &&
     !s.includes('callWithErrorHandling') &&
     !s.includes('callWithAsyncErrorHandling')

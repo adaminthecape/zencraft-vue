@@ -7,12 +7,12 @@ const routes: RouteRecordRaw[] = [
     component: () => import('src/components/views/UserFacingLayout.vue'),
     children: [
       {
-        path: '/:moduleId',
-        name: 'viewModule',
+        path: '/:hubId',
+        name: 'viewHub',
         component: () => import('src/components/views/UserFacingLayout.vue')
       },
       {
-        path: '/:moduleId/:pageId',
+        path: '/:hubId/:pageId',
         name: 'viewLayout',
         component: () => import('src/components/views/UserFacingLayout.vue')
       }

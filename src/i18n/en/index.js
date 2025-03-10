@@ -275,7 +275,7 @@ Definition which your new block will use.',
       },
       addPageButton: {
         title: 'Add Page Button',
-        content: 'This button lets you add a Page to the current Module.',
+        content: 'This button lets you add a Page to the current Hub.',
       },
       editPageButton: {
         title: 'Edit Page Button',

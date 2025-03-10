@@ -73,8 +73,8 @@ export const exampleTickets: TicketItem[] = [
     blockers: []
   },
   {
-    title: 'Refactor authentication module',
-    description: 'Refactor the authentication module to improve code readability and maintainability.',
+    title: 'Refactor authentication hub',
+    description: 'Refactor the authentication hub to improve code readability and maintainability.',
     status: TicketStatus.review,
     ticketType: TicketType.chore,
     points: 5,
@@ -117,7 +117,7 @@ export const exampleTickets: TicketItem[] = [
   typeId: 'Ticket'
 }));
 
-const moduleId = 'a5b48a8a-d120-4f9a-8e17-07eab24a9edf';
+const hubId = 'a5b48a8a-d120-4f9a-8e17-07eab24a9edf';
 
 async function addExampleTickets(store: HelpStore)
 {
@@ -273,7 +273,7 @@ adding Blocks to it.', step.id);
     ],
   });
 
-  store.router?.push(`/${moduleId}/${pageData.allTickets.id}`);
+  store.router?.push(`/${hubId}/${pageData.allTickets.id}`);
 }
 
 const pageData = {
@@ -373,7 +373,7 @@ const blockDataByPage = {
 async function createBugSearchPage(store: HelpStore)
 {
   const pageStore = deriveStoreForItemType('Page');
-  const moduleStore = deriveStoreForItemType('Module');
+  const hubStore = deriveStoreForItemType('Hub');
   const blockStore = deriveStoreForItemType('Block');
 
   await pageStore.saveItem({
@@ -388,7 +388,7 @@ async function createBugSearchPage(store: HelpStore)
 
   await sleep.short();
 
-  const existingData = await moduleStore.loadItem({ id: moduleId, itemType: 'Module' });
+  const existingData = await hubStore.loadItem({ id: hubId, itemType: 'Hub' });
   let pageIds = [pageData.activeBugs.id];
 
   if(
@@ -401,11 +401,11 @@ async function createBugSearchPage(store: HelpStore)
   }
 
   await editAndAmend({
-    itemId: moduleId,
-    itemType: 'Module',
+    itemId: hubId,
+    itemType: 'Hub',
     initialData: existingData,
     amendments: [{
-      status: 'Adding page to module',
+      status: 'Adding page to hub',
       statusTimeout: 5000,
       newData: { pageIds },
       onChanged: (newData) =>
@@ -415,7 +415,7 @@ async function createBugSearchPage(store: HelpStore)
     }],
   });
 
-  store.router?.push(`/${moduleId}/${pageData.activeBugs.id}`);
+  store.router?.push(`/${hubId}/${pageData.activeBugs.id}`);
 
   // now we need to add a search block to the page
   await editAndAmend({
@@ -473,7 +473,7 @@ async function createBugSearchPage(store: HelpStore)
 
 async function addBasicTicketSearchBlock(store: HelpStore, step: HelpStep)
 {
-  await store.router?.push(`/${moduleId}/${pageData.allTickets.id}`);
+  await store.router?.push(`/${hubId}/${pageData.allTickets.id}`);
 
   await sleep.short();
 
@@ -683,7 +683,7 @@ customized to show different fields, and in different ways.',
         actionCanTriggerMultipleTimes: true,
         action: (store) =>
         {
-          store.router?.push(`/${moduleId}/`);
+          store.router?.push(`/${hubId}/`);
         },
       },
       {

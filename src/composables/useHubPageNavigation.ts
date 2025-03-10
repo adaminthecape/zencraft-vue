@@ -1,39 +1,39 @@
-import { ModuleStore } from 'src/pinia/moduleStore';
+import { HubStore } from 'src/pinia/hubStore';
 import { PageStore } from 'src/pinia/pageStore';
-import { Module, Page, sharedTypes, utils } from 'zencraft-core';
+import { Hub, Page, sharedTypes, utils } from 'zencraft-core';
 import { computed, ComputedRef, onMounted } from 'vue';
 import { RouteLocation, useRoute, useRouter } from 'vue-router';
 import { deriveStoreForItemType } from 'src/logic/utils/stores';
 
 export type LayoutParams = {
-  moduleId: Module.ModuleItem['id'];
+  hubId: Hub.HubItem['id'];
   pageId: Page.PageItem['id'];
 };
 
-export default function useModulePageNavigation(): ({
-	moduleStore: ModuleStore;
+export default function useHubPageNavigation(): ({
+	hubStore: HubStore;
   pageStore: PageStore;
   currentPage: ComputedRef<Page.PageItem | undefined>;
-  currentModule: ComputedRef<Module.ModuleItem | undefined>;
+  currentHub: ComputedRef<Hub.HubItem | undefined>;
   navigateToLayout: (opts: Partial<RouteLocation>) => Promise<void>;
   navigateToDefaultLayout: () => Promise<void>;
   getLastVisitedLayout: () => Partial<RouteLocation> | undefined;
   setLastVisitedLayout: (opts: Partial<RouteLocation>) => void;
 })
 {
-	const moduleStore = deriveStoreForItemType(sharedTypes.KnownItemType.Module) as ModuleStore;
+	const hubStore = deriveStoreForItemType(sharedTypes.KnownItemType.Hub) as HubStore;
   const pageStore = deriveStoreForItemType(sharedTypes.KnownItemType.Page) as PageStore;
 
   const route = useRoute();
 
-  // get the current page/module
-  const currentModuleId = computed(() => (route.params?.moduleId));
+  // get the current page/hub
+  const currentHubId = computed(() => (route.params?.hubId));
   const currentPageId = computed(() => (route.params?.pageId));
-  const currentModule = computed(() => (
-    typeof currentModuleId.value === 'string' ?
-      moduleStore.getItem(
-        currentModuleId.value,
-        sharedTypes.KnownItemType.Module
+  const currentHub = computed(() => (
+    typeof currentHubId.value === 'string' ?
+      hubStore.getItem(
+        currentHubId.value,
+        sharedTypes.KnownItemType.Hub
       ) :
       undefined
   ));
@@ -51,21 +51,21 @@ export default function useModulePageNavigation(): ({
   // allow changing the route sanely
   async function navigateToLayout(opts: Partial<RouteLocation>): Promise<void>
   {
-    // TODO: convert module/page IDs to slugs
+    // TODO: convert hub/page IDs to slugs
 
-    if(!opts.params?.moduleId)
+    if(!opts.params?.hubId)
     {
-      console.warn(`Module id is required, got ${opts.params?.moduleId}`);
+      console.warn(`Hub id is required, got ${opts.params?.hubId}`);
 
       return;
     }
 
     let pageId = opts.params?.pageId as string | undefined;
 
-    if(!pageId && currentModule.value?.defaultPageId)
+    if(!pageId && currentHub.value?.defaultPageId)
     {
       pageId = pageStore.getItem(
-        currentModule.value.defaultPageId,
+        currentHub.value.defaultPageId,
         sharedTypes.KnownItemType.Page
       )?.id;
     }
@@ -80,14 +80,14 @@ export default function useModulePageNavigation(): ({
     const newRoute = {
       name: 'viewLayout',
       params: {
-        moduleId: opts.params?.moduleId,
+        hubId: opts.params?.hubId,
         pageId: pageId,
       }
     };
 
-    if(utils.uuid.isUuid(opts.params?.moduleId))
+    if(utils.uuid.isUuid(opts.params?.hubId))
     {
-      moduleStore.setSelectedModule(opts.params.moduleId);
+      hubStore.setSelectedHub(opts.params.hubId);
     }
 
     if(pageId)
@@ -135,19 +135,19 @@ export default function useModulePageNavigation(): ({
 
   async function navigateToDefaultLayout()
   {
-    // check for default module & its default page
-    const defaultModuleId = moduleStore.allItemIds?.[0];
+    // check for default hub & its default page
+    const defaultHubId = hubStore.allItemIds?.[0];
 
-    if(!defaultModuleId)
+    if(!defaultHubId)
     {
       return;
     }
 
-    moduleStore.setSelectedModule(defaultModuleId);
+    hubStore.setSelectedHub(defaultHubId);
 
-    const defaultPageId = moduleStore.getItem(
-      defaultModuleId,
-      sharedTypes.KnownItemType.Module
+    const defaultPageId = hubStore.getItem(
+      defaultHubId,
+      sharedTypes.KnownItemType.Hub
     )?.defaultPageId;
 
     if(!defaultPageId)
@@ -159,7 +159,7 @@ export default function useModulePageNavigation(): ({
 
     return navigateToLayout({
       params: {
-        moduleId: defaultModuleId,
+        hubId: defaultHubId,
         pageId: defaultPageId,
       }
     });
@@ -167,22 +167,22 @@ export default function useModulePageNavigation(): ({
 
   onMounted(async () =>
   {
-    if(!moduleStore.allItemIds?.length)
+    if(!hubStore.allItemIds?.length)
     {
-      await moduleStore.loadAllItems(sharedTypes.KnownItemType.Module);
+      await hubStore.loadAllItems(sharedTypes.KnownItemType.Hub);
     }
 
-    if(typeof currentModuleId.value === 'string')
+    if(typeof currentHubId.value === 'string')
     {
-      await moduleStore.loadItem({
-        id: currentModuleId.value,
-        itemType: sharedTypes.KnownItemType.Module
+      await hubStore.loadItem({
+        id: currentHubId.value,
+        itemType: sharedTypes.KnownItemType.Hub
       });
 
-      if(currentModule.value?.pageIds?.length)
+      if(currentHub.value?.pageIds?.length)
       {
         await pageStore.loadMultiple({
-          ids: utils.genericUtils.uniq(currentModule.value.pageIds),
+          ids: utils.genericUtils.uniq(currentHub.value.pageIds),
           itemType: sharedTypes.KnownItemType.Page,
         });
       }
@@ -199,9 +199,9 @@ export default function useModulePageNavigation(): ({
 
   return {
     pageStore,
-    moduleStore,
+    hubStore,
     currentPage,
-    currentModule,
+    currentHub,
     navigateToLayout,
     navigateToDefaultLayout,
     getLastVisitedLayout,

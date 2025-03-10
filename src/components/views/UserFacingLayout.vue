@@ -51,7 +51,7 @@
     </template>
     <template #below-header>
       <div style="background: var(--q-secondary)">
-        <DisplayModules />
+        <DisplayHubs />
       </div>
     </template>
     <template #page-content>
@@ -87,8 +87,8 @@
 <script setup lang="ts">
 import SimpleLayout from 'src/components/ui/SimpleLayout.vue';
 import { ref, computed, inject, onMounted } from 'vue';
-import DisplayModules from '../generic/layout/DisplayModules.vue';
-import useModulePageNavigation from 'src/composables/useModulePageNavigation';
+import DisplayHubs from '../generic/layout/DisplayHubs.vue';
+import useHubPageNavigation from 'src/composables/useHubPageNavigation';
 import DisplayBlock from '../generic/layout/DisplayBlock.vue';
 import useAddBlock from 'src/composables/useAddBlock';
 import AddBlockButton from '../generic/layout/AddBlockButton.vue';
@@ -132,7 +132,7 @@ onMounted(async () =>
 
 const {
   currentPage,
-} = useModulePageNavigation();
+} = useHubPageNavigation();
 
 const adminStore = useAdminStore();
 

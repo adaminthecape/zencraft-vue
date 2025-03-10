@@ -6,7 +6,7 @@ import {
   CustomItem,
   AccessRole,
   Block,
-  Module,
+  Hub,
   Page,
   Blueprint,
   sharedTypes,
@@ -18,7 +18,7 @@ export type ItemHandlerType = (
   item.ItemHandler |
   fields.Field |
   Block.BlockHandler |
-  Module.ModuleHandler |
+  Hub.HubHandler |
   Page.PageHandler |
   Archetype.ArchetypeHandler |
   Blueprint.BlueprintHandler |

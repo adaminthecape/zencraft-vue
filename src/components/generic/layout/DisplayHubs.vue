@@ -3,11 +3,11 @@
     class="row items-center no-wrap full-width"
   >
     <q-btn
-      :class="[$q.screen.gt.sm ? 'module-dropdown-desktop' : 'module-dropdown-mobile']"
+      :class="[$q.screen.gt.sm ? 'hub-dropdown-desktop' : 'hub-dropdown-mobile']"
       color="secondary"
       class="ellipsis"
       style="max-width: 200px"
-      :label="selectedModule?.title || '. . .'"
+      :label="selectedHub?.title || '. . .'"
       square
       unelevated
       auto-close
@@ -15,23 +15,23 @@
       <q-menu auto-close>
         <q-list>
           <ListItem
-            v-for="module in allModules"
-            :key="`module-item-${module.id}`"
+            v-for="hub in allHubs"
+            :key="`hub-item-${hub.id}`"
             v-close-popup
             clickable
-            @click.stop.prevent="() => onItemClick(module)"
+            @click.stop.prevent="() => onItemClick(hub)"
           >
-            <template #label><span>{{ module?.title }}</span></template>
+            <template #label><span>{{ hub?.title }}</span></template>
             <template #avatar>
               <q-avatar
-                :icon="(module as any)?.icon || 'folder'"
+                :icon="(hub as any)?.icon || 'folder'"
                 color="primary"
                 text-color="white"
               />
             </template>
-            <template #right v-if="(module as any)?.sideIcon">
+            <template #right v-if="(hub as any)?.sideIcon">
               <ThemeIcon
-                :name="(module as any)?.sideIcon"
+                :name="(hub as any)?.sideIcon"
                 color="amber"
               />
             </template>
@@ -40,18 +40,18 @@
       </q-menu>
     </q-btn>
     <DisplayPages
-      v-if="selectedModule?.id"
-      :module-id="selectedModule?.id"
+      v-if="selectedHub?.id"
+      :hub-id="selectedHub?.id"
       style="flex-grow: 100"
     />
   </div>
 </template>
 
 <script setup lang="ts">
-import { Module, sharedTypes, utils } from 'zencraft-core';
+import { Hub, sharedTypes, utils } from 'zencraft-core';
 import { computed, onMounted } from 'vue';
 import DisplayPages from './DisplayPages.vue';
-import useModulePageNavigation from 'src/composables/useModulePageNavigation';
+import useHubPageNavigation from 'src/composables/useHubPageNavigation';
 import { useRoute } from 'vue-router';
 import { useQuasar } from 'quasar';
 import { useCustomItemStore } from 'src/pinia/customItemStore';
@@ -63,32 +63,32 @@ const customItemStore = useCustomItemStore({})();
 onMounted(async () =>
 {
   await customItemStore.searchItems({
-    itemType: 'Module'
+    itemType: 'Hub'
   });
 });
 
 const $q = useQuasar();
 
 const {
-  moduleStore,
+  hubStore,
   pageStore,
-  currentModule,
+  currentHub,
   currentPage,
   navigateToLayout,
   navigateToDefaultLayout,
   getLastVisitedLayout,
-} = useModulePageNavigation();
+} = useHubPageNavigation();
 
-// const allModules = computed(() => (moduleStore.allItems));
-const allModules = computed(() => (customItemStore.getItemsByType(
-  sharedTypes.KnownItemType.Module
+// const allHubs = computed(() => (hubStore.allItems));
+const allHubs = computed(() => (customItemStore.getItemsByType(
+  sharedTypes.KnownItemType.Hub
 )));
 
-const selectedModule = computed(() => (
-  typeof moduleStore.selectedModule === 'string' ?
-    moduleStore.getItem(
-      moduleStore.selectedModule,
-      sharedTypes.KnownItemType.Module
+const selectedHub = computed(() => (
+  typeof hubStore.selectedHub === 'string' ?
+    hubStore.getItem(
+      hubStore.selectedHub,
+      sharedTypes.KnownItemType.Hub
     ) :
     undefined
 ));
@@ -97,16 +97,16 @@ const route = useRoute();
 
 onMounted(async () =>
 {
-  await moduleStore?.searchItems({
-    itemType: sharedTypes.KnownItemType.Module
+  await hubStore?.searchItems({
+    itemType: sharedTypes.KnownItemType.Hub
   });
 
   setTimeout(() =>
   {
-    const moduleValid = utils.uuid.isUuid(currentModule.value?.id);
+    const hubValid = utils.uuid.isUuid(currentHub.value?.id);
     const pageValid = utils.uuid.isUuid(currentPage.value?.id);
 
-    if(!moduleValid && !pageValid)
+    if(!hubValid && !pageValid)
     {
       const savedLocation = getLastVisitedLayout();
 
@@ -116,9 +116,9 @@ onMounted(async () =>
       }
     }
 
-    if(moduleValid)
+    if(hubValid)
     {
-      moduleStore.setSelectedModule(currentModule.value?.id as string);
+      hubStore.setSelectedHub(currentHub.value?.id as string);
     }
 
     if(pageValid)
@@ -134,24 +134,24 @@ onMounted(async () =>
 
 function onMainClick()
 {
-  if(selectedModule.value?.id && selectedModule.value.defaultPageId)
+  if(selectedHub.value?.id && selectedHub.value.defaultPageId)
   {
     navigateToLayout({
       params: {
-        moduleId: selectedModule.value.id,
-        pageId: selectedModule.value.defaultPageId
+        hubId: selectedHub.value.id,
+        pageId: selectedHub.value.defaultPageId
       }
     });
   }
 }
 
-function onItemClick(module: Module.ModuleItem)
+function onItemClick(hub: Hub.HubItem)
 {
-  moduleStore.setSelectedModule(module.id);
+  hubStore.setSelectedHub(hub.id);
 
-  if(module.defaultPageId)
+  if(hub.defaultPageId)
   {
-    pageStore.setSelectedPage(module.defaultPageId);
+    pageStore.setSelectedPage(hub.defaultPageId);
   }
 
   onMainClick();
@@ -159,11 +159,11 @@ function onItemClick(module: Module.ModuleItem)
 </script>
 
 <style lang="css" scoped>
-.module-dropdown-desktop {
+.hub-dropdown-desktop {
   min-width: 10rem;
 }
 
-.module-dropdown-mobile {
+.hub-dropdown-mobile {
   min-width: 4rem;
 }
 </style>

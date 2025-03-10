@@ -1,7 +1,7 @@
 export enum PiniaStoreName
 {
   fieldStore = 'fieldStore',
-  moduleStore = 'moduleStore',
+  hubStore = 'hubStore',
   pageStore = 'pageStore',
   blockStore = 'blockStore',
   archetypeStore = 'archetypeStore',

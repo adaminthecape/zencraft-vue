@@ -1,6 +1,6 @@
 import { sharedTypes } from 'zencraft-core';
 import { GenericItemStore } from 'src/pinia/genericItemStore';
-import { ModuleStore, useModuleStore } from 'src/pinia/moduleStore';
+import { HubStore, useHubStore } from 'src/pinia/hubStore';
 import { PageStore, usePageStore } from 'src/pinia/pageStore';
 import { BlockStore, useBlockStore } from 'src/pinia/blockStore';
 import { ArchetypeStore, useArchetypeStore } from 'src/pinia/archetypeStore';
@@ -13,7 +13,7 @@ export type StoreTypes = (
   GenericItemStore |
   FieldStore |
   PageStore |
-  ModuleStore |
+  HubStore |
   BlockStore |
   ArchetypeStore |
   BlueprintStore |
@@ -33,8 +33,8 @@ export function deriveStoreForItemType(
 
   switch(itemType)
   {
-    case sharedTypes.KnownItemType.Module:
-      return useModuleStore(opts)();
+    case sharedTypes.KnownItemType.Hub:
+      return useHubStore(opts)();
     case sharedTypes.KnownItemType.Page:
       return usePageStore(opts)();
     case sharedTypes.KnownItemType.Field:
