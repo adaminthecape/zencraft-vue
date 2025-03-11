@@ -217,7 +217,7 @@ const props = defineProps<{
 const table = ref();
 
 const resultRows = computed(() => (
-  utils.tools.isPopulatedObject(props.results) ? Object.values(props.results) : []
+  utils.genericUtils.isPopulatedObject(props.results) ? Object.values(props.results) : []
 ));
 
 const computedResults = computed(() => props.results);
@@ -335,7 +335,7 @@ function requestData(e: {
   getCellValue?: (col: any, row: any) => any
 })
 {
-  if(utils.tools.isPopulatedObject(e?.pagination))
+  if(utils.genericUtils.isPopulatedObject(e?.pagination))
   {
       updatePagination(e.pagination);
   }

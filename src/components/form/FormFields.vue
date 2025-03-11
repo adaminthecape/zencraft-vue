@@ -39,7 +39,7 @@
           :initial-value="(
             Array.isArray((formValues as any)?.[field.key as string]) ?
               (formValues as any)?.[field.key as string] :
-              utils.tools.isPopulatedObject((formValues as any)?.[field.key as string]) ?
+              utils.genericUtils.isPopulatedObject((formValues as any)?.[field.key as string]) ?
                 [(formValues as any)?.[field.key as string]] :
                 undefined
           )"

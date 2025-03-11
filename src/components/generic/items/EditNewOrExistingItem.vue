@@ -253,7 +253,7 @@ async function generateNewOrExistingItemForm()
  */
 async function saveForm()
 {
-  if(!utils.tools.isPopulatedObject(formData.value))
+  if(!utils.genericUtils.isPopulatedObject(formData.value))
   {
     console.log('No data to save');
 

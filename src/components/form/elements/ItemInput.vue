@@ -234,7 +234,7 @@ const customTableFields = computed(() => (
 
 function onItemSelected(e: unknown)
 {
-  const id = utils.tools.isPopulatedObject(e) ? e.id || e : e;
+  const id = utils.genericUtils.isPopulatedObject(e) ? e.id || e : e;
 
   if(!utils.uuid.isUuid(id))
   {
@@ -268,7 +268,7 @@ function onItemSelected(e: unknown)
 
 function onItemRemoved(e: unknown)
 {
-  const id = utils.tools.isPopulatedObject(e) ? e.id || e : e;
+  const id = utils.genericUtils.isPopulatedObject(e) ? e.id || e : e;
 
   if(!utils.uuid.isUuid(id))
   {

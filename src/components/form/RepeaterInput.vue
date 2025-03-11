@@ -162,7 +162,7 @@ const childFields = computed(() =>
 
 onMounted(async () =>
 {
-  if(utils.tools.isPopulatedObject(props.initialValue))
+  if(utils.genericUtils.isPopulatedObject(props.initialValue))
   {
     repeaterValues.value = [...Object.values(props.initialValue as Record<string, ModelType>)];
   }

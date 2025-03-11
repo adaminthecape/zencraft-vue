@@ -138,7 +138,7 @@ export default function usePublicComponent<
     let result: Record<string, unknown> = {};
 
     // check blockConfig first for any hardcoded options
-    if(utils.tools.isPopulatedObject(blockConfig?.value))
+    if(utils.genericUtils.isPopulatedObject(blockConfig?.value))
     {
       Object.keys(blockConfig.value).forEach((key) =>
       {
@@ -147,7 +147,7 @@ export default function usePublicComponent<
     }
 
     // check props for any options passed from parent component
-    if(utils.tools.isPopulatedObject(opts.props))
+    if(utils.genericUtils.isPopulatedObject(opts.props))
     {
       Object.keys(opts.props).forEach((key) =>
       {
@@ -159,7 +159,7 @@ export default function usePublicComponent<
     }
 
     // (blockId, parentId) (itemId, itemType should not be used)
-    if(utils.tools.isPopulatedObject(opts.props))
+    if(utils.genericUtils.isPopulatedObject(opts.props))
     {
       result.blockId = opts.props?.blockId;
       result.parentId = opts.props?.parentId;
@@ -188,7 +188,7 @@ export default function usePublicComponent<
         opts.props.blockId
       );
 
-      if(utils.tools.isPopulatedObject(foundContext))
+      if(utils.genericUtils.isPopulatedObject(foundContext))
       {
         result = {
           ...result,
@@ -197,7 +197,7 @@ export default function usePublicComponent<
       }
     }
 
-    if(utils.tools.isPopulatedObject(result.itemId) && result.id)
+    if(utils.genericUtils.isPopulatedObject(result.itemId) && result.id)
     {
       result.itemId = result.itemId.id;
     }
@@ -277,7 +277,7 @@ export default function usePublicComponent<
     }
 
     if(
-      utils.tools.isPopulatedObject(mergedContext.value?.itemId) &&
+      utils.genericUtils.isPopulatedObject(mergedContext.value?.itemId) &&
       mergedContext.value?.itemId.id
     )
     {
