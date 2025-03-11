@@ -1,5 +1,6 @@
 <template>
   <RouterView id="app-view-root" />
+  <!-- Block edit modal: -->
   <EditNewOrExistingItemModal
     v-if="itemToEdit"
     :item-type="itemToEdit.typeId"
@@ -7,11 +8,25 @@
     :initial-data="itemToEdit.initialData"
     :modal-props="editItemModalProps"
     :force-is-new="itemToEdit.options?.isNew"
-    :context-reference="itemToEdit.contextReference"
     @request-close="clearEditingItem"
   >
     <template #activator><span></span></template>
+    <template #top-right>
+      <ThemeButton
+        :icon="shouldShowBlockPreviewModal ? 'fas fa-eye' : 'visibility_off'"
+        color="accent"
+        style="margin-bottom: -1rem"
+        flat
+        @click="() => toggleShouldShowBlockPreviewModal()"
+      />
+    </template>
   </EditNewOrExistingItemModal>
+  <BlockPreviewModal
+    v-if="shouldShowBlockPreviewModal"
+    ref="blockPreviewModal"
+    :item-data="itemToEdit"
+    @close="() => toggleShouldShowBlockPreviewModal(false)"
+  />
   <HelpWizardModal />
 </template>
 
@@ -24,7 +39,7 @@ import { RouterView, useRoute, useRouter } from 'vue-router';
 import EditNewOrExistingItemModal from './components/generic/items/EditNewOrExistingItemModal.vue';
 import useAdminStore from 'src/pinia/adminStore';
 import handlebars from './boot/handlebars';
-import useBlockContextStore, { ContextReference } from './pinia/blockContextStore';
+import useBlockContextStore from './pinia/blockContextStore';
 import { utils } from 'zencraft-core';
 import HelpWizardModal from './HelpWizardModal.vue';
 // import { useCustomItemStore } from './pinia/customItemStore';
@@ -33,6 +48,10 @@ import { getIsJwtExpired, getLocalFirebaseCreds, updateLocalJwt } from './models
 import { useQueues } from './composables/useQueues';
 import { IndexedDbInterface } from './models/api/IndexedDbInterface';
 import useQueueStore from './pinia/queueStore';
+import { ItemToEdit } from './types/generic';
+import BlockPreviewModal from './components/generic/items/BlockPreviewModal.vue';
+import ThemeButton from './components/generic/buttons/ThemeButton.vue';
+import useBlockPreviewModal from './composables/useBlockPreviewModal';
 
 const $q = useQuasar();
 const route = useRoute();
@@ -103,16 +122,6 @@ async function login(user: string, pass: string): Promise<boolean>
 }
 
 // Editing Items via the dedicated panel
-type ItemToEdit = {
-  id: string;
-  typeId: string;
-  initialData?: Record<string, unknown>;
-  contextReference?: ContextReference;
-  options?: {
-    isNew?: boolean;
-    persistent?: boolean;
-  };
-};
 const itemToEdit = ref<ItemToEdit | undefined>(undefined);
 function clearEditingItem()
 {
@@ -152,7 +161,6 @@ useQueues<ItemToEdit>({
         id: item.id,
         typeId: item.typeId,
         initialData: item.initialData,
-        contextReference: item.contextReference,
         options: { isNew: item.options?.isNew }
       });
     }
@@ -162,6 +170,12 @@ useQueues<ItemToEdit>({
     }
   }
 });
+
+// Block preview modal opts
+const {
+  shouldShowBlockPreviewModal,
+  toggleShouldShowBlockPreviewModal,
+} = useBlockPreviewModal();
 
 // Context store
 const ctx = useBlockContextStore()();
