@@ -104,13 +104,14 @@
 import { QInputProps } from 'quasar';
 import useFormElement from 'src/composables/useFormElement';
 import { computed, onMounted, ref } from 'vue';
-import { dbFilters, fields, sharedTypes } from 'zencraft-core';
+import { dbFilters, fields, sharedTypes, utils } from 'zencraft-core';
 import FormFields from './FormFields.vue';
 import { GenericItemStore } from 'src/pinia/genericItemStore';
 import { deriveStoreForItemType } from 'src/logic/utils/stores';
 import ThemeButton from 'src/components/generic/buttons/ThemeButton.vue';
 import ListItem from '../ui/ListItem.vue';
 import { useI18n } from 'vue-i18n';
+import { ItemHandlerType } from '@/logic/utils/items';
 
 const { t: $t } = useI18n();
 
@@ -120,7 +121,7 @@ const props = defineProps<{
   itemId?: string;
   itemType?: string;
   store?: GenericItemStore;
-  itemHandler?: any;
+  itemHandler?: ItemHandlerType;
   field: fields.Field | fields.FieldData;
   initialValue?: ModelType;
   type?: QInputProps['type'];
@@ -161,9 +162,13 @@ const childFields = computed(() =>
 
 onMounted(async () =>
 {
-  if(props.initialValue)
+  if(utils.tools.isPopulatedObject(props.initialValue))
   {
-      repeaterValues.value = [...Object.values(props.initialValue)];
+    repeaterValues.value = [...Object.values(props.initialValue as Record<string, ModelType>)];
+  }
+  else if(Array.isArray(props.initialValue))
+  {
+    repeaterValues.value = [...props.initialValue];
   }
 
   if(Array.isArray(props.field?.children) && props.field.children.length)
