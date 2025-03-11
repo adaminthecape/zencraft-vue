@@ -3,8 +3,8 @@ import useQueueStore from "src/pinia/queueStore";
 import { checkDataSource } from "src/models/api/DataSource";
 import { Notify } from "quasar";
 import { dbFilters } from "zencraft-core";
-import { IndexedDbInterface } from "@/models/api/IndexedDbInterface";
-import { ContextReference } from "@/pinia/blockContextStore";
+import { IndexedDbInterface } from "src/models/api/IndexedDbInterface";
+import { ContextReference, ItemToEdit } from "src/types/generic";
 
 export type HelpStep = {
   id: number;
@@ -65,21 +65,10 @@ export function queueAction(name: string, data: Record<string, unknown>)
   getQueueStore()?.addToQueue(name, data);
 }
 
-export function editItem(opts: {
-  itemType: string;
-  itemId: string;
-  initialData?: Record<string, unknown>;
-  contextReference?: ContextReference;
-  options?: {
-    persistent?: boolean;
-    isNew?: boolean;
-  };
-}): void
+export function editItem(opts: ItemToEdit): void
 {
   queueAction('edit_items', {
-    id: opts.itemId,
-    typeId: opts.itemType,
-    initialData: opts.initialData,
+    ...opts,
     options: opts.options ?? { persistent: true },
   });
 }
@@ -166,7 +155,7 @@ export async function editAndAmend(opts: {
     opts.delay ? () => sleep.ms(opts.delay) : sleep.medium
   );
 
-  editItem({ itemId, itemType, initialData });
+  editItem({ id: itemId, typeId: itemType, initialData });
   await sleep.short();
 
   if(Array.isArray(amendments) && amendments.length)
@@ -268,15 +257,20 @@ Click "Next Page" below to get started.', step.id);
         nextPage: 1,
         title: 'Add basic data',
         text: 'Click the button below to add some essential data to the platform.',
-        userTriggersAction: true,
+        userTriggersAction: false,
+        actionCanTriggerMultipleTimes: false,
         actionCta: 'Import essential data',
         action: async (store: HelpStore, step: HelpStep) =>
         {
+          await sleep.short();
           store.addTextToStep('For this demo, we will be storing the data \
-locally, meaning you won\'t have to send your data to me for any reason. Click \
-below to load some basic data.', step.id);
-
-          queueAction('upsert_default_data', { action: 'open' });
+locally, meaning you won\'t have to send your data to me for any reason.', step.id);
+          const queueKey = 'upsert_default_data';
+          queueAction(queueKey, { action: 'open' });
+          await sleep.medium();
+          queueAction(queueKey, { action: 'start' });
+          await sleep.short();
+          queueAction(queueKey, { action: 'destroy' });
         },
       },
     ],
