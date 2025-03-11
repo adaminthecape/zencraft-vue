@@ -37,6 +37,7 @@
     :darkPercentage="darkPercentage"
     @click="onClick"
   >
+    <q-tooltip v-if="tooltip">{{ tooltip }}</q-tooltip>
     <ThemeIcon
       v-if="icon"
       :name="icon"
@@ -60,6 +61,7 @@ import { RouteLocation } from 'vue-router';
 const slots = useSlots();
 
 const props = withDefaults(defineProps<{
+  tooltip?: string | undefined;
   size?: string | undefined;
   type?: string | undefined;
   to?: string | RouteLocation | undefined;
