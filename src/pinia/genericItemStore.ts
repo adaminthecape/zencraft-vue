@@ -11,7 +11,6 @@ import
   dbPagination,
   genericDb,
   sharedTypes,
-  item,
 } from 'zencraft-core';
 import debounce from 'lodash/debounce';
 import { ApiHandler, ApiHandlerDbInterface } from 'src/models/api/ApiInterface';
@@ -34,6 +33,7 @@ export type GenericRootState<
   lastCloudUpdate: number;
   lastCloudDispatch: number;
   items: Record<string, IItemType>;
+  loadingPromises: Record<`${string}_${string}`, Promise<Record<string, unknown> | undefined>>;
   dbHandler: DatabaseHandlerType | undefined;
   itemHandlers: Record<IItemType['id'], IItemHandlerType>;
 };
@@ -144,6 +144,7 @@ export function useGenericItemStore<
   return defineStore(storeOpts.storeName, {
     state: (): GenericRootState => ({
       items: {},
+      loadingPromises: {},
       cloudLoading: false,
       lastCloudUpdate: 0,
       lastCloudDispatch: 0,
@@ -504,7 +505,43 @@ export function useGenericItemStore<
 
         handler.setData(data);
       },
+      setLoadingPromise(
+        opts: { id: string; itemType: string; },
+        promise: Promise<IItemType | undefined>
+      ): void
+      {
+        this.loadingPromises[`${opts.itemType}_${opts.id}`] = promise;
+      },
+      clearLoadingPromise(opts: { id: string; itemType: string; }): void
+      {
+        delete this.loadingPromises[`${opts.itemType}_${opts.id}`];
+      },
+      getLoadingPromise(
+        opts: { id: string; itemType: string; }
+      ): Promise<IItemType | undefined>
+      {
+        return this.loadingPromises[`${opts.itemType}_${opts.id}`] as Promise<IItemType | undefined>;
+      },
       async loadItem(opts: {
+        id: IItemType['id'] | string;
+        itemType: string;
+        force?: boolean;
+      }): Promise<IItemType | undefined>
+      {
+        const existing = this.getLoadingPromise(opts);
+
+        if(existing instanceof Promise)
+        {
+          return existing;
+        }
+
+        const promise = this.loadItemActual(opts);
+
+        this.setLoadingPromise(opts, promise);
+
+        return promise;
+      },
+      async loadItemActual(opts: {
         id: IItemType['id'] | string;
         itemType: string;
         force?: boolean;
@@ -557,6 +594,10 @@ export function useGenericItemStore<
           });
 
           return undefined;
+        }
+        finally
+        {
+          this.clearLoadingPromise(opts);
         }
       },
       async loadMultiple(opts: {
