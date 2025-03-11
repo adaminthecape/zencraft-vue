@@ -1,89 +1,17 @@
 import { deriveStoreForItemType } from 'src/logic/utils/stores';
 import { defineStore } from 'pinia';
 import { utils } from 'zencraft-core';
-import { contextStoreDefaultOpts, Nullable } from 'src/types/generic';
+import { BlockContextStoreState, ContextReference, contextStoreDefaultOpts, ItemContextOpts, Nullable } from 'src/types/generic';
 
-type ItemContextOpts = {
-  itemId: string;
-  itemType: string;
-};
-
-type RootState = {
-  containerId: string;
-  currentPageId: string | undefined;
-  /** Handlebars processor for context values */
-  handlebars: unknown;
-  page: {
-    [pageId: string]: {
-      block?: {
-        [blockId: string]: Record<string, unknown>;
-      };
-      itemIdsByType?: Partial<Record<string, string>>;
-      itemDataByType?: Partial<Record<string, Record<string, unknown>>>;
-    };
-  };
-  context: {
-    itemIdsByType: Partial<Record<string, string>>;
-    itemDataByType: Partial<Record<string, Record<string, unknown>>>;
-  };
-};
-
-export type ContextReference = {
-  pageId: string;
-  blockId: string;
-  parentId?: string;
-};
-
-export type BlockContextStore = {
-  getContext: RootState['context'];
-  getCurrentPageContext: {
-    itemData: RootState['page'][string]['itemDataByType'];
-    itemIds: RootState['page'][string]['itemIdsByType'];
-  } | undefined;
-  getPageContext: (pageId: string) => RootState['page'][string];
-  getSelectedItemOnPage: (
-    pageId: string | undefined,
-    itemType: string
-  ) => Record<string, unknown> | undefined;
-  getBlockContext: (pageId: string, blockId: string) => Record<string, unknown>;
-  getItemData: RootState['context']['itemDataByType'];
-  getSelectedItem: (type: string) => {
-    itemId: string | undefined;
-    itemType: string;
-    itemData: Record<string, unknown> | undefined;
-  };
-  getSelectedItemData: (type: string) => Record<string, unknown> | undefined;
-  getDataByPath: (opts: {
-    itemType: string;
-    itemId?: string;
-    dotPath: string;
-  }) => Record<string, unknown> | undefined;
-  generateReference: (opts?: Partial<ContextReference>) => Partial<ContextReference>;
-  resolveReference: (reference: Partial<ContextReference>) => Record<string, unknown>;
-  setPageId: (pageId: Nullable<string>) => void;
-  setHandlebars: (hb: unknown) => void;
-  handlebarsCompile: (template: string, data: Record<string, unknown>) => string;
-  compile: (template: string) => string;
-  setPageContextData: (opts: {
-    pageId: string;
-    blockId: string;
-    data: Record<string, unknown>;
-  }) => void;
-  ensureItemInStore: (opts: ItemContextOpts) => Promise<Record<string, unknown> | undefined>;
-  selectItem: (opts: ItemContextOpts) => void;
-  selectItemOnPage: (opts: ItemContextOpts & {
-    pageId: string | undefined;
-  }) => void;
-  setItemData: (opts: ItemContextOpts & {
-    data: Record<string, unknown>;
-  }) => void;
-};
-
-const useBlockContextStore = (opts: {
+type BlockContextStoreOpts = {
   storeId: string;
   containerId: string;
-} = contextStoreDefaultOpts) => defineStore(opts.storeId, {
-  state: () =>
+};
+
+const useBlockContextStore = (
+  opts: BlockContextStoreOpts = contextStoreDefaultOpts
+) => defineStore(opts.storeId, {
+  state: (): BlockContextStoreState =>
     ({
       containerId: opts.containerId,
       currentPageId: undefined,
@@ -93,7 +21,7 @@ const useBlockContextStore = (opts: {
         itemIdsByType: {},
         itemDataByType: {},
       }
-    } as RootState),
+    }),
   getters: {
     getContext: (state) => (state.context),
     getCurrentPageContext: (state) => (
