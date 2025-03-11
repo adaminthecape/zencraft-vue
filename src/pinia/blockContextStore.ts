@@ -50,7 +50,7 @@ const useBlockContextStore = (
       itemType: string;
       itemId?: string;
       dotPath: string;
-    }) => (utils.genericUtils.dotPick(
+    }) => (utils.tools.dotPick(
       state.context.itemDataByType[opts.itemType] || {},
       opts.dotPath
     )),

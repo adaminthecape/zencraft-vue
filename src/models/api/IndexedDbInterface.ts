@@ -50,7 +50,7 @@ interface ItemsArchived
 
 function fromDbData(dbData: ItemsPublished): AnyItem | undefined
 {
-  if(!utils.genericUtils.isPopulatedObject(dbData))
+  if(!utils.tools.isPopulatedObject(dbData))
   {
     return undefined;
   }
@@ -61,15 +61,15 @@ function fromDbData(dbData: ItemsPublished): AnyItem | undefined
     {
       const json = JSON.parse(dbData.jsonData);
 
-      return utils.genericUtils.removeUndefined({
+      return utils.tools.removeUndefined({
         ...dbData,
         ...json,
         jsonData: undefined
       }) as AnyItem;
     }
-    else if(utils.genericUtils.isPopulatedObject(dbData.jsonData))
+    else if(utils.tools.isPopulatedObject(dbData.jsonData))
     {
-      return utils.genericUtils.removeUndefined({
+      return utils.tools.removeUndefined({
         ...dbData,
         ...dbData.jsonData,
         jsonData: undefined
@@ -88,7 +88,7 @@ function fromDbData(dbData: ItemsPublished): AnyItem | undefined
 
 function toDbData(itemData: AnyItem): ItemsPublished | undefined
 {
-  if(!utils.genericUtils.isPopulatedObject(itemData))
+  if(!utils.tools.isPopulatedObject(itemData))
   {
     return undefined;
   }
@@ -99,7 +99,7 @@ function toDbData(itemData: AnyItem): ItemsPublished | undefined
       id: getIdOrItemId(itemData) as string,
       itemId: getIdOrItemId(itemData) as string,
       typeId: itemData.typeId as string,
-      jsonData: JSON.stringify(utils.genericUtils.removeUndefined({
+      jsonData: JSON.stringify(utils.tools.removeUndefined({
         ...itemData,
         itemId: undefined,
         typeId: undefined,
@@ -185,7 +185,7 @@ type DexieDb = ({
 
 function getIdOrItemId(item: unknown): string | undefined
 {
-  if(!utils.genericUtils.isPopulatedObject(item))
+  if(!utils.tools.isPopulatedObject(item))
   {
     return undefined;
   }
@@ -217,7 +217,7 @@ class LocalStorageDB implements Table<AnyItem, 'revisionId'>
     //   return this.collection as AnyItem[];
     // }
 
-    // if(utils.genericUtils.isPopulatedObject(this.collection))
+    // if(utils.tools.isPopulatedObject(this.collection))
     // {
     //   return Object.values(this.collection) as AnyItem[];
     // }
@@ -378,8 +378,8 @@ class IndexedDbInterface extends genericDb.GenericDatabase
     newData: unknown
   ): Record<string, unknown>
   {
-    const existingIsObj = utils.genericUtils.isPopulatedObject(existingData);
-    const newIsObj = utils.genericUtils.isPopulatedObject(existingData);
+    const existingIsObj = utils.tools.isPopulatedObject(existingData);
+    const newIsObj = utils.tools.isPopulatedObject(existingData);
 
     if(!existingIsObj)
     {
@@ -439,7 +439,7 @@ class IndexedDbInterface extends genericDb.GenericDatabase
     if(!(
       opts.itemId &&
       opts.itemType &&
-      utils.genericUtils.isPopulatedObject(opts.data)
+      utils.tools.isPopulatedObject(opts.data)
     ))
     {
       return;

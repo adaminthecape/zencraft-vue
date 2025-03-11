@@ -141,7 +141,7 @@ useQueues<ItemToEdit>({
   queueAction: (item) =>
   {
     if(
-      utils.genericUtils.isPopulatedObject(item) &&
+      utils.tools.isPopulatedObject(item) &&
       ('id' in item && 'typeId' in item)
     )
     {

@@ -203,7 +203,7 @@ export function useGenericItemStore<
 
         for await(const result of someData.results)
         {
-          if(!utils.genericUtils.isPopulatedObject(result))
+          if(!utils.tools.isPopulatedObject(result))
           {
             return;
           }
@@ -816,7 +816,7 @@ export function useGenericItemStore<
         }
 
         if(!(
-          utils.genericUtils.isPopulatedObject(queryResult) &&
+          utils.tools.isPopulatedObject(queryResult) &&
           Array.isArray(queryResult.results)
         ))
         {
@@ -840,7 +840,7 @@ export function useGenericItemStore<
           itemData: unknown
         ) =>
         {
-          if(!itemData || !utils.genericUtils.isPopulatedObject(itemData))
+          if(!itemData || !utils.tools.isPopulatedObject(itemData))
           {
             return agg;
           }
@@ -872,7 +872,7 @@ export function useGenericItemStore<
        */
       setResultsFromFirebase(cloudTasks: Record<string, unknown>)
       {
-        if(!(utils.genericUtils.isPopulatedObject(cloudTasks)))
+        if(!(utils.tools.isPopulatedObject(cloudTasks)))
         {
           console.warn(`Empty results from firebase (${storeOpts.storeName})`);
 
@@ -934,7 +934,7 @@ export function useGenericItemStore<
         data: unknown
       )
       {
-        if(utils.genericUtils.isPopulatedObject(this.items[id]) && (prop in this.items[id]))
+        if(utils.tools.isPopulatedObject(this.items[id]) && (prop in this.items[id]))
         {
           // @ts-expect-error Validated above
           this.items[id][prop] = data;

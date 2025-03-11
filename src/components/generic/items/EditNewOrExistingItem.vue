@@ -94,7 +94,7 @@ const { updateQueueKey } = useQueues<{
   {
     if(opts?.actions.amend)
     {
-      if(utils.genericUtils.isPopulatedObject(opts.data))
+      if(utils.tools.isPopulatedObject(opts.data))
       {
         formData.value = { ...opts.data };
         formDataHandler.value?.setData(formData.value);
@@ -253,7 +253,7 @@ async function generateNewOrExistingItemForm()
  */
 async function saveForm()
 {
-  if(!utils.genericUtils.isPopulatedObject(formData.value))
+  if(!utils.tools.isPopulatedObject(formData.value))
   {
     console.log('No data to save');
 

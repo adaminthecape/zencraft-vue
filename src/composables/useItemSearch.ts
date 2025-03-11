@@ -108,7 +108,7 @@ export default function useItemSearch(opts: {
     paginationHandler.value.setTotal(searchResultsObj.totalItems);
 
     resultsArray.value = searchResults as Record<string, unknown>[];
-    results.value = utils.genericUtils.reduceIntoAssociativeArray(resultsArray.value, 'id');
+    results.value = utils.tools.reduceIntoAssociativeArray(resultsArray.value, 'id');
 
     isSearching.value = false;
   }, 150);

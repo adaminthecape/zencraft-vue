@@ -197,7 +197,7 @@ class StoreSearchAdapter extends genericDb.GenericDatabase
       return items;
     }
     else if(
-      utils.genericUtils.isPopulatedObject(this.store.allItems) &&
+      utils.tools.isPopulatedObject(this.store.allItems) &&
       !Array.isArray(this.store.allItems) &&
       Array.isArray(Object.values(this.store.allItems))
     )
@@ -419,7 +419,7 @@ hb.registerHelper('prop', (
   prop: string,
 ) =>
 {
-  if((typeof prop === 'string') && !utils.genericUtils.isPopulatedObject(item))
+  if((typeof prop === 'string') && !utils.tools.isPopulatedObject(item))
   {
     return undefined;
   }
@@ -457,7 +457,7 @@ hb.registerHelper('first', function (...args)
 hb.registerHelper('json', function (data: unknown, indent = 4)
 {
   if(!(
-    utils.genericUtils.isPopulatedObject(data) ||
+    utils.tools.isPopulatedObject(data) ||
     Array.isArray(data)
   ))
   {

@@ -230,7 +230,7 @@ export class ApiHandler
   {
     const { method, url, opts, params, result } = options;
 
-    if(utils.genericUtils.isPopulatedObject(result))
+    if(utils.tools.isPopulatedObject(result))
     {
       if(result.status != 200)
       {
@@ -242,8 +242,8 @@ export class ApiHandler
       let error = result.error;
 
       if(
-        utils.genericUtils.isPopulatedObject(result.data) &&
-        utils.genericUtils.isPopulatedObject(result.data.data)
+        utils.tools.isPopulatedObject(result.data) &&
+        utils.tools.isPopulatedObject(result.data.data)
       )
       {
         data = result.data.data;
@@ -279,7 +279,7 @@ export class ApiHandler
       const result = await get(url, opts, params);
 
       if(!(
-        utils.genericUtils.isPopulatedObject(result) &&
+        utils.tools.isPopulatedObject(result) &&
         'status' in result
       ))
       {
@@ -295,7 +295,7 @@ export class ApiHandler
 
       if(
         'data' in result &&
-        utils.genericUtils.isPopulatedObject(result.data) &&
+        utils.tools.isPopulatedObject(result.data) &&
         'success' in result.data &&
         'data' in result.data
       )
@@ -336,7 +336,7 @@ export class ApiHandler
       const result = await post(url, params, opts);
 
       if(!(
-        utils.genericUtils.isPopulatedObject(result) &&
+        utils.tools.isPopulatedObject(result) &&
         'status' in result
       ))
       {
@@ -352,7 +352,7 @@ export class ApiHandler
 
       if(
         'data' in result &&
-        utils.genericUtils.isPopulatedObject(result.data) &&
+        utils.tools.isPopulatedObject(result.data) &&
         'success' in result.data &&
         'data' in result.data
       )
@@ -567,7 +567,7 @@ export class ApiHandlerDbInterface extends genericDb.GenericDatabase
     const { data } = res;
 
     if(
-      utils.genericUtils.isPopulatedObject(data) &&
+      utils.tools.isPopulatedObject(data) &&
       Array.isArray(data.results)
     )
     {

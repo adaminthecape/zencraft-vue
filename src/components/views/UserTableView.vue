@@ -75,7 +75,7 @@ onMounted(getLogins);
 
 const columns = computed<ReturnType<typeof getTableColumns>>(() => (
   getTableColumns({
-    results: utils.genericUtils.reduceIntoAssociativeArray(
+    results: utils.tools.reduceIntoAssociativeArray(
       loginsOnPage.value,
       'id'
     ),
