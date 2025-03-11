@@ -3,7 +3,7 @@
 		<!-- Card for existing rules -->
 		<div class="rule-card q-pa-sm">
 			<div v-if="!filters?.length" class="flex flex-col justify-center items-center q-my-md">
-				<div class="text-bold q-ma-sm">$t('forms.itemFilters.rules.noRules')</div>
+				<div class="text-bold q-ma-sm">{{ $t('forms.itemFilters.rules.noRules') }}</div>
 			</div>
 			<div v-else>
 				<div class="text-bold q-mb-sm">{{ title || $t('forms.itemFilters.rules.title') }}</div>

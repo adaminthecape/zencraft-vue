@@ -6,12 +6,10 @@ import { deriveStoreForItemType } from "../utils/stores";
 import { getCurrentSecond } from "src/models/api/ApiInterface";
 import {
   closeItem,
-  defaultHelpPages,
   editAndAmend,
   editItem,
   HelpPage,
   HelpStep,
-  queueAction,
   saveItem,
   sleep,
 } from "./HelpPages";

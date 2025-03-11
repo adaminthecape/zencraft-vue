@@ -33,7 +33,7 @@ export type GenericRootState<
   cloudLoading: boolean;
   lastCloudUpdate: number;
   lastCloudDispatch: number;
-  items: Record<IItemType['id'], IItemType>;
+  items: Record<string, IItemType>;
   dbHandler: DatabaseHandlerType | undefined;
   itemHandlers: Record<IItemType['id'], IItemHandlerType>;
 };
@@ -142,16 +142,15 @@ export function useGenericItemStore<
 })
 {
   return defineStore(storeOpts.storeName, {
-    state: () => ({
+    state: (): GenericRootState => ({
       items: {},
       cloudLoading: false,
       lastCloudUpdate: 0,
       lastCloudDispatch: 0,
       dbHandler: undefined,
-      dbSource: DataSource.itemSql,
       itemHandlers: {},
       ...storeOpts.rootState
-    } as GenericRootState),
+    }),
     getters: {
       allItems: (state): IItemType[] => Object.values(state.items) as IItemType[],
       allItemIds: (state): IItemType['id'][] => Object.keys(state.items),

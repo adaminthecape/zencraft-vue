@@ -1,7 +1,5 @@
 <template>
-  <div
-    :class="customClasses"
-  >
+  <div :class="customClasses">
     <div>Editing {{ existingItemId ? '' : ' new ' }}{{ itemType }}</div>
     <div class="text-caption">{{ existingItemId || itemId }}</div>
     <q-separator class="q-my-sm" />
@@ -45,7 +43,7 @@
 </template>
 
 <script setup lang="ts">
-import { CssClassProp, UUID } from 'src/types/generic';
+import { ContextReference, CssClassProp, UUID } from 'src/types/generic';
 import { Block, Blueprint, sharedTypes, utils } from 'zencraft-core';
 import { computed, onMounted, ref, watch } from 'vue';
 import FormFields from 'src/components/form/FormFields.vue';
@@ -56,9 +54,6 @@ import { deriveStoreForItemType, StoreTypes } from 'src/logic/utils/stores';
 import useFieldsForItemType from 'src/composables/useFieldsForItemType';
 import ThemeButton from 'src/components/generic/buttons/ThemeButton.vue';
 import { useQueues } from 'src/composables/useQueues';
-import { ContextReference } from 'src/pinia/blockContextStore';
-
-// TODO: Implement context reference by opening a modal which renders the target block with the context in the store
 
 export type EditNewOrExistingItemProps = {
   itemType: string;

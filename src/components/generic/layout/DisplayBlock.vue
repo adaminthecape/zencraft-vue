@@ -4,13 +4,13 @@
     class="borad-6"
     :class="[
       ...containerClasses,
-      { 'q-pa-xs': isEditMode, 'q-ma-xs': isEditMode },
+      { 'q-pa-xs': isBlockEditMode, 'q-ma-xs': isBlockEditMode },
       { 'highlight-block-on-hover': isHoveringAddBlock },
     ]"
     :style="block.customStyles"
   >
     <div
-      v-if="isEditMode"
+      v-if="isBlockEditMode"
       class="block-edit-controls row items-center q-ma-xs"
     >
       <!-- Block Icon -->
@@ -26,13 +26,14 @@
       <div class="q-space" />
       <!-- Echo context -->
       <ThemeButton
+        :tooltip="$t('admin.blocks.controls.printDebug')"
         color="secondary"
         icon="description"
         class="q-mr-xs"
         size="sm"
         flat
         @click="printContext"
-      ><q-tooltip>{{ $t('admin.blocks.controls.printDebug') }}</q-tooltip></ThemeButton>
+      />
       <!-- Remove Block -->
       <RemoveBlockButton
         class="q-mr-xs"
@@ -44,14 +45,16 @@
       />
       <!-- Edit Block -->
       <ThemeButton
+        :tooltip="$t('admin.blocks.controls.edit')"
         color="accent"
         icon="edit"
         size="sm"
+        dense
         flat
         @click="editBlock"
-      ><q-tooltip>{{ $t('admin.blocks.controls.edit') }}</q-tooltip></ThemeButton>
+      />
     </div>
-    <q-separator v-if="isEditMode" class="q-ma-xs" />
+    <q-separator v-if="isBlockEditMode" class="q-ma-xs" />
     <component
       v-if="componentToUse"
       :is="componentToUse"
@@ -62,7 +65,7 @@
     />
     <div
       v-if="(
-        isEditMode &&
+        isBlockEditMode &&
         blockConfigForType?.hasChildren &&
         !blockConfigForType?.hideAddBlockButton
       )"
@@ -103,6 +106,8 @@ const { t: $t } = useI18n();
 const props = defineProps<{
   parentId: string;
   blockId: string;
+  forceEditMode?: boolean;
+  forceNoEditMode?: boolean;
   itemId?: string;
   itemType?: string;
   /** A block may accept e.g. `$parent.title` to retrieve that data value */
@@ -125,10 +130,24 @@ const {
   mergedContext,
 } = usePublicComponent({ props, emit });
 
+const isBlockEditMode = computed(() =>
+{
+  if(props.forceEditMode)
+  {
+    return true;
+  }
+  else if(props.forceNoEditMode)
+  {
+    return false;
+  }
+
+  return isEditMode.value;
+});
+
 const computedParentId = computed(() => props.blockId);
 
 const { editItem } = (inject('helpers') as AppHelpers['helpers']) || {};
-const $ctx = inject('context') as AppHelpers['$ctxStore'];
+const $ctx = inject('$ctxStore') as AppHelpers['$ctxStore'];
 
 const { onBlockDefSelected } = useAddBlock({
   parentId: computedParentId,
@@ -136,7 +155,7 @@ const { onBlockDefSelected } = useAddBlock({
 });
 
 const containerClasses = computed(() => ([
-  ...(isEditMode.value ? [
+  ...(isBlockEditMode.value ? [
     'block-container',
     'block-edit-container',
     'q-ma-xs',
@@ -195,7 +214,10 @@ function editBlock()
   editItem({
     id: block.value.id || '',
     typeId: sharedTypes.KnownItemType.Block,
-    contextReference: $ctx.store.generateReference({ blockId: block.value.id }),
+    contextReference: $ctx.store.generateReference({
+      blockId: block.value.id,
+      parentId: props.parentId,
+    }),
   });
 }
 </script>

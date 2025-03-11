@@ -130,7 +130,6 @@ const emit = defineEmits<{
 
 function onResultClicked(e: ItemResultClick)
 {
-  console.log('result clicked', e);
   activeResultId.value = e?.itemId;
   emit('resultClicked', e);
 }

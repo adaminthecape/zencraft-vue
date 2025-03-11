@@ -4,8 +4,8 @@ import useAdminStore from 'src/pinia/adminStore';
 import { Block, item, sharedTypes, utils } from 'zencraft-core';
 import { computed, ComputedRef, Ref, ref } from 'vue';
 import { deriveStoreForItemType } from 'src/logic/utils/stores';
-import { AppHelpers } from 'src/types/generic';
-import useBlockContextStore, { BlockContextStore } from 'src/pinia/blockContextStore';
+import { AppHelpers, BlockContextStore } from 'src/types/generic';
+import useBlockContextStore from 'src/pinia/blockContextStore';
 
 export default function useAddBlock(options: {
   parentId: ComputedRef<string | undefined>;
@@ -22,7 +22,7 @@ export default function useAddBlock(options: {
 {
   const adminStore = useAdminStore();
   const blockStore = deriveStoreForItemType(sharedTypes.KnownItemType.Block) as BlockStore;
-  const pageStore = deriveStoreForItemType(sharedTypes.KnownItemType.Block) as PageStore;
+  const pageStore = deriveStoreForItemType(sharedTypes.KnownItemType.Page) as PageStore;
   const ctxStore = useBlockContextStore()() as BlockContextStore;
 
   const isEditMode = computed(() => adminStore.isEditMode);
@@ -66,6 +66,7 @@ export default function useAddBlock(options: {
     // attach the Block to the current Block (or Page)
     if(!parentBlock)
     {
+      console.log('options.parentId.value:', options.parentId.value);
       parentPage = pageStore.getItem(
         options.parentId.value,
         sharedTypes.KnownItemType.Page
@@ -113,7 +114,7 @@ export default function useAddBlock(options: {
     options.editItem({
       id: newBlockId,
       typeId: sharedTypes.KnownItemType.Block,
-      contextReference: ctxStore.generateContextReference({
+      contextReference: ctxStore.generateReference({
         parentId,
         blockId: newBlockId,
         pageId: parentPage?.id,

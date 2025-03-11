@@ -14,6 +14,7 @@
   >
     <template #title>
       <div class="row items-center justify-end">
+        <slot name="top-right" />
         <ThemeButton
           :icon="isTransparent ? 'visibility' : 'visibility_off'"
           color="accent"

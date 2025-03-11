@@ -212,17 +212,17 @@ class LocalStorageDB implements Table<AnyItem, 'revisionId'>
   {
     // not using 'collection' for now as localstorage option is transient
     return this.getAllItems();
-    if(Array.isArray(this.collection))
-    {
-      return this.collection as AnyItem[];
-    }
+    // if(Array.isArray(this.collection))
+    // {
+    //   return this.collection as AnyItem[];
+    // }
 
-    if(utils.genericUtils.isPopulatedObject(this.collection))
-    {
-      return Object.values(this.collection) as AnyItem[];
-    }
+    // if(utils.genericUtils.isPopulatedObject(this.collection))
+    // {
+    //   return Object.values(this.collection) as AnyItem[];
+    // }
 
-    return [] as AnyItem[];
+    // return [] as AnyItem[];
   }
 
   public getTable()
@@ -255,7 +255,11 @@ class LocalStorageDB implements Table<AnyItem, 'revisionId'>
     {
       const allItems = JSON.parse(localStorage.getItem(this.getTable()) || '[]');
 
-      return allItems.find((x) => getIdOrItemId(x) === getIdOrItemId(opts));
+      const found = allItems.find((x) => getIdOrItemId(x) === getIdOrItemId(opts));
+
+      // console.log('found:', found);
+
+      return found;
     }
     catch(e)
     {
@@ -617,6 +621,8 @@ class IndexedDbInterface extends genericDb.GenericDatabase
         value: itemIds,
       });
     }
+
+    // console.log('filters:', filterHandler.filters);
 
     const filtered = await this.dex.itemsPublished.filter((
       obj: AnyItem
