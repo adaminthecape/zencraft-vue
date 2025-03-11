@@ -8,7 +8,7 @@ Note that this is not a production-ready system; it is a collection of interface
 ## 💡 Demo
 There is a live demo available, which stores all data locally, and does not connect to an API. You are free to use it and change the data as you please, though your data will be limited to that particular device and browser. I am working to provide a secure cloud-based solution.
 
-See the project in action at: https://www.adam-in-the-cape.web.app/
+See the project in action at: https://adam-in-the-cape.web.app/
 
 ## 📊 Key Features
 The core library (`zencraft-core`) contains:
