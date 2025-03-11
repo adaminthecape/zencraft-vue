@@ -32,7 +32,7 @@
         </template>
       </component>
       <div
-        v-else-if="field && field.fieldType === fields.FieldType.repeater && field.children?.length"
+        v-else-if="field && field.fieldType === fields.FieldType.repeater"
       >
         <RepeaterInput
           v-model="(formValues as any)[field.key as string]"
