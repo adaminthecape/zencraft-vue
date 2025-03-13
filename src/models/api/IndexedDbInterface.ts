@@ -571,15 +571,6 @@ class IndexedDbInterface extends genericDb.GenericDatabase
     }
   }
 
-  /** @deprecated */
-  public async select1r<T = Record<string, unknown>>(opts: {
-    itemId: string;
-    itemType: string;
-  }): Promise<T | undefined>
-  {
-    return this.select(opts);
-  }
-
   public async select<T = Record<string, unknown>>(opts: {
     itemId: string;
     itemType: string;
