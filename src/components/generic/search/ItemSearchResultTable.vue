@@ -14,16 +14,37 @@
     <template #loading>
       <q-spinner :size="40" />
     </template>
-    <template #top><slot name="top" v-bind="{ columns, resultRows }" /></template>
-    <template #top-left><slot name="top-left" v-bind="{ columns, resultRows }" /></template>
-    <template #top-right><slot name="top-right" v-bind="{ columns, resultRows }" /></template>
+    <template #top>
+      <slot
+        name="top"
+        v-bind="{ columns, resultRows }"
+      />
+    </template>
+    <template #top-left>
+      <slot
+        name="top-left"
+        v-bind="{ columns, resultRows }"
+      />
+    </template>
+    <template #top-right>
+      <slot
+        name="top-right"
+        v-bind="{ columns, resultRows }"
+      />
+    </template>
     <template
       v-for="headerCellName in columnNames"
       :key="`template-header-${headerCellName}`"
       #[`header-cell-${headerCellName}`]="ctx"
     >
-      <slot :name="`custom-header-cell-${headerCellName}`" v-bind="ctx">
-        <q-th class="text-left text-bold" auto-width>
+      <slot
+        :name="`custom-header-cell-${headerCellName}`"
+        v-bind="ctx"
+      >
+        <q-th
+          class="text-left text-bold"
+          auto-width
+        >
           <span>{{ (
             fieldsByName[headerCellName]?.label ||
             ctx.col.label ||
@@ -65,7 +86,10 @@
       :key="`template-body-${bodyCellName}`"
       #[`body-cell-${bodyCellName}`]="ctx"
     >
-      <slot :name="`custom-body-cell-${bodyCellName}`" v-bind="ctx">
+      <slot
+        :name="`custom-body-cell-${bodyCellName}`"
+        v-bind="ctx"
+      >
         <q-td
           class="item-search-table-result-cell"
           auto-width
@@ -83,12 +107,12 @@
           <template
             v-else-if="fieldsByName[bodyCellName].fieldType === fields.FieldType.timestamp"
           >
-          <span
-            v-if="(typeof ctx.value === 'number' || parseInt(`${ctx.value}`, 10) === ctx.value)"
-          >{{ convertTimestampToDateTime(parseInt(`${ctx.value}`, 10))?.date }}</span>
-          <span
-            v-else-if="ctx.value && !Number.isNaN(new Date(ctx.value).valueOf())"
-          >{{ new Date(ctx.value).toISOString().split('T')[0] }}</span>
+            <span
+              v-if="(typeof ctx.value === 'number' || parseInt(`${ctx.value}`, 10) === ctx.value)"
+            >{{ convertTimestampToDateTime(parseInt(`${ctx.value}`, 10))?.date }}</span>
+            <span
+              v-else-if="ctx.value && !Number.isNaN(new Date(ctx.value).valueOf())"
+            >{{ new Date(ctx.value).toISOString().split('T')[0] }}</span>
           </template>
           <template
             v-else-if="fieldsByName[bodyCellName].fieldType === fields.FieldType.itemArray"
@@ -117,17 +141,26 @@
             <span>{{ ctx.value.split('-')[0] }}</span>
             <q-tooltip>{{ ctx.value }}</q-tooltip>
           </template>
-          <template v-else>{{ ctx.value }}</template>
+          <template v-else>
+            {{ ctx.value }}
+          </template>
         </q-td>
       </slot>
     </template>
-    <template #header-cell-actions><q-th>{{ $t('tables.actions.title') }}</q-th></template>
+    <template #header-cell-actions>
+      <q-th>{{ $t('tables.actions.title') }}</q-th>
+    </template>
     <template #body-cell-actions="{ row }">
       <q-td auto-width>
         <div class="row items-center justify-center no-wrap">
-          <slot name="actions" v-bind="{ row }">
-          </slot>
-          <slot name="defaultActions" v-bind="{ row }">
+          <slot
+            name="actions"
+            v-bind="{ row }"
+          />
+          <slot
+            name="defaultActions"
+            v-bind="{ row }"
+          >
             <EditNewOrExistingItemModal
               :existing-item-id="row.id"
               :item-type="row.typeId"
@@ -179,28 +212,28 @@ const filters = ref<dbFilters.DbFilters>([]);
 
 function updateFilterByKey(key: unknown, newVal: unknown)
 {
-  if(typeof key === 'string')
-  {
-    filterValues.value[key] = newVal;
+	if(typeof key === 'string')
+	{
+		filterValues.value[key] = newVal;
 
-    const newFilters: dbFilters.DbFilters = [];
+		const newFilters: dbFilters.DbFilters = [];
 
-    for(const [k, v] of Object.entries(filterValues.value))
-    {
-      if(v)
-      {
-        newFilters.push({
-          key: k,
-          operator: filterOperators.value[k] || '~',
-          value: v
-        });
-      }
-    }
+		for(const [k, v] of Object.entries(filterValues.value))
+		{
+			if(v)
+			{
+				newFilters.push({
+					key: k,
+					operator: filterOperators.value[k] || '~',
+					value: v
+				});
+			}
+		}
 
-    filters.value = newFilters;
+		filters.value = newFilters;
 
-    emit('update:filters', newFilters);
-  }
+		emit('update:filters', newFilters);
+	}
 }
 
 const modelTitle = defineModel<string>();
@@ -217,114 +250,116 @@ const props = defineProps<{
 const table = ref();
 
 const resultRows = computed(() => (
-  utils.tools.isPopulatedObject(props.results) ? Object.values(props.results) : []
+	utils.tools.isPopulatedObject(props.results) ? Object.values(props.results) : []
 ));
 
 const computedResults = computed(() => props.results);
 
 const columnNames = computed<string[]>(() =>
 {
-  if(!Array.isArray(columns.value))
-  {
-    return [];
-  }
+	if(!Array.isArray(columns.value))
+	{
+		return [];
+	}
 
-  return columns.value.reduce((agg, col) =>
-  {
-    // Quasar refers to the `name` when constructing the template name
-    if(typeof col.name === 'string' && col.name)
-    {
-      // show actions column separately
-      if(col.name === 'actions')
-      {
-        return agg;
-      }
+	return columns.value.reduce((agg, col) =>
+	{
+		// Quasar refers to the `name` when constructing the template name
+		if(typeof col.name === 'string' && col.name)
+		{
+			// show actions column separately
+			if(col.name === 'actions')
+			{
+				return agg;
+			}
 
-      agg.push(col.name);
-    }
+			agg.push(col.name);
+		}
 
-    return agg;
-  }, [] as string[]);
+		return agg;
+	}, [] as string[]);
 });
 
 const fieldsByName = computed<Record<string, fields.FieldData>>(() => (
-  !Array.isArray(activeFields.value) ?
-    {} :
-    columnNames.value.reduce((agg, name) =>
-    {
-      const field: (
+	!Array.isArray(activeFields.value) ?
+		{} :
+		columnNames.value.reduce((agg, name) =>
+		{
+			const field: (
         fields.FieldData | undefined
       ) = activeFields.value?.find((f) => f.key === name);
 
-      (agg as any)[name] = field || {};
+			(agg as any)[name] = field || {};
 
-      return agg;
-    }, {} as Record<string, ReturnType<typeof getTableColumns>>[number])
+			return agg;
+		}, {} as Record<string, ReturnType<typeof getTableColumns>>[number])
 ));
 
 const itemTypeComputed = computed(() => (
-  props.itemType ? props.itemType : (
-    resultRows.value?.length ?
-      Object.keys(resultRows.value[0] || {})[0]?.typeId :
-      undefined
-  )
+	props.itemType ? props.itemType : (
+		resultRows.value?.length ?
+		(
+			resultRows.value[0] as Record<string, unknown>
+		)?.typeId as (string | undefined) :
+			undefined
+	)
 ));
 
 const { fieldsForItemType } = itemTypeComputed.value ?
-  useFieldsForItemType({ itemTypeRef: itemTypeComputed }) :
-  {};
+	useFieldsForItemType({ itemTypeRef: itemTypeComputed }) :
+	{};
 
 const activeFields = computed(() =>
 {
-  return (Array.isArray(props.customFields)) ?
-    props.customFields :
-    fieldsForItemType?.value
+	return (Array.isArray(props.customFields)) ?
+		props.customFields :
+		fieldsForItemType?.value;
 });
 
 const columns = computed<ReturnType<typeof getTableColumns>>(() =>
 {
-  let cols = getTableColumns({
-    results: computedResults.value,
-    exclude: ['createdAt', 'createdBy', 'updatedAt'],
-    knownFields: props.customFields
-  });
+	let cols = getTableColumns({
+		results: computedResults.value,
+		exclude: ['createdAt', 'createdBy', 'updatedAt'],
+		knownFields: props.customFields
+	});
 
-  if(
-    !props.showDefaultItemFields &&
+	if(
+		!props.showDefaultItemFields &&
     Array.isArray(props.customFields) &&
     props.customFields.length
-  )
-  {
-    // filter fields from cols if not in custom fields
-    cols = cols.reduce((agg: any[], col) =>
-    {
-      if(col.name === 'actions')
-      {
-        agg.push(col);
+	)
+	{
+		// filter fields from cols if not in custom fields
+		cols = cols.reduce((agg: any[], col) =>
+		{
+			if(col.name === 'actions')
+			{
+				agg.push(col);
 
-        return agg;
-      }
+				return agg;
+			}
 
-      if(props.customFields?.some((field) =>
-      {
-        const matched = field.key === col.name;
+			if(props.customFields?.some((field) =>
+			{
+				const matched = field.key === col.name;
 
-        if(matched)
-        {
-          return true;
-        }
+				if(matched)
+				{
+					return true;
+				}
 
-        return false;
-      }))
-      {
-        agg.push(col);
-      }
+				return false;
+			}))
+			{
+				agg.push(col);
+			}
 
-      return agg;
-    }, []);
-  }
+			return agg;
+		}, []);
+	}
 
-  return cols;
+	return cols;
 });
 
 // Pagination:
@@ -335,10 +370,10 @@ function requestData(e: {
   getCellValue?: (col: any, row: any) => any
 })
 {
-  if(utils.tools.isPopulatedObject(e?.pagination))
-  {
-      updatePagination(e.pagination);
-  }
+	if(utils.tools.isPopulatedObject(e?.pagination))
+	{
+		updatePagination(e.pagination);
+	}
 }
 
 export type ItemResultClick = {
@@ -357,30 +392,30 @@ const emit = defineEmits<{
 }>();
 
 const qPagination = ref<QTableProps['pagination']>({
-  page: 1,
-  rowsPerPage: 10
+	page: 1,
+	rowsPerPage: 10
 });
 
 function updateFilters(newVal: dbFilters.DbFilters)
 {
-  emit('update:filters', newVal);
+	emit('update:filters', newVal);
 }
 
 function updatePagination(newVal: QTableProps['pagination'])
 {
-  qPagination.value = newVal;
+	qPagination.value = newVal;
 
-  emit('update:pagination:quasar', newVal);
+	emit('update:pagination:quasar', newVal);
 }
 
 watch(() => props.quasarPagination, (n, o) =>
 {
-  qPagination.value = n;
+	qPagination.value = n;
 });
 
 function onResultClicked(e: ItemResultClick)
 {
-  emit('resultClicked', e);
+	emit('resultClicked', e);
 }
 </script>
 

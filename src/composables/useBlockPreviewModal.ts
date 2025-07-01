@@ -6,34 +6,37 @@ export default function useBlockPreviewModal(): ({
   shouldShowBlockPreviewModal: Ref<boolean>;
 })
 {
-  const blockPreviewModalStorageKey = 'showBlockPreviewModal';
-  function getShouldShowBlockPreviewModal(): boolean
-  {
-    const val = localStorage.getItem(blockPreviewModalStorageKey);
+	const blockPreviewModalStorageKey = 'showBlockPreviewModal';
 
-    return (val && [true, 'true'].includes(val)) ? true : false;
-  }
-  function toggleShouldShowBlockPreviewModal(val?: boolean)
-  {
-    if(typeof val === 'boolean')
-    {
-      localStorage.setItem(blockPreviewModalStorageKey, `${val}`);
-    }
-    else
-    {
-      localStorage.setItem(
-        blockPreviewModalStorageKey,
-        `${!getShouldShowBlockPreviewModal()}`
-      );
-    }
+	function getShouldShowBlockPreviewModal(): boolean
+	{
+		const val = localStorage.getItem(blockPreviewModalStorageKey);
 
-    shouldShowBlockPreviewModal.value = getShouldShowBlockPreviewModal();
-  }
-  const shouldShowBlockPreviewModal = ref(getShouldShowBlockPreviewModal());
+		return (val && [true, 'true'].includes(val)) ? true : false;
+	}
 
-  return {
-    getShouldShowBlockPreviewModal,
-    toggleShouldShowBlockPreviewModal,
-    shouldShowBlockPreviewModal,
+	function toggleShouldShowBlockPreviewModal(val?: boolean)
+	{
+		if(typeof val === 'boolean')
+		{
+			localStorage.setItem(blockPreviewModalStorageKey, `${val}`);
+		}
+		else
+		{
+			localStorage.setItem(
+				blockPreviewModalStorageKey,
+				`${!getShouldShowBlockPreviewModal()}`
+			);
+		}
+
+		shouldShowBlockPreviewModal.value = getShouldShowBlockPreviewModal();
+	}
+
+	const shouldShowBlockPreviewModal = ref(getShouldShowBlockPreviewModal());
+
+	return {
+		getShouldShowBlockPreviewModal,
+		toggleShouldShowBlockPreviewModal,
+		shouldShowBlockPreviewModal,
 	};
 }

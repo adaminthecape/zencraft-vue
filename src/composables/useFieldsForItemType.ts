@@ -10,16 +10,16 @@ export default function useFieldsForItemType(options: {
   fieldsForItemType: ComputedRef<fields.FieldData[] | undefined>;
 })
 {
-  const itemStore = useCustomItemStore({})();
+	const itemStore = useCustomItemStore({})();
 
-  const fieldsForItemType = computed<fields.FieldData[] | undefined>(() => (
-    typeof options.itemTypeRef.value === 'string' ?
-      itemStore.getFieldsForItemType(options.itemTypeRef.value) :
-      undefined
-  ));
+	const fieldsForItemType = computed<fields.FieldData[] | undefined>(() => (
+		typeof options.itemTypeRef.value === 'string' ?
+			itemStore.getFieldsForItemType(options.itemTypeRef.value) :
+			undefined
+	));
 
-  return {
-    fieldsForItemType,
+	return {
+		fieldsForItemType,
 	};
 }
 

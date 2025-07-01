@@ -52,11 +52,11 @@ const input = ref();
 const isErrored = computed(() => (input as any)?.value?.hasError);
 
 const {
-  modelProxy,
-  updateValue,
+	modelProxy,
+	updateValue,
 } = useFormElement<ModelType>({
-  props,
-  emit
+	props,
+	emit
 });
 
 const selectedItemType = ref<string>();
@@ -64,8 +64,8 @@ const selectedItemType = ref<string>();
 const customItemStore = useCustomItemStore({})();
 
 const allItemTypes = computed(() => ([
-  ...Object.values(sharedTypes.KnownItemType),
-  ...Object.keys(customItemStore.definitionFieldsMap)
+	...Object.values(sharedTypes.KnownItemType),
+	...Object.keys(customItemStore.definitionFieldsMap)
 ]));
 </script>
 

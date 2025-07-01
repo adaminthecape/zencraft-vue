@@ -9,7 +9,7 @@
     :target="target"
     :label="undefined"
     :icon="undefined"
-    :iconRight="iconRight"
+    :icon-right="iconRight"
     :outline="outline"
     :flat="flat"
     :unelevated="unelevated"
@@ -18,12 +18,12 @@
     :square="square"
     :glossy="glossy"
     :fab="fab"
-    :fabMini="fabMini"
+    :fab-mini="fabMini"
     :padding="padding"
     :color="color"
-    :textColor="textColor"
-    :noCaps="noCaps"
-    :noWrap="noWrap"
+    :text-color="textColor"
+    :no-caps="noCaps"
+    :no-wrap="noWrap"
     :dense="dense"
     :ripple="ripple"
     :tabindex="tabindex"
@@ -34,10 +34,12 @@
     :disable="disable"
     :round="round"
     :percentage="percentage"
-    :darkPercentage="darkPercentage"
+    :dark-percentage="darkPercentage"
     @click="onClick"
   >
-    <q-tooltip v-if="tooltip">{{ tooltip }}</q-tooltip>
+    <q-tooltip v-if="tooltip">
+      {{ tooltip }}
+    </q-tooltip>
     <ThemeIcon
       v-if="icon"
       :name="icon"
@@ -47,8 +49,15 @@
     <div
       v-if="label"
       :class="{ 'q-pr-sm': (slots.default) }"
-    >{{ label }}</div>
-    <div v-if="slots.default" class=""><slot /></div>
+    >
+      {{ label }}
+    </div>
+    <div
+      v-if="slots.default"
+      class=""
+    >
+      <slot />
+    </div>
   </q-btn>
 </template>
 
@@ -105,17 +114,17 @@ const props = withDefaults(defineProps<{
     }) => Promise<unknown>,
   ) => void;
 }>(), {
-  noCaps: true,
-  noWrap: true,
-  dense: true,
-  size: 'md',
+	noCaps: true,
+	noWrap: true,
+	dense: true,
+	size: 'md',
 });
 
 const sizes = ['xs', 'sm', 'md', 'lg', 'xl'];
 
 function getLowerSize(currentSize: string, offset: number): string
 {
-  return sizes[Math.max(sizes.findIndex((s) => s === currentSize), 0) + offset];
+	return sizes[Math.max(sizes.findIndex((s) => s === currentSize), 0) + offset];
 }
 
 const sizeMinusOne = computed(() => (getLowerSize(props.size, -1)));

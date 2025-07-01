@@ -7,15 +7,16 @@
         color="accent"
         size="sm"
       />
-      <div class="text-h6 q-my-md">{{ $t('tables.users.title') }}</div>
+      <div class="text-h6 q-my-md">
+        {{ $t('tables.users.title') }}
+      </div>
     </div>
     <q-table
       :rows="loginsOnPage"
       :columns="columns"
       class="standout-1 bg-standard"
       flat
-    >
-    </q-table>
+    />
   </div>
   <pre v-else>{{ {loginsOnPage} }}</pre>
 </template>
@@ -37,50 +38,50 @@ const loginsOnPage = ref <unknown[]>([]);
 
 async function getLogins()
 {
-  const dataSource = checkDataSource();
+	const dataSource = checkDataSource();
 
-  if(dataSource.isIndexedDb)
-  {
-    const idb = new IndexedDbInterface({});
+	if(dataSource.isIndexedDb)
+	{
+		const idb = new IndexedDbInterface({});
 
-    const logins = await idb.getLogins();
+		const logins = await idb.getLogins();
 
-    if(!(Array.isArray(logins) && logins.length))
-    {
-      loginsOnPage.value = [];
+		if(!(Array.isArray(logins) && logins.length))
+		{
+			loginsOnPage.value = [];
 
-      return;
-    }
+			return;
+		}
 
-    loginsOnPage.value = logins;
+		loginsOnPage.value = logins;
 
-    return;
-  }
+		return;
+	}
 
-  const api = new ApiHandler({ jwtFn: () => (localStorage.getItem('jwt')) });
-  const logins = await api.POST('/login/downstream', {});
-  const loginsArray = (logins?.data as Record<string, unknown>)?.logins;
+	const api = new ApiHandler({ jwtFn: () => (localStorage.getItem('jwt')) });
+	const logins = await api.POST('/login/downstream', {});
+	const loginsArray = (logins?.data as Record<string, unknown>)?.logins;
 
-  if(!(Array.isArray(loginsArray) && loginsArray.length))
-  {
-    loginsOnPage.value = [];
+	if(!(Array.isArray(loginsArray) && loginsArray.length))
+	{
+		loginsOnPage.value = [];
 
-    return;
-  }
+		return;
+	}
 
-  loginsOnPage.value = loginsArray;
+	loginsOnPage.value = loginsArray;
 }
 
 onMounted(getLogins);
 
 const columns = computed<ReturnType<typeof getTableColumns>>(() => (
-  getTableColumns({
-    results: utils.tools.reduceIntoAssociativeArray(
-      loginsOnPage.value,
-      'id'
-    ),
-    exclude: ['id', 'typeId'],
-  })
+	getTableColumns({
+		results: utils.tools.reduceIntoAssociativeArray(
+			loginsOnPage.value,
+			'id'
+		),
+		exclude: ['id', 'typeId'],
+	})
 ));
 
 </script>

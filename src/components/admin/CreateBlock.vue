@@ -10,11 +10,17 @@
         v-bind="qProps"
         placeholder="New Block Type"
         mask="SSSSSSSSSSSSSSSSSSSS"
-      ></q-input>
-      <div :class="codeClass" v-if="blockTypeError">
+      />
+      <div
+        v-if="blockTypeError"
+        :class="codeClass"
+      >
         <span class="text-negative text-bold">{{ blockTypeError }}</span>
       </div>
-      <div :class="codeClass" v-else>
+      <div
+        v-else
+        :class="codeClass"
+      >
         <div class="row items-center">
           <ThemeButton
             class="q-mr-sm"
@@ -100,7 +106,9 @@
             color="accent"
             flat
             @click="addBlockTypeToFieldOptions"
-          ><code class="q-ml-sm">Click to update `blockType` field(s)</code></ThemeButton>
+          >
+            <code class="q-ml-sm">Click to update `blockType` field(s)</code>
+          </ThemeButton>
         </div>
       </div>
     </div>
@@ -192,9 +200,9 @@ import { deriveStoreForItemType } from 'src/logic/utils/stores';
 import ThemeButton from 'src/components/generic/buttons/ThemeButton.vue';
 
 const qProps = {
-  standout: true,
-  dense: true,
-  class: 'q-ma-sm'
+	standout: true,
+	dense: true,
+	class: 'q-ma-sm'
 };
 const labelClass = 'text-h6 q-ma-md';
 const codeClass = 'q-pa-sm standout-2 q-ma-sm borad-6';
@@ -202,97 +210,97 @@ const codeClass = 'q-pa-sm standout-2 q-ma-sm borad-6';
 const blockType = ref<string>('newBlockType');
 const blockTypeError = computed(() =>
 {
-  if(blockType.value && (BlockType as any)[blockType.value])
-  {
-    return `Type ${blockType.value} already exists, choose another`;
-  }
+	if(blockType.value && (BlockType as any)[blockType.value])
+	{
+		return `Type ${blockType.value} already exists, choose another`;
+	}
 
-  return undefined;
+	return undefined;
 });
 const blockTypeConfig = ref<BlockTypeConfigOpts>({
-  defaultAllowedChildren: undefined,
-  maximumAllowedChildren: undefined,
-  fields: [],
-  hasChildren: true,
-  categories: [],
-  hideAddBlockButton: false,
+	defaultAllowedChildren: undefined,
+	maximumAllowedChildren: undefined,
+	fields: [],
+	hasChildren: true,
+	categories: [],
+	hideAddBlockButton: false,
 });
 const blockTypeConfigString = computed(() => (
-  `${blockType.value}: ${JSON.stringify(
-    {
-      ...(blockTypeConfig.value || {}),
-      categories: blockTypeConfig.value?.categories?.map((c) => (
-        `BlockCategory.${c}`
-      )),
-      defaultAllowedChildren: (
-        !blockTypeConfig.value?.defaultAllowedChildren ?
-          undefined :
-          blockTypeConfig.value.defaultAllowedChildren?.map((c) => (
-            `BlockType.${c}`
-          ))
-      )
-    },
-    undefined,
-    2
-  )},`.replace(/\"/g, '')
+	`${blockType.value}: ${JSON.stringify(
+		{
+			...(blockTypeConfig.value || {}),
+			categories: blockTypeConfig.value?.categories?.map((c) => (
+				`BlockCategory.${c}`
+			)),
+			defaultAllowedChildren: (
+				!blockTypeConfig.value?.defaultAllowedChildren ?
+					undefined :
+					blockTypeConfig.value.defaultAllowedChildren?.map((c) => (
+						`BlockType.${c}`
+					))
+			)
+		},
+		undefined,
+		2
+	)},`.replace(/"/g, '')
 ));
 const i18nValues = ref({
-  title: '',
-  description: '',
+	title: '',
+	description: '',
 });
 const i18nValuesString = computed(() => (
-  `${blockType.value || ''}: ${JSON.stringify(i18nValues.value, undefined, 2)}`
-    .replace('"title":', 'title:')
-    .replace('"description":', 'description:')
+	`${blockType.value || ''}: ${JSON.stringify(i18nValues.value, undefined, 2)}`
+		.replace('"title":', 'title:')
+		.replace('"description":', 'description:')
 ));
 const componentReference = computed(() => (
-  `${blockType.value || ''}: defineAsyncComponent(() => ${(
-    `import('src/components/public/${(
-      (blockType.value || '').slice(0, 1).toUpperCase()
-    )}${(
-      (blockType.value || '').slice(1)
-    )}.vue')`
-  )}),`
+	`${blockType.value || ''}: defineAsyncComponent(() => ${(
+		`import('src/components/public/${(
+			(blockType.value || '').slice(0, 1).toUpperCase()
+		)}${(
+			(blockType.value || '').slice(1)
+		)}.vue')`
+	)}),`
 ));
 const initialDefinitionData = computed(() => ({
-  blockType: blockType.value
+	blockType: blockType.value
 }));
 
 async function addBlockTypeToFieldOptions()
 {
-  if(!blockType.value)
-  {
-    return;
-  }
+	if(!blockType.value)
+	{
+		return;
+	}
 
-  const fieldStore = deriveStoreForItemType(sharedTypes.KnownItemType.Field);
+	const fieldStore = deriveStoreForItemType(sharedTypes.KnownItemType.Field);
 
-  const blockTypeFields = (
+	const blockTypeFields = (
     fieldStore.allItems as fields.FieldData[]
-  ).filter((field) => (
-    field?.key === 'blockType'
-  ));
+	).filter((field) => (
+		field?.key === 'blockType'
+	));
 
-  for(const field of blockTypeFields)
-  {
-    if(Array.isArray(field.options))
-    {
-      const newOptions = [...field.options];
+	for(const field of blockTypeFields)
+	{
+		if(Array.isArray(field.options))
+		{
+			const newOptions = [...field.options];
 
-      if(!newOptions.includes(blockType.value))
-      {
-        newOptions.push(blockType.value);
+			if(!newOptions.includes(blockType.value))
+			{
+				newOptions.push(blockType.value);
 
-        await fieldStore.saveItem({
-          id: field.id,
-          itemType: sharedTypes.KnownItemType.Field,
-          data: {
-            options: newOptions
-          }
-        });
-      }
-    }
-  }
+				await fieldStore.saveItem({
+					id: field.id,
+					itemType: sharedTypes.KnownItemType.Field,
+					data: {
+						options: newOptions
+					}
+				});
+			}
+		}
+	}
 }
 </script>
 

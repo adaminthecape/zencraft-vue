@@ -1,14 +1,17 @@
 <template>
   <div>
-    <slot name="activator" v-bind="{ open, close }"></slot>
+    <slot
+      name="activator"
+      v-bind="{ open, close }"
+    />
     <q-dialog
-        v-model="isModalOpen"
-        v-bind="qProps"
-        style="margin: 0;"
-        transition-show="fade"
-        transition-hide="fade"
-        @hide="onClose"
-        @before-hide="onBeforeClose"
+      v-model="isModalOpen"
+      v-bind="qProps"
+      style="margin: 0;"
+      transition-show="fade"
+      transition-hide="fade"
+      @hide="onClose"
+      @before-hide="onBeforeClose"
     >
       <q-card
         class="flex-col"
@@ -21,17 +24,26 @@
         }"
       >
         <slot name="title">
-          <h4 v-if="title" class="modal-title">
+          <h4
+            v-if="title"
+            class="modal-title"
+          >
             {{ title }}
           </h4>
         </slot>
         <div class="modal-content q-mb-lg">
-          <slot name="content" v-bind="{ open, close, toggle }"></slot>
+          <slot
+            name="content"
+            v-bind="{ open, close, toggle }"
+          />
         </div>
         <div class="q-space" />
         <div class="modal-actions row">
           <div class="q-space" />
-          <slot name="close" v-bind="{ open, close, toggle }">
+          <slot
+            name="close"
+            v-bind="{ open, close, toggle }"
+          >
             <ThemeButton
               v-if="showCloseButton"
               label="Close"
@@ -40,7 +52,10 @@
               @click="close"
             />
           </slot>
-          <slot name="actions" v-bind="{ open, close, toggle }"></slot>
+          <slot
+            name="actions"
+            v-bind="{ open, close, toggle }"
+          />
         </div>
       </q-card>
     </q-dialog>
@@ -72,16 +87,19 @@ const props = defineProps<SimpleModalProps>();
 
 const isModalOpen = ref(props.openOnMount ?? false);
 
-function close() {
-  isModalOpen.value = false;
+function close()
+{
+	isModalOpen.value = false;
 }
 
-function open() {
-  isModalOpen.value = true;
+function open()
+{
+	isModalOpen.value = true;
 }
 
-function toggle() {
-  isModalOpen.value = !isModalOpen.value;
+function toggle()
+{
+	isModalOpen.value = !isModalOpen.value;
 }
 
 defineExpose({ open, close, toggle });

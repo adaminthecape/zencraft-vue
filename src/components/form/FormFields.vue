@@ -10,9 +10,9 @@
       :class="formClasses"
     >
       <component
+        :is="getInputComponent(field)"
         v-if="field && getInputComponent(field)"
         :initial-value="(formValues as any)?.[field.key as string]"
-        :is="getInputComponent(field)"
         :field="(field as any)"
         class="q-mb-sm"
         :q-props="(qProps as any)"
@@ -101,49 +101,49 @@ const props = defineProps<{
 
 function getInputComponent(field: fields.Field | fields.FieldData)
 {
-  if(!field?.fieldType)
-  {
-    return undefined;
-  }
+	if(!field?.fieldType)
+	{
+		return undefined;
+	}
 
-  switch(field.fieldType)
-  {
-    case fields.FieldType.text:
-      return TextInput;
-    case fields.FieldType.textarea:
-      return MarkdownInput;
-    case fields.FieldType.number:
-      return NumberInput;
-    case fields.FieldType.dropdown:
-      return DropdownInput;
-    case fields.FieldType.timestamp:
-      return TimestampInput;
-    case fields.FieldType.item:
-    case fields.FieldType.itemArray:
-      return ItemInput;
-    case fields.FieldType.itemFilters:
-      return ItemFiltersInput;
-    case fields.FieldType.toggle:
-      return ToggleInput;
-    // TODO: Implement other FieldType components
-    case fields.FieldType.uuid:
-      return TextInput;
-    case fields.FieldType.itemType:
-      return ItemTypeInput;
-    case fields.FieldType.uuidArray:
-    case fields.FieldType.checkbox:
-    case fields.FieldType.radio:
-    case fields.FieldType.readonly:
-    default:
-      return undefined;
-  }
+	switch(field.fieldType)
+	{
+		case fields.FieldType.text:
+			return TextInput;
+		case fields.FieldType.textarea:
+			return MarkdownInput;
+		case fields.FieldType.number:
+			return NumberInput;
+		case fields.FieldType.dropdown:
+			return DropdownInput;
+		case fields.FieldType.timestamp:
+			return TimestampInput;
+		case fields.FieldType.item:
+		case fields.FieldType.itemArray:
+			return ItemInput;
+		case fields.FieldType.itemFilters:
+			return ItemFiltersInput;
+		case fields.FieldType.toggle:
+			return ToggleInput;
+			// TODO: Implement other FieldType components
+		case fields.FieldType.uuid:
+			return TextInput;
+		case fields.FieldType.itemType:
+			return ItemTypeInput;
+		case fields.FieldType.uuidArray:
+		case fields.FieldType.checkbox:
+		case fields.FieldType.radio:
+		case fields.FieldType.readonly:
+		default:
+			return undefined;
+	}
 }
 
 const formValues = ref<FormValues>({ ...props.initialValues });
 
 const model = defineModel<FormValues>({
-  required: true,
-  default: {}
+	required: true,
+	default: {}
 });
 
 const emit = defineEmits<{
@@ -153,71 +153,71 @@ const emit = defineEmits<{
 
 function inputChanged(field: fields.FieldData, e: unknown)
 {
-  if(field.key)
-  {
-    (formValues.value as any)[field.key] = e;
-    emit('update:field', { key: field.key, value: e });
-    emit('update:modelValue', formValues.value);
-  }
+	if(field.key)
+	{
+		(formValues.value as any)[field.key] = e;
+		emit('update:field', { key: field.key, value: e });
+		emit('update:modelValue', formValues.value);
+	}
 }
 
 // disabled as this seems to work only without the watcher?
 watch(() => props.initialValues, (n, o) =>
 {
-  if(n)
-  {
-    formValues.value = {
-      ...(formValues.value || {}),
-      ...props.initialValues
-    };
-    // if(formDataHandler.value)
-    // {
-    //   formDataHandler.value.setData(n);
-    // }
-  }
+	if(n)
+	{
+		formValues.value = {
+			...(formValues.value || {}),
+			...props.initialValues
+		};
+		// if(formDataHandler.value)
+		// {
+		//   formDataHandler.value.setData(n);
+		// }
+	}
 });
 
 const formDataHandler = ref();
 
 onMounted(() =>
 {
-  if(props.storeOpts)
-  {
-    if(props.storeOpts.useHandler)
-    {
-      if(!props.storeOpts.storeToUse)
-      {
-        console.error('FormFields requires a store when using handlers!');
+	if(props.storeOpts)
+	{
+		if(props.storeOpts.useHandler)
+		{
+			if(!props.storeOpts.storeToUse)
+			{
+				console.error('FormFields requires a store when using handlers!');
 
-        return;
-      }
+				return;
+			}
 
-      if(!props.storeOpts.itemIdToUse || !props.storeOpts.itemTypeToUse)
-      {
-        console.error('FormFields requires an item ID when using handlers!');
+			if(!props.storeOpts.itemIdToUse || !props.storeOpts.itemTypeToUse)
+			{
+				console.error('FormFields requires an item ID when using handlers!');
 
-        return;
-      }
+				return;
+			}
 
-      formDataHandler.value = props.storeOpts.storeToUse.getHandler(
-        props.storeOpts.itemIdToUse,
-        props.storeOpts.itemTypeToUse,
-        props.storeOpts.syncHandler ?? true
-      );
+			formDataHandler.value = props.storeOpts.storeToUse.getHandler(
+				props.storeOpts.itemIdToUse,
+				props.storeOpts.itemTypeToUse,
+				props.storeOpts.syncHandler ?? true
+			);
 
-      if(formDataHandler.value)
-      {
-        formValues.value = {
-          ...(formValues.value || {}),
-          ...formDataHandler.value.getData()
-        };
-      }
-    }
-  }
+			if(formDataHandler.value)
+			{
+				formValues.value = {
+					...(formValues.value || {}),
+					...formDataHandler.value.getData()
+				};
+			}
+		}
+	}
 
-  if(!formDataHandler.value)
-  {
-    // formDataHandler.value
-  }
+	if(!formDataHandler.value)
+	{
+		// formDataHandler.value
+	}
 });
 </script>

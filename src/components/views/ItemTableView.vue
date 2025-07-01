@@ -1,8 +1,8 @@
 <template>
   <ItemSearch
     v-if="itemTypeRef"
-    :item-type="(itemTypeRef)"
     :key="`item-table-${itemTypeRef}-${storeName}`"
+    :item-type="(itemTypeRef)"
     :store="(storeToUse as any)"
     :custom-table-fields="fieldsForItemType"
   >
@@ -40,21 +40,21 @@ const route = useRoute();
 const storeName = computed(() => storeToUse.value?.$id);
 
 const itemTypeRef = computed<string | undefined>(() => (
-  route.params.itemType ? `${route.params.itemType}` : undefined
+	route.params.itemType ? `${route.params.itemType}` : undefined
 ));
 const { fieldsForItemType } = useFieldsForItemType({ itemTypeRef });
 
 const storeToUse = computed<StoreTypes>(() => (
-  deriveStoreForItemType(itemTypeRef.value)
+	deriveStoreForItemType(itemTypeRef.value)
 ));
 
 onBeforeMount(async () =>
 {
-  if(storeToUse.value)
-  {
-    const definitionStore = useCustomItemStore({})();
+	if(storeToUse.value)
+	{
+		const definitionStore = useCustomItemStore({})();
 
-    await definitionStore.loadDefinitions();
-  }
+		await definitionStore.loadDefinitions();
+	}
 });
 </script>

@@ -36,12 +36,12 @@ let queueStore: ReturnType<typeof useQueueStore> | undefined = undefined;
 
 export function getQueueStore(): typeof queueStore
 {
-  if(!queueStore)
-  {
-    queueStore = useQueueStore();
-  }
+	if(!queueStore)
+	{
+		queueStore = useQueueStore();
+	}
 
-  return queueStore;
+	return queueStore;
 }
 
 /**
@@ -51,26 +51,26 @@ export function getQueueStore(): typeof queueStore
  */
 export function setStatus(message: string, timeout?: number)
 {
-  Notify.create({
-    message,
-    icon: 'fas fa-clock',
-    timeout: timeout ?? 5000,
-    color: 'primary',
-    position: 'bottom',
-  });
+	Notify.create({
+		message,
+		icon: 'fas fa-clock',
+		timeout: timeout ?? 5000,
+		color: 'primary',
+		position: 'bottom',
+	});
 }
 
 export function queueAction(name: string, data: Record<string, unknown>)
 {
-  getQueueStore()?.addToQueue(name, data);
+	getQueueStore()?.addToQueue(name, data);
 }
 
 export function editItem(opts: ItemToEdit): void
 {
-  queueAction('edit_items', {
-    ...opts,
-    options: opts.options ?? { persistent: true },
-  });
+	queueAction('edit_items', {
+		...opts,
+		options: opts.options ?? { persistent: true },
+	});
 }
 
 export function amendItem(opts: {
@@ -83,37 +83,38 @@ export function amendItem(opts: {
   };
 }): void
 {
-  if(opts?.itemId)
-  {
-    queueAction(`amend_item_form_${opts.itemId}`, {
-      data: opts.newData,
-      actions: !opts.actions ? {
-        amend: true,
-      } : {
-        amend: opts.actions.amend,
-        save: opts.actions.save,
-        close: opts.actions.close,
-      },
-    });
-  }
+	if(opts?.itemId)
+	{
+		queueAction(`amend_item_form_${opts.itemId}`, {
+			data: opts.newData,
+			actions: !opts.actions ? {
+				amend: true,
+			} : {
+				amend: opts.actions.amend,
+				save: opts.actions.save,
+				close: opts.actions.close,
+			},
+		});
+	}
 }
 
 export function saveItem(itemId: string): void
 {
-  amendItem({ itemId, actions: { save: true }, });
+	amendItem({ itemId, actions: { save: true }, });
 }
 
 export function closeItem(itemId: string): void
 {
-  amendItem({ itemId, actions: { close: true } });
+	amendItem({ itemId, actions: { close: true } });
 }
 
 export async function sleepMs(ms?: number): Promise<void>
 {
-  return new Promise((r) => setTimeout(r, ms ?? 0));
+	return new Promise((r) => setTimeout(r, ms ?? 0));
 }
 
 export type SleepFn = (ms?: number) => Promise<void>;
+
 export const sleep: {
   ms: SleepFn;
   tiny: SleepFn;
@@ -121,11 +122,11 @@ export const sleep: {
   medium: SleepFn;
   long: SleepFn;
 } = {
-  ms: sleepMs,
-  tiny: async () => sleepMs(250),
-  short: async () => sleepMs(1000),
-  medium: async () => sleepMs(2000),
-  long: async () => sleepMs(4000),
+	ms: sleepMs,
+	tiny: async () => sleepMs(250),
+	short: async () => sleepMs(1000),
+	medium: async () => sleepMs(2000),
+	long: async () => sleepMs(4000),
 };
 
 /**
@@ -150,129 +151,131 @@ export async function editAndAmend(opts: {
   doNotClose?: boolean;
 })
 {
-  const { itemId, itemType, initialData, amendments } = opts;
-  const delay = opts.delayFn ?? (
-    opts.delay ? () => sleep.ms(opts.delay) : sleep.medium
-  );
+	const { itemId, itemType, initialData, amendments } = opts;
+	const delay = opts.delayFn ?? (
+		opts.delay ? () => sleep.ms(opts.delay) : sleep.medium
+	);
 
-  editItem({ id: itemId, typeId: itemType, initialData });
-  await sleep.short();
+	editItem({ id: itemId, typeId: itemType, initialData });
+	await sleep.short();
 
-  if(Array.isArray(amendments) && amendments.length)
-  {
-    for await(const amendment of amendments)
-    {
-      if(amendment.status)
-      {
-        setStatus(amendment.status, amendment.statusTimeout);
-      }
+	if(Array.isArray(amendments) && amendments.length)
+	{
+		for await(const amendment of amendments)
+		{
+			if(amendment.status)
+			{
+				setStatus(amendment.status, amendment.statusTimeout);
+			}
 
-      amendItem({ itemId, newData: amendment.newData });
+			amendItem({ itemId, newData: amendment.newData });
 
-      if(typeof amendment.onChanged === 'function')
-      {
-        const hookRes = amendment.onChanged(amendment.newData);
+			if(typeof amendment.onChanged === 'function')
+			{
+				const hookRes = amendment.onChanged(amendment.newData);
 
-        if(hookRes instanceof Promise)
-        {
-          await hookRes;
-        }
-      }
+				if(hookRes instanceof Promise)
+				{
+					await hookRes;
+				}
+			}
 
-      if(typeof amendment.delay === 'number')
-      {
-        await sleep.ms(amendment.delay);
-      }
-      else
-      {
-        await delay();
-      }
-    }
-  }
+			if(typeof amendment.delay === 'number')
+			{
+				await sleep.ms(amendment.delay);
+			}
+			else
+			{
+				await delay();
+			}
+		}
+	}
 
-  if(!opts.doNotSave)
-  {
-    saveItem(itemId);
-    await delay();
-  }
+	if(!opts.doNotSave)
+	{
+		saveItem(itemId);
+		await delay();
+	}
 
-  if(!opts.doNotClose)
-  {
-    closeItem(itemId);
-    await delay();
-  }
+	if(!opts.doNotClose)
+	{
+		closeItem(itemId);
+		await delay();
+	}
 }
 
 async function getShouldImportEssentialData(): Promise<boolean>
 {
-  const dataSource = checkDataSource();
+	const dataSource = checkDataSource();
 
-  if(dataSource.isIndexedDb)
-  {
-    const idb = new IndexedDbInterface({});
+	if(dataSource.isIndexedDb)
+	{
+		const idb = new IndexedDbInterface({});
 
-    const archetypes = await idb.selectMultiple({
-      itemType: 'Archetype',
-      filters: [{
-        key: 'typeId',
-        operator: dbFilters.DbFilterOperator.isEqual,
-        value: 'Archetype',
-      }]
-    });
+		const archetypes = await idb.selectMultiple({
+			itemType: 'Archetype',
+			filters: [{
+				key: 'typeId',
+				operator: dbFilters.DbFilterOperator.isEqual,
+				value: 'Archetype',
+			}]
+		});
 
-    return (archetypes?.results?.length > 0);
-  }
+		return (archetypes?.results?.length > 0);
+	}
 
-  return false;
+	return false;
 }
 
 export const defaultHelpPages: HelpPage[] = [
-  {
-    id: 0,
-    title: 'Welcome to the Help Wizard',
-    text: 'This is the help wizard. It will guide you through the features of this page.',
-    steps: [
-      {
-        id: 0,
-        next: 1,
-        title: 'Welcome!',
-        text: 'Welcome to Zencraft! This wizard will guide you through some of \
+	{
+		id: 0,
+		title: 'Welcome to the Help Wizard',
+		text: 'This is the help wizard. It will guide you through the features of this page.',
+		steps: [
+			{
+				id: 0,
+				next: 1,
+				title: 'Welcome!',
+				text: 'Welcome to Zencraft! This wizard will guide you through some of \
 the available features and how to use them. This platform is designed to be \
 configured as anything which can represent data. That means it can be a CRM, \
 a project management tool, a task tracker, or anything else you can think of.',
-        action: async (store, step) =>
-        {
-          if(await getShouldImportEssentialData())
-          {
-            store.addTextToStep('We need to add some basic data to begin. \
+				action: async (store, step) =>
+				{
+					if(await getShouldImportEssentialData())
+					{
+						store.addTextToStep('We need to add some basic data to begin. \
 Click "Next Page" below to get started.', step.id);
 
-            step.next = 1;
-            step.nextPage = undefined;
-          }
-        }
-      },
-      {
-        id: 1,
-        nextPage: 1,
-        title: 'Add basic data',
-        text: 'Click the button below to add some essential data to the platform.',
-        userTriggersAction: false,
-        actionCanTriggerMultipleTimes: false,
-        actionCta: 'Import essential data',
-        action: async (store: HelpStore, step: HelpStep) =>
-        {
-          await sleep.short();
-          store.addTextToStep('For this demo, we will be storing the data \
+						step.next = 1;
+						step.nextPage = undefined;
+					}
+				}
+			},
+			{
+				id: 1,
+				nextPage: 1,
+				title: 'Add basic data',
+				text: 'Click the button below to add some essential data to the platform.',
+				userTriggersAction: false,
+				actionCanTriggerMultipleTimes: false,
+				actionCta: 'Import essential data',
+				action: async (store: HelpStore, step: HelpStep) =>
+				{
+					await sleep.short();
+					store.addTextToStep('For this demo, we will be storing the data \
 locally, meaning you won\'t have to send your data to me for any reason.', step.id);
-          const queueKey = 'upsert_default_data';
-          queueAction(queueKey, { action: 'open' });
-          await sleep.medium();
-          queueAction(queueKey, { action: 'start' });
-          await sleep.short();
-          queueAction(queueKey, { action: 'destroy' });
-        },
-      },
-    ],
-  },
+
+					const queueKey = 'upsert_default_data';
+
+					queueAction(queueKey, { action: 'open' });
+					await sleep.medium();
+					queueAction(queueKey, { action: 'start' });
+					await sleep.short();
+					queueAction(queueKey, { action: 'destroy' });
+				},
+			},
+		],
+	},
 ];

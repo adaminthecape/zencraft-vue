@@ -1,12 +1,19 @@
 <template>
   <slot v-if="!helpStore.isOverlayActive" />
-  <div v-else class="help-popover-container">
+  <div
+    v-else
+    class="help-popover-container"
+  >
     <slot />
     <q-popup-proxy>
       <q-card>
         <q-card-section>
-          <div class="text-h6">{{ helpText.title }}</div>
-          <div class="q-mt-sm">{{ helpText.content }}</div>
+          <div class="text-h6">
+            {{ helpText.title }}
+          </div>
+          <div class="q-mt-sm">
+            {{ helpText.content }}
+          </div>
         </q-card-section>
       </q-card>
     </q-popup-proxy>
@@ -34,24 +41,24 @@ const isPopoverOpen = ref(false);
 
 function open()
 {
-  isPopoverOpen.value = true;
+	isPopoverOpen.value = true;
 }
 
 function close()
 {
-  isPopoverOpen.value = false;
+	isPopoverOpen.value = false;
 }
 
 const helpText = ref<Record<string, string>>(
-  (
-    i18n?.en?.tutorial?.popovers &&
+	(
+		i18n?.en?.tutorial?.popovers &&
     (typeof props.i18nKey === 'string') &&
     props.i18nKey in i18n.en.tutorial.popovers
-  ) ?
-    i18n.en.tutorial.popovers[
+	) ?
+		i18n.en.tutorial.popovers[
       props.i18nKey as keyof typeof i18n.en.tutorial.popovers
-    ] || {} :
-    {}
+		] || {} :
+		{}
 );
 </script>
 

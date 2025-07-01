@@ -1,12 +1,12 @@
 <template>
-	<q-select
-		v-model="model"
-		:label="label"
-		:placeholder="placeholder"
-		:emit-value="emitValue"
-		standout
-		dense
-	/>
+  <q-select
+    v-model="model"
+    :label="label"
+    :placeholder="placeholder"
+    :emit-value="emitValue"
+    standout
+    dense
+  />
 </template>
 
 <script setup lang="ts">

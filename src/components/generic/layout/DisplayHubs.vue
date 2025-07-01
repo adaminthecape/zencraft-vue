@@ -21,7 +21,9 @@
             clickable
             @click.stop.prevent="() => onItemClick(hub)"
           >
-            <template #label><span>{{ hub?.title }}</span></template>
+            <template #label>
+              <span>{{ hub?.title }}</span>
+            </template>
             <template #avatar>
               <q-avatar
                 :icon="(hub as any)?.icon || 'folder'"
@@ -29,7 +31,10 @@
                 text-color="white"
               />
             </template>
-            <template #right v-if="(hub as any)?.sideIcon">
+            <template
+              v-if="(hub as any)?.sideIcon"
+              #right
+            >
               <ThemeIcon
                 :name="(hub as any)?.sideIcon"
                 color="amber"
@@ -62,99 +67,99 @@ const customItemStore = useCustomItemStore({})();
 
 onMounted(async () =>
 {
-  await customItemStore.searchItems({
-    itemType: 'Hub'
-  });
+	await customItemStore.searchItems({
+		itemType: 'Hub'
+	});
 });
 
 const $q = useQuasar();
 
 const {
-  hubStore,
-  pageStore,
-  currentHub,
-  currentPage,
-  navigateToLayout,
-  navigateToDefaultLayout,
-  getLastVisitedLayout,
+	hubStore,
+	pageStore,
+	currentHub,
+	currentPage,
+	navigateToLayout,
+	navigateToDefaultLayout,
+	getLastVisitedLayout,
 } = useHubPageNavigation();
 
 // const allHubs = computed(() => (hubStore.allItems));
 const allHubs = computed(() => (customItemStore.getItemsByType(
-  sharedTypes.KnownItemType.Hub
+	sharedTypes.KnownItemType.Hub
 )));
 
 const selectedHub = computed(() => (
-  typeof hubStore.selectedHub === 'string' ?
-    hubStore.getItem(
-      hubStore.selectedHub,
-      sharedTypes.KnownItemType.Hub
-    ) :
-    undefined
+	typeof hubStore.selectedHub === 'string' ?
+		hubStore.getItem(
+			hubStore.selectedHub,
+			sharedTypes.KnownItemType.Hub
+		) :
+		undefined
 ));
 
 const route = useRoute();
 
 onMounted(async () =>
 {
-  await hubStore?.searchItems({
-    itemType: sharedTypes.KnownItemType.Hub
-  });
+	await hubStore?.searchItems({
+		itemType: sharedTypes.KnownItemType.Hub
+	});
 
-  setTimeout(() =>
-  {
-    const hubValid = utils.uuid.isUuid(currentHub.value?.id);
-    const pageValid = utils.uuid.isUuid(currentPage.value?.id);
+	setTimeout(() =>
+	{
+		const hubValid = utils.uuid.isUuid(currentHub.value?.id);
+		const pageValid = utils.uuid.isUuid(currentPage.value?.id);
 
-    if(!hubValid && !pageValid)
-    {
-      const savedLocation = getLastVisitedLayout();
+		if(!hubValid && !pageValid)
+		{
+			const savedLocation = getLastVisitedLayout();
 
-      if(savedLocation)
-      {
-        return navigateToLayout(savedLocation);
-      }
-    }
+			if(savedLocation)
+			{
+				return navigateToLayout(savedLocation);
+			}
+		}
 
-    if(hubValid)
-    {
-      hubStore.setSelectedHub(currentHub.value?.id as string);
-    }
+		if(hubValid)
+		{
+			hubStore.setSelectedHub(currentHub.value?.id as string);
+		}
 
-    if(pageValid)
-    {
-      pageStore.setSelectedPage(currentPage.value?.id as string);
-    }
-    else
-    {
-      navigateToDefaultLayout();
-    }
-  }, 200);
+		if(pageValid)
+		{
+			pageStore.setSelectedPage(currentPage.value?.id as string);
+		}
+		else
+		{
+			navigateToDefaultLayout();
+		}
+	}, 200);
 });
 
 function onMainClick()
 {
-  if(selectedHub.value?.id && selectedHub.value.defaultPageId)
-  {
-    navigateToLayout({
-      params: {
-        hubId: selectedHub.value.id,
-        pageId: selectedHub.value.defaultPageId
-      }
-    });
-  }
+	if(selectedHub.value?.id && selectedHub.value.defaultPageId)
+	{
+		navigateToLayout({
+			params: {
+				hubId: selectedHub.value.id,
+				pageId: selectedHub.value.defaultPageId
+			}
+		});
+	}
 }
 
 function onItemClick(hub: Hub.HubItem)
 {
-  hubStore.setSelectedHub(hub.id);
+	hubStore.setSelectedHub(hub.id);
 
-  if(hub.defaultPageId)
-  {
-    pageStore.setSelectedPage(hub.defaultPageId);
-  }
+	if(hub.defaultPageId)
+	{
+		pageStore.setSelectedPage(hub.defaultPageId);
+	}
 
-  onMainClick();
+	onMainClick();
 }
 </script>
 

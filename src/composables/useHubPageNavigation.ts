@@ -22,189 +22,190 @@ export default function useHubPageNavigation(): ({
 })
 {
 	const hubStore = deriveStoreForItemType(sharedTypes.KnownItemType.Hub) as HubStore;
-  const pageStore = deriveStoreForItemType(sharedTypes.KnownItemType.Page) as PageStore;
+	const pageStore = deriveStoreForItemType(sharedTypes.KnownItemType.Page) as PageStore;
 
-  const route = useRoute();
+	const route = useRoute();
 
-  // get the current page/hub
-  const currentHubId = computed(() => (route.params?.hubId));
-  const currentPageId = computed(() => (route.params?.pageId));
-  const currentHub = computed(() => (
-    typeof currentHubId.value === 'string' ?
-      hubStore.getItem(
-        currentHubId.value,
-        sharedTypes.KnownItemType.Hub
-      ) :
-      undefined
-  ));
-  const currentPage = computed(() => (
-    typeof currentPageId.value === 'string' ?
-      pageStore.getItem(
-        currentPageId.value,
-        sharedTypes.KnownItemType.Page
-      ) :
-      undefined
-  ));
+	// get the current page/hub
+	const currentHubId = computed(() => (route.params?.hubId));
+	const currentPageId = computed(() => (route.params?.pageId));
+	const currentHub = computed(() => (
+		typeof currentHubId.value === 'string' ?
+			hubStore.getItem(
+				currentHubId.value,
+				sharedTypes.KnownItemType.Hub
+			) :
+			undefined
+	));
+	const currentPage = computed(() => (
+		typeof currentPageId.value === 'string' ?
+			pageStore.getItem(
+				currentPageId.value,
+				sharedTypes.KnownItemType.Page
+			) :
+			undefined
+	));
 
-  const router = useRouter();
+	const router = useRouter();
 
-  // allow changing the route sanely
-  async function navigateToLayout(opts: Partial<RouteLocation>): Promise<void>
-  {
-    // TODO: convert hub/page IDs to slugs
+	// allow changing the route sanely
+	async function navigateToLayout(opts: Partial<RouteLocation>): Promise<void>
+	{
+		// TODO: convert hub/page IDs to slugs
 
-    if(!opts.params?.hubId)
-    {
-      console.warn(`Hub id is required, got ${opts.params?.hubId}`);
+		if(!opts.params?.hubId)
+		{
+			console.warn(`Hub id is required, got ${opts.params?.hubId}`);
 
-      return;
-    }
+			return;
+		}
 
-    let pageId = opts.params?.pageId as string | undefined;
+		let pageId = opts.params?.pageId as string | undefined;
 
-    if(!pageId && currentHub.value?.defaultPageId)
-    {
-      pageId = pageStore.getItem(
-        currentHub.value.defaultPageId,
-        sharedTypes.KnownItemType.Page
-      )?.id;
-    }
+		if(!pageId && currentHub.value?.defaultPageId)
+		{
+			pageId = pageStore.getItem(
+				currentHub.value.defaultPageId,
+				sharedTypes.KnownItemType.Page
+			)?.id;
+		}
 
-    if(!pageId)
-    {
-      console.warn(`Page id is required, got ${pageId}`);
+		if(!pageId)
+		{
+			console.warn(`Page id is required, got ${pageId}`);
 
-      return;
-    }
+			return;
+		}
 
-    const newRoute = {
-      name: 'viewLayout',
-      params: {
-        hubId: opts.params?.hubId,
-        pageId: pageId,
-      }
-    };
+		const newRoute = {
+			name: 'viewLayout',
+			params: {
+				hubId: opts.params?.hubId,
+				pageId: pageId,
+			}
+		};
 
-    if(utils.uuid.isUuid(opts.params?.hubId))
-    {
-      hubStore.setSelectedHub(opts.params.hubId);
-    }
+		if(utils.uuid.isUuid(opts.params?.hubId))
+		{
+			hubStore.setSelectedHub(opts.params.hubId);
+		}
 
-    if(pageId)
-    {
-      pageStore.setSelectedPage(pageId);
-    }
+		if(pageId)
+		{
+			pageStore.setSelectedPage(pageId);
+		}
 
-    setLastVisitedLayout({
-      name: newRoute.name,
-      params: newRoute.params,
-    });
+		setLastVisitedLayout({
+			name: newRoute.name,
+			params: newRoute.params,
+		});
 
-    try
-    {
-      router.push(newRoute);
-    }
-    catch(e)
-    {
-      console.error(e);
-    }
-  }
+		try
+		{
+			router.push(newRoute);
+		}
+		catch(e)
+		{
+			console.error(e);
+		}
+	}
 
-  function getLastVisitedLayout(): Partial<RouteLocation> | undefined
-  {
-    const value = localStorage.getItem('last_visited_layout');
+	function getLastVisitedLayout(): Partial<RouteLocation> | undefined
+	{
+		const value = localStorage.getItem('last_visited_layout');
 
-    try
-    {
-      if(typeof value === 'string')
-      {
-        return JSON.parse(value);
-      }
-    }
-    catch(e: unknown)
-    {
-      console.log('Failed to get last visited layout:', e);
-      return undefined;
-    }
-  }
+		try
+		{
+			if(typeof value === 'string')
+			{
+				return JSON.parse(value);
+			}
+		}
+		catch(e: unknown)
+		{
+			console.log('Failed to get last visited layout:', e);
 
-  function setLastVisitedLayout(opts: Partial<RouteLocation>): void
-  {
-    localStorage.setItem('last_visited_layout', JSON.stringify(opts));
-  }
+			return undefined;
+		}
+	}
 
-  async function navigateToDefaultLayout()
-  {
-    // check for default hub & its default page
-    const defaultHubId = hubStore.allItemIds?.[0];
+	function setLastVisitedLayout(opts: Partial<RouteLocation>): void
+	{
+		localStorage.setItem('last_visited_layout', JSON.stringify(opts));
+	}
 
-    if(!defaultHubId)
-    {
-      return;
-    }
+	async function navigateToDefaultLayout()
+	{
+		// check for default hub & its default page
+		const defaultHubId = hubStore.allItemIds?.[0];
 
-    hubStore.setSelectedHub(defaultHubId);
+		if(!defaultHubId)
+		{
+			return;
+		}
 
-    const defaultPageId = hubStore.getItem(
-      defaultHubId,
-      sharedTypes.KnownItemType.Hub
-    )?.defaultPageId;
+		hubStore.setSelectedHub(defaultHubId);
 
-    if(!defaultPageId)
-    {
-      return;
-    }
+		const defaultPageId = hubStore.getItem(
+			defaultHubId,
+			sharedTypes.KnownItemType.Hub
+		)?.defaultPageId;
 
-    pageStore.setSelectedPage(defaultPageId);
+		if(!defaultPageId)
+		{
+			return;
+		}
 
-    return navigateToLayout({
-      params: {
-        hubId: defaultHubId,
-        pageId: defaultPageId,
-      }
-    });
-  }
+		pageStore.setSelectedPage(defaultPageId);
 
-  onMounted(async () =>
-  {
-    if(!hubStore.allItemIds?.length)
-    {
-      await hubStore.loadAllItems(sharedTypes.KnownItemType.Hub);
-    }
+		return navigateToLayout({
+			params: {
+				hubId: defaultHubId,
+				pageId: defaultPageId,
+			}
+		});
+	}
 
-    if(typeof currentHubId.value === 'string')
-    {
-      await hubStore.loadItem({
-        id: currentHubId.value,
-        itemType: sharedTypes.KnownItemType.Hub
-      });
+	onMounted(async () =>
+	{
+		if(!hubStore.allItemIds?.length)
+		{
+			await hubStore.loadAllItems(sharedTypes.KnownItemType.Hub);
+		}
 
-      if(currentHub.value?.pageIds?.length)
-      {
-        await pageStore.loadMultiple({
-          ids: utils.genericUtils.uniq(currentHub.value.pageIds),
-          itemType: sharedTypes.KnownItemType.Page,
-        });
-      }
-    }
+		if(typeof currentHubId.value === 'string')
+		{
+			await hubStore.loadItem({
+				id: currentHubId.value,
+				itemType: sharedTypes.KnownItemType.Hub
+			});
 
-    if(typeof currentPageId.value === 'string')
-    {
-      await pageStore.loadItem({
-        id: currentPageId.value,
-        itemType: sharedTypes.KnownItemType.Page
-      });
-    }
-  });
+			if(currentHub.value?.pageIds?.length)
+			{
+				await pageStore.loadMultiple({
+					ids: utils.genericUtils.uniq(currentHub.value.pageIds),
+					itemType: sharedTypes.KnownItemType.Page,
+				});
+			}
+		}
 
-  return {
-    pageStore,
-    hubStore,
-    currentPage,
-    currentHub,
-    navigateToLayout,
-    navigateToDefaultLayout,
-    getLastVisitedLayout,
-    setLastVisitedLayout,
+		if(typeof currentPageId.value === 'string')
+		{
+			await pageStore.loadItem({
+				id: currentPageId.value,
+				itemType: sharedTypes.KnownItemType.Page
+			});
+		}
+	});
+
+	return {
+		pageStore,
+		hubStore,
+		currentPage,
+		currentHub,
+		navigateToLayout,
+		navigateToDefaultLayout,
+		getLastVisitedLayout,
+		setLastVisitedLayout,
 	};
 }

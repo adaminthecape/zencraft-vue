@@ -10,7 +10,9 @@
     :force-is-new="itemToEdit.options?.isNew"
     @request-close="clearEditingItem"
   >
-    <template #activator><span></span></template>
+    <template #activator>
+      <span />
+    </template>
     <template #top-right>
       <ThemeButton
         :icon="shouldShowBlockPreviewModal ? 'fas fa-eye' : 'visibility_off'"
@@ -60,193 +62,203 @@ const router = useRouter();
 // Login handling
 async function redirectToLoginIfNeeded()
 {
-  const dataSource = checkDataSource();
+	const dataSource = checkDataSource();  let isLoggedOut = false;
 
-  let isLoggedOut = false;
+	if(dataSource.isApi)
+	{
+		isLoggedOut = await getIsJwtExpired();
+	}
+	else if(dataSource.isFirebase)
+	{
+		isLoggedOut = !getLocalFirebaseCreds();
+	}
+	else if(dataSource.isIndexedDb)
+	{
+		// assume user is logged in at all times on indexedDb
+		isLoggedOut = false;
+	}
 
-  if(dataSource.isApi)
-  {
-    isLoggedOut = await getIsJwtExpired();
-  }
-  else if(dataSource.isFirebase)
-  {
-    isLoggedOut = !getLocalFirebaseCreds();
-  }
-  else if(dataSource.isIndexedDb)
-  {
-    // assume user is logged in at all times on indexedDb
-    isLoggedOut = false;
-  }
-
-  if(isLoggedOut)
-  {
-    $q.notify('You have been logged out, please log in again');
-    router.push({ name: 'login' });
-  }
+	if(isLoggedOut)
+	{
+		$q.notify('You have been logged out, please log in again');
+		router.push({ name: 'login' });
+	}
 }
+
 onMounted(redirectToLoginIfNeeded);
 const adminStore = useAdminStore();
+
 async function login(user: string, pass: string): Promise<boolean>
 {
-  const dataSource = checkDataSource();
+	const dataSource = checkDataSource();
 
-  if(dataSource.isIndexedDb)
-  {
-    // assume user is logged in at all times on indexedDb
-    return true;
-  }
-  else if(dataSource.isApi)
-  {
-    const ah = new ApiHandler({});
+	if(dataSource.isIndexedDb)
+	{
+		// assume user is logged in at all times on indexedDb
+		return true;
+	}
+	else if(dataSource.isApi)
+	{
+		const ah = new ApiHandler({});
 
-    updateLocalJwt('');
+		updateLocalJwt('');
 
-    const res = await ah.GET(`/login/${user}/${pass}`);
-    const jwt = (res?.data as Record<string, unknown>)?.token;
+		const res = await ah.GET(`/login/${user}/${pass}`);
+		const jwt = (res?.data as Record<string, unknown>)?.token;
 
-    if(typeof jwt === 'string')
-    {
-      updateLocalJwt(jwt);
+		if(typeof jwt === 'string')
+		{
+			updateLocalJwt(jwt);
 
-      return true;
-    }
-  }
-  else if(dataSource.isFirebase)
-  {
-    await adminStore.firebaseLogin(user, pass);
+			return true;
+		}
+	}
+	else if(dataSource.isFirebase)
+	{
+		await adminStore.firebaseLogin(user, pass);
 
-    return true;
-  }
+		return true;
+	}
 
-  return false;
+	return false;
 }
 
 // Editing Items via the dedicated panel
 const itemToEdit = ref<ItemToEdit | undefined>(undefined);
+
 function clearEditingItem()
 {
-  itemToEdit.value = undefined;
+	itemToEdit.value = undefined;
 }
+
 function editItem(opts: ItemToEdit | undefined): void
 {
-  itemToEdit.value = opts;
+	itemToEdit.value = opts;
 }
+
 const editItemModalProps = ref<Record<string, unknown>>({
-  openOnMount: true,
-  onClose: clearEditingItem,
+	openOnMount: true,
+	onClose: clearEditingItem,
 });
 const queueStore = useQueueStore();
-useQueues<ItemToEdit>({
-  queueKey: 'edit_items',
-  queueAction: (item) =>
-  {
-    if(
-      utils.tools.isPopulatedObject(item) &&
-      ('id' in item && 'typeId' in item)
-    )
-    {
-      if(item.options)
-      {
-        if(item.options.persistent)
-        {
-          editItemModalProps.value.persistent = true;
-        }
-        else if(editItemModalProps.value.persistent)
-        {
-          editItemModalProps.value.persistent = false;
-        }
-      }
 
-      editItem({
-        id: item.id,
-        typeId: item.typeId,
-        initialData: item.initialData,
-        options: { isNew: item.options?.isNew }
-      });
-    }
-    else
-    {
-      clearEditingItem();
-    }
-  }
+useQueues<ItemToEdit>({
+	queueKey: 'edit_items',
+	queueAction: (item) =>
+	{
+		if(
+			utils.tools.isPopulatedObject(item) &&
+      ('id' in item && 'typeId' in item)
+		)
+		{
+			if(item.options)
+			{
+				if(item.options.persistent)
+				{
+					editItemModalProps.value.persistent = true;
+				}
+				else if(editItemModalProps.value.persistent)
+				{
+					editItemModalProps.value.persistent = false;
+				}
+			}
+
+			editItem({
+				id: item.id,
+				typeId: item.typeId,
+				initialData: item.initialData,
+				options: { isNew: item.options?.isNew }
+			});
+		}
+		else
+		{
+			clearEditingItem();
+		}
+	}
 });
 
 // Block preview modal opts
 const {
-  shouldShowBlockPreviewModal,
-  toggleShouldShowBlockPreviewModal,
+	shouldShowBlockPreviewModal,
+	toggleShouldShowBlockPreviewModal,
 } = useBlockPreviewModal();
 
 // Context store
 const ctx = useBlockContextStore()();
 const ctxItemData = computed(() => (
-  typeof route.params.pageId === 'string' ?
-    ctx.page?.[route.params.pageId]?.itemDataByType :
-    {}
+	typeof route.params.pageId === 'string' ?
+		ctx.page?.[route.params.pageId]?.itemDataByType :
+		{}
 ));
 const ctxItemIdsOnPage = computed(() => (
-  typeof route.params.pageId === 'string' ?
-    ctx.page?.[route.params.pageId]?.itemIdsByType :
-    {}
+	typeof route.params.pageId === 'string' ?
+		ctx.page?.[route.params.pageId]?.itemIdsByType :
+		{}
 ));
+
 onMounted(() => ctx.setHandlebars(handlebars));
 watch(() => route.params.pageId, () =>
 {
-  if(!route.params.pageId)
-  {
-    ctx.setPageId(route.params.pageId);
-  }
-  else if(typeof route.params.pageId === 'string')
-  {
-    ctx.setPageId(route.params.pageId);
-  }
+	if(!route.params.pageId)
+	{
+		ctx.setPageId(route.params.pageId);
+	}
+	else if(typeof route.params.pageId === 'string')
+	{
+		ctx.setPageId(route.params.pageId);
+	}
 });
 
 // Provides
 provide('$ctxStore', {
-  store: ctx,
-  itemData: ctxItemData,
-  itemIdsOnPage: ctxItemIdsOnPage,
-  compile: (html: string) => handlebars.compile(html)(ctxItemData.value),
+	store: ctx,
+	itemData: ctxItemData,
+	itemIdsOnPage: ctxItemIdsOnPage,
+	compile: (html: string) => handlebars.compile(html)(ctxItemData.value),
 });
+
 provide('helpers', { login, editItem });
 provide('$handlebars', handlebars);
 
 function setTheme()
 {
-  const themes = useThemeStore();
-  // set dark mode to the user's preference
-  const theme = themes.getActiveTheme;
-  Dark.set((theme === 'dark'));
+	const themes = useThemeStore();
+	// set dark mode to the user's preference
+	const theme = themes.getActiveTheme;
+
+	Dark.set((theme === 'dark'));
 }
+
 onMounted(setTheme);
 
 async function openHelpWizardIfDbEmpty()
 {
-  const dataSource = checkDataSource();
+	const dataSource = checkDataSource();
 
-  if(dataSource.isIndexedDb)
-  {
-    // open the help modal if the local db is empty
-    const idb = new IndexedDbInterface({});
-    idb.getItemsPublished().then((items) =>
-    {
-      if(!(Array.isArray(items) && items.length))
-      {
-        $q.notify({
-          message: 'Welcome to my app! The help wizard will now open to guide you.',
-          timeout: 10000,
-        });
+	if(dataSource.isIndexedDb)
+	{
+		// open the help modal if the local db is empty
+		const idb = new IndexedDbInterface({});
 
-        queueStore.addToQueue('help_wizard_first_run', { start: true });
-      }
-      else
-      {
-        queueStore.addToQueue('help_wizard_first_run', { start: false });
-      }
-    });
-  }
+		idb.getItemsPublished().then((items) =>
+		{
+			if(!(Array.isArray(items) && items.length))
+			{
+				$q.notify({
+					message: 'Welcome to my app! The help wizard will now open to guide you.',
+					timeout: 10000,
+				});
+
+				queueStore.addToQueue('help_wizard_first_run', { start: true });
+			}
+			else
+			{
+				queueStore.addToQueue('help_wizard_first_run', { start: false });
+			}
+		});
+	}
 }
+
 onMounted(openHelpWizardIfDbEmpty);
 </script>
 
@@ -486,7 +498,6 @@ body *,
 .body--light .standout-2 { background-color: #00000020; }
 .body--light .standout-3 { background-color: #00000030; }
 .body--light .standout-4 { background-color: #00000040; }
-
 
 .body--dark .standout-0 {
   background: rgba(25, 45, 65, 0.02);

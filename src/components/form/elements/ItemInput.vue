@@ -35,7 +35,10 @@
             >
               <q-tooltip>{{ $t('forms.itemInput.tooltips.clearSelection') }}</q-tooltip>
             </ThemeButton>
-            <q-separator vertical class="q-mx-sm" />
+            <q-separator
+              vertical
+              class="q-mx-sm"
+            />
             <SimpleModal full-width>
               <template #activator="{open}">
                 <ThemeButton
@@ -43,10 +46,12 @@
                   flat
                   @click.stop.prevent="open"
                 >
-                  <q-tooltip>{{ ($t(
-                    'forms.itemInput.tooltips.searchFields',
-                    { itemType: field.itemType }
-                  )) }}</q-tooltip>
+                  <q-tooltip>
+                    {{ ($t(
+                      'forms.itemInput.tooltips.searchFields',
+                      { itemType: field.itemType }
+                    )) }}
+                  </q-tooltip>
                 </ThemeButton>
               </template>
               <template #content>
@@ -57,7 +62,10 @@
                 />
               </template>
             </SimpleModal>
-            <q-separator vertical class="q-mx-sm" />
+            <q-separator
+              vertical
+              class="q-mx-sm"
+            />
             <!-- Add new if allowed -->
             <EditNewOrExistingItemModal
               :item-type="(field.itemType ?? undefined)"
@@ -159,166 +167,166 @@ const { modelProxy } = useFormElement<ModelType>({ props, emit });
 
 async function init()
 {
-  const itemType = props.field?.itemType || props.itemType;
+	const itemType = props.field?.itemType || props.itemType;
 
-  if(!itemType)
-  {
-    console.warn(`No item type for ${props.field?.key}`, props.field);
+	if(!itemType)
+	{
+		console.warn(`No item type for ${props.field?.key}`, props.field);
 
-    return;
-  }
+		return;
+	}
 
-  const derivedStore = deriveStoreForItemType(itemType);
+	const derivedStore = deriveStoreForItemType(itemType);
 
-  if(derivedStore && itemType)
-  {
-    storeToUse.value = derivedStore;
+	if(derivedStore && itemType)
+	{
+		storeToUse.value = derivedStore;
 
-    const itemId = props.itemId || utils.uuid.generateUuid();
+		const itemId = props.itemId || utils.uuid.generateUuid();
 
-    const derivedHandler = derivedStore?.getHandler(itemId, itemType);
+		const derivedHandler = derivedStore?.getHandler(itemId, itemType);
 
-    if(props.itemId)
-    {
-      derivedHandler?.load().then(() =>
-      {
-        initialDataToUse.value = derivedHandler.getData();
-        itemHandlerRef.value = derivedHandler;
-      });
-    }
-    else
-    {
-      initialDataToUse.value = derivedHandler?.getData();
-      itemHandlerRef.value = derivedHandler;
-    }
-  }
+		if(props.itemId)
+		{
+			derivedHandler?.load().then(() =>
+			{
+				initialDataToUse.value = derivedHandler.getData();
+				itemHandlerRef.value = derivedHandler;
+			});
+		}
+		else
+		{
+			initialDataToUse.value = derivedHandler?.getData();
+			itemHandlerRef.value = derivedHandler;
+		}
+	}
 }
 
 onMounted(init);
 
 onMounted(() =>
 {
-  if(modelProxy.value && props.field?.itemType)
-  {
-    storeToUse.value?.loadMultiple({
-      itemType: props.field?.itemType,
-      ids: (
+	if(modelProxy.value && props.field?.itemType)
+	{
+		storeToUse.value?.loadMultiple({
+			itemType: props.field?.itemType,
+			ids: (
         Array.isArray(modelProxy.value) ? modelProxy.value : [modelProxy.value]
       ) as string[]
-    });
-  }
+		});
+	}
 });
 
 const displayValues = computed(() =>
 {
-  if(!modelProxy.value || !storeToUse.value)
-  {
-    return undefined;
-  }
+	if(!modelProxy.value || !storeToUse.value)
+	{
+		return undefined;
+	}
 
-  return mapItemIdsToItems({
-    itemType: props.field?.itemType || props.itemType,
-    itemIds: (
+	return mapItemIdsToItems({
+		itemType: props.field?.itemType || props.itemType,
+		itemIds: (
       Array.isArray(modelProxy.value) ? modelProxy.value : [modelProxy.value]
     ) as string[],
-    store: storeToUse.value
-  });
+		store: storeToUse.value
+	});
 });
 
 const useAllFields = ref(false);
 const customTableFields = computed(() => (
-  useAllFields.value ?
-    fieldsToUse.value :
-    fieldsToUse.value?.filter((f) => (f.validation?.required || f.isPrimarySearchField))
+	useAllFields.value ?
+		fieldsToUse.value :
+		fieldsToUse.value?.filter((f) => (f.validation?.required || f.isPrimarySearchField))
 ));
 
 function onItemSelected(e: unknown)
 {
-  const id = utils.tools.isPopulatedObject(e) ? e.id || e : e;
+	const id = utils.tools.isPopulatedObject(e) ? e.id || e : e;
 
-  if(!utils.uuid.isUuid(id))
-  {
-    return;
-  }
+	if(!utils.uuid.isUuid(id))
+	{
+		return;
+	}
 
-  const shouldBeArray = (props.field.fieldType === fields.FieldType.itemArray);
+	const shouldBeArray = (props.field.fieldType === fields.FieldType.itemArray);
 
-  const valueToSave = shouldBeArray ? [id] : id;
+	const valueToSave = shouldBeArray ? [id] : id;
 
-  if(!modelProxy.value)
-  {
-    modelProxy.value = valueToSave as ModelType;
+	if(!modelProxy.value)
+	{
+		modelProxy.value = valueToSave as ModelType;
 
-    return;
-  }
+		return;
+	}
 
-  if(Array.isArray(modelProxy.value))
-  {
-    // TODO: Add allowDuplicates flag to control this
-    if(typeof id === 'string' && !modelProxy.value.includes(id))
-    {
-      modelProxy.value.push(id);
-    }
-  }
-  else if(!shouldBeArray)
-  {
-    modelProxy.value = valueToSave as ModelType;
-  }
+	if(Array.isArray(modelProxy.value))
+	{
+		// TODO: Add allowDuplicates flag to control this
+		if(typeof id === 'string' && !modelProxy.value.includes(id))
+		{
+			modelProxy.value.push(id);
+		}
+	}
+	else if(!shouldBeArray)
+	{
+		modelProxy.value = valueToSave as ModelType;
+	}
 }
 
 function onItemRemoved(e: unknown)
 {
-  const id = utils.tools.isPopulatedObject(e) ? e.id || e : e;
+	const id = utils.tools.isPopulatedObject(e) ? e.id || e : e;
 
-  if(!utils.uuid.isUuid(id))
-  {
-    return;
-  }
+	if(!utils.uuid.isUuid(id))
+	{
+		return;
+	}
 
-  const shouldBeArray = (props.field.fieldType === fields.FieldType.itemArray);
+	const shouldBeArray = (props.field.fieldType === fields.FieldType.itemArray);
 
-  if(!shouldBeArray)
-  {
-    // if not array, and we are removing the only value, nullify the field
-    modelProxy.value = null;
+	if(!shouldBeArray)
+	{
+		// if not array, and we are removing the only value, nullify the field
+		modelProxy.value = null;
 
-    return;
-  }
+		return;
+	}
 
-  if(!Array.isArray(modelProxy.value))
-  {
-    modelProxy.value = [];
+	if(!Array.isArray(modelProxy.value))
+	{
+		modelProxy.value = [];
 
-    return;
-  }
+		return;
+	}
 
-  // TODO: handle removing a single item when duplicates are allowed
-  modelProxy.value = modelProxy.value.filter((existingId) => (existingId !== id));
+	// TODO: handle removing a single item when duplicates are allowed
+	modelProxy.value = modelProxy.value.filter((existingId) => (existingId !== id));
 }
 
 onMounted(async () =>
 {
-  if(modelProxy.value && props.itemType)
-  {
-    await storeToUse.value?.loadMultiple({
-      itemType: props.itemType,
-      ids: (
+	if(modelProxy.value && props.itemType)
+	{
+		await storeToUse.value?.loadMultiple({
+			itemType: props.itemType,
+			ids: (
         Array.isArray(modelProxy.value) ? modelProxy.value : [modelProxy.value]
       ) as string[]
-    });
-  }
+		});
+	}
 });
 
 function onResultClicked($event: ItemResultClick)
 {
-  console.log('result-clicked:', $event);
-  // emit('changed', $event.itemId);
+	console.log('result-clicked:', $event);
+	// emit('changed', $event.itemId);
 }
 
 function clearInput()
 {
-  modelProxy.value = null;
-  emit('changed', null);
+	modelProxy.value = null;
+	emit('changed', null);
 }
 </script>
 

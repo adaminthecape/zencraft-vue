@@ -14,7 +14,9 @@
             icon="fas fa-remove"
             color="negative"
             @click="deleteItem"
-          >{{ $t('generic.buttons.delete') }}</ThemeButton>
+          >
+            {{ $t('generic.buttons.delete') }}
+          </ThemeButton>
         </ListItem>
       </q-card>
     </q-popup-proxy>
@@ -38,14 +40,14 @@ const props = defineProps<QBtnProps & {
 
 async function deleteItem(): Promise<void>
 {
-  if(typeof props.store.removeItem !== 'function')
-  {
-    console.warn('Cannot delete item');
-  }
+	if(typeof props.store.removeItem !== 'function')
+	{
+		console.warn('Cannot delete item');
+	}
 
 	await props.store.removeItem({
-    itemId: props.itemId,
-    itemType: props.itemType,
+		itemId: props.itemId,
+		itemType: props.itemType,
 	});
 }
 </script>

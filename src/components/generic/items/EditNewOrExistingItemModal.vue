@@ -25,7 +25,10 @@
       </div>
     </template>
     <template #activator="{ open }">
-      <slot name="activator" v-bind="{ open }">
+      <slot
+        name="activator"
+        v-bind="{ open }"
+      >
         <ThemeButton
           :icon="icon || (existingItemId ? 'edit' : 'add')"
           :color="iconColor || (existingItemId ? 'accent' : 'positive')"
@@ -89,7 +92,7 @@ const emit = defineEmits<{
 const isTransparent = ref(false);
 const minWidth = computed(() => `${Math.min($q.screen.width, 600)}px`);
 const styles = computed(() => ({
-  minWidth: minWidth.value,
-  background: isTransparent.value ? '#ffffff10' : undefined
+	minWidth: minWidth.value,
+	background: isTransparent.value ? '#ffffff10' : undefined
 }));
 </script>

@@ -1,6 +1,9 @@
 <template>
   <q-list>
-    <template v-for="(menuItem, m) in menuList" :key="`nav-item-${m}`">
+    <template
+      v-for="(menuItem, m) in menuList"
+      :key="`nav-item-${m}`"
+    >
       <div
         v-if="menuItem.to"
         :to="menuItem.to"
@@ -8,37 +11,46 @@
         active-class="nav-link-active"
         custom
       >
-      <ListItem
-        v-if="!menuItem.children"
-        clickable
-        :active="pathMatch(menuItem.to?.path)"
-        v-ripple
-        :to="menuItem.to"
-      >
-        <template #avatar>
-          <ThemeIcon color="secondary" :name="menuItem.icon" />
-        </template>
-        <span class="lato-bold">{{ menuItem.label }}</span>
-      </ListItem>
-      <q-expansion-item
-        v-if="menuItem.children"
-        default-opened
-        :label="menuItem.label"
-      >
         <ListItem
-          v-for="subMenuItem in menuItem.children"
-          :key="`sub-menu-item-${subMenuItem.label}`"
-          :to="subMenuItem.to"
-          clickable
+          v-if="!menuItem.children"
           v-ripple
+          clickable
+          :active="pathMatch(menuItem.to?.path)"
+          :to="menuItem.to"
         >
           <template #avatar>
-            <ThemeIcon color="secondary" :name="subMenuItem.icon" />
+            <ThemeIcon
+              color="secondary"
+              :name="menuItem.icon"
+            />
           </template>
-          <span class="lato-bold">{{ subMenuItem.label }}</span>
+          <span class="lato-bold">{{ menuItem.label }}</span>
         </ListItem>
-      </q-expansion-item>
-      <q-separator :key="`nav-sep-${m}`" v-if="menuItem.separator" />
+        <q-expansion-item
+          v-if="menuItem.children"
+          default-opened
+          :label="menuItem.label"
+        >
+          <ListItem
+            v-for="subMenuItem in menuItem.children"
+            :key="`sub-menu-item-${subMenuItem.label}`"
+            v-ripple
+            :to="subMenuItem.to"
+            clickable
+          >
+            <template #avatar>
+              <ThemeIcon
+                color="secondary"
+                :name="subMenuItem.icon"
+              />
+            </template>
+            <span class="lato-bold">{{ subMenuItem.label }}</span>
+          </ListItem>
+        </q-expansion-item>
+        <q-separator
+          v-if="menuItem.separator"
+          :key="`nav-sep-${m}`"
+        />
       </div>
     </template>
   </q-list>
@@ -59,91 +71,91 @@ const customItemStore = useCustomItemStore({})();
 
 const allItemTypes = computed(() =>
 {
-  const types: string[] = Object.values(sharedTypes.KnownItemType);
+	const types: string[] = Object.values(sharedTypes.KnownItemType);
 
-  if(Array.isArray(customItemStore.getDefinitionNames))
-  {
-    customItemStore.getDefinitionNames.forEach((name) =>
-    {
-      if(!types.includes(name))
-      {
-        types.push(name);
-      }
-    });
-  }
+	if(Array.isArray(customItemStore.getDefinitionNames))
+	{
+		customItemStore.getDefinitionNames.forEach((name) =>
+		{
+			if(!types.includes(name))
+			{
+				types.push(name);
+			}
+		});
+	}
 
-  return types;
+	return types;
 });
 
 const menuList = computed(() => ([
-  {
-    icon: 'people',
-    label: 'Users',
-    separator: true,
-    to: { path: '/admin/users' }
-  },
-  {
-    icon: 'key',
-    label: 'Permissions',
-    separator: true,
-    to: { path: '/admin/permissions' }
-  },
-  {
-    icon: 'inbox',
-    label: 'Item Tables',
-    separator: true,
-    to: { path: '/admin/items' },
-    children: (allItemTypes.value).map((itemType) => ({
-      icon: itemTypeIcons[itemType] ?? 'house',
-      label: `${itemType}s`,
-      to: {
-        name: 'manageItemType',
-        params: { itemType }
-      }
-    }))
-  },
-  {
-    icon: 'send',
-    label: 'View Tours',
-    separator: false,
-    to: { path: '/admin/tours/list' }
-  },
-  {
-    icon: 'delete',
-    label: 'Trash',
-    separator: false
-  },
-  {
-    icon: 'error',
-    label: 'Spam',
-    separator: true
-  },
-  {
-    icon: 'settings',
-    label: 'Settings',
-    separator: false,
-    to: { path: '/admin/settings' }
-  },
-  {
-    icon: 'feedback',
-    label: 'Home Page',
-    separator: false,
-    to: { path: '/' }
-  },
-  {
-    icon: 'help',
-    iconColor: 'primary',
-    label: 'Help',
-    separator: false,
-    to: { path: '/help' }
-  }
+	{
+		icon: 'people',
+		label: 'Users',
+		separator: true,
+		to: { path: '/admin/users' }
+	},
+	{
+		icon: 'key',
+		label: 'Permissions',
+		separator: true,
+		to: { path: '/admin/permissions' }
+	},
+	{
+		icon: 'inbox',
+		label: 'Item Tables',
+		separator: true,
+		to: { path: '/admin/items' },
+		children: (allItemTypes.value).map((itemType) => ({
+			icon: itemTypeIcons[itemType] ?? 'house',
+			label: `${itemType}s`,
+			to: {
+				name: 'manageItemType',
+				params: { itemType }
+			}
+		}))
+	},
+	{
+		icon: 'send',
+		label: 'View Tours',
+		separator: false,
+		to: { path: '/admin/tours/list' }
+	},
+	{
+		icon: 'delete',
+		label: 'Trash',
+		separator: false
+	},
+	{
+		icon: 'error',
+		label: 'Spam',
+		separator: true
+	},
+	{
+		icon: 'settings',
+		label: 'Settings',
+		separator: false,
+		to: { path: '/admin/settings' }
+	},
+	{
+		icon: 'feedback',
+		label: 'Home Page',
+		separator: false,
+		to: { path: '/' }
+	},
+	{
+		icon: 'help',
+		iconColor: 'primary',
+		label: 'Help',
+		separator: false,
+		to: { path: '/help' }
+	}
 ]));
 
 const route = useRoute();
 
 function pathMatch(path: string | undefined): boolean
 {
-  return path === route.path;
+	return path === route.path;
 }
 </script>
 

@@ -1,7 +1,7 @@
 <template>
-	<q-card>
-		<slot />
-	</q-card>
+  <q-card>
+    <slot />
+  </q-card>
 </template>
 
 <script setup lang="ts">

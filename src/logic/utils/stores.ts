@@ -22,36 +22,36 @@ export type StoreTypes = (
 );
 
 export function deriveStoreForItemType(
-  itemType: string | undefined,
-  opts?: Record<string, unknown>
+	itemType: string | undefined,
+	opts?: Record<string, unknown>
 ): StoreTypes
 {
-  if(!opts)
-  {
-    opts = {};
-  }
+	if(!opts)
+	{
+		opts = {};
+	}
 
-  switch(itemType)
-  {
-    case sharedTypes.KnownItemType.Hub:
-      return useHubStore(opts)();
-    case sharedTypes.KnownItemType.Page:
-      return usePageStore(opts)();
-    case sharedTypes.KnownItemType.Field:
-      return useFieldStore(opts)();
-    case sharedTypes.KnownItemType.Block:
-      return useBlockStore(opts)();
-    case sharedTypes.KnownItemType.Archetype:
-      return useArchetypeStore(opts)();
-    case sharedTypes.KnownItemType.Blueprint:
-      return useBlueprintStore(opts)();
-    case sharedTypes.KnownItemType.AccessRole:
-      return useAccessRoleStore(opts)();
-    case sharedTypes.KnownItemType.CustomItem:
-    case sharedTypes.KnownItemType.Item:
-    default:
-      return useCustomItemStore(opts)();
-  }
+	switch(itemType)
+	{
+		case sharedTypes.KnownItemType.Hub:
+			return useHubStore(opts)();
+		case sharedTypes.KnownItemType.Page:
+			return usePageStore(opts)();
+		case sharedTypes.KnownItemType.Field:
+			return useFieldStore(opts)();
+		case sharedTypes.KnownItemType.Block:
+			return useBlockStore(opts)();
+		case sharedTypes.KnownItemType.Archetype:
+			return useArchetypeStore(opts)();
+		case sharedTypes.KnownItemType.Blueprint:
+			return useBlueprintStore(opts)();
+		case sharedTypes.KnownItemType.AccessRole:
+			return useAccessRoleStore(opts)();
+		case sharedTypes.KnownItemType.CustomItem:
+		case sharedTypes.KnownItemType.Item:
+		default:
+			return useCustomItemStore(opts)();
+	}
 }
 
 export function mapItemIdsToItems(opts: {
@@ -60,32 +60,33 @@ export function mapItemIdsToItems(opts: {
   store: StoreTypes;
 }): Record<string, unknown>
 {
-  if(
-    !Array.isArray(opts.itemIds) ||
+	if(
+		!Array.isArray(opts.itemIds) ||
     !opts.store ||
     !(opts.itemType && (typeof opts.itemType === 'string'))
-  )
-  {
-    console.log(
-      opts,
-      !Array.isArray(opts.itemIds),
-      !opts.store,
-      !(opts.itemType && (typeof opts.itemType === 'string'))
-    );
-    return {};
-  }
+	)
+	{
+		console.log(
+			opts,
+			!Array.isArray(opts.itemIds),
+			!opts.store,
+			!(opts.itemType && (typeof opts.itemType === 'string'))
+		);
 
-  return opts.itemIds.reduce((agg, id) =>
-  {
-    if(opts.itemType && opts.store?.getItem(id, opts.itemType))
-    {
-      agg[id] = opts.store.getItem(id, opts.itemType);
-    }
-    else
-    {
-      agg[id] = { id };
-    }
+		return {};
+	}
 
-    return agg;
-  }, {} as Record<string, unknown>);
+	return opts.itemIds.reduce((agg, id) =>
+	{
+		if(opts.itemType && opts.store?.getItem(id, opts.itemType))
+		{
+			agg[id] = opts.store.getItem(id, opts.itemType);
+		}
+		else
+		{
+			agg[id] = { id };
+		}
+
+		return agg;
+	}, {} as Record<string, unknown>);
 }

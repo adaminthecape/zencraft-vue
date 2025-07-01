@@ -13,7 +13,9 @@
       position: 'right'
     }"
   >
-    <div class="row items-center q-mb-sm">Block Preview</div>
+    <div class="row items-center q-mb-sm">
+      Block Preview
+    </div>
     <div v-if="itemData.contextReference?.blockId">
       <DisplayBlock
         :block-id="itemData.contextReference.blockId"
@@ -22,8 +24,7 @@
         :force-no-edit-mode="true"
       />
     </div>
-    <div v-else>
-    </div>
+    <div v-else />
   </div>
 </template>
 
@@ -35,7 +36,7 @@ import DisplayBlock from '../layout/DisplayBlock.vue';
 import useBlockPreviewModal from 'src/composables/useBlockPreviewModal';
 
 const {
-  shouldShowBlockPreviewModal,
+	shouldShowBlockPreviewModal,
 } = useBlockPreviewModal();
 
 const $q = useQuasar();
@@ -50,15 +51,15 @@ const emit = defineEmits<{
 
 const minWidth = computed(() => `calc(100vw - ${Math.min($q.screen.width, 600)}px - 100px)`);
 const styles = computed(() => ({
-  minWidth: minWidth.value,
-  margin: '40px',
-  background: Dark.isActive ? '#11111180' : '#dddddd80',
-  position: 'absolute',
-  top: '0px',
-  right: '40px',
-  height: 'calc(100vh - 80px)',
-  borderRadius: '6px',
-  backdropFilter: 'blur(10px)',
-  boxShadow: Dark.isActive ? '0 0 10px 0 rgba(0, 0, 0)' : '0 0 10px 0 rgba(255, 255, 255, 0.2)',
+	minWidth: minWidth.value,
+	margin: '40px',
+	background: Dark.isActive ? '#11111180' : '#dddddd80',
+	position: 'absolute',
+	top: '0px',
+	right: '40px',
+	height: 'calc(100vh - 80px)',
+	borderRadius: '6px',
+	backdropFilter: 'blur(10px)',
+	boxShadow: Dark.isActive ? '0 0 10px 0 rgba(0, 0, 0)' : '0 0 10px 0 rgba(255, 255, 255, 0.2)',
 }));
 </script>

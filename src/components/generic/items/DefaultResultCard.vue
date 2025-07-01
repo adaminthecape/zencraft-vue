@@ -1,14 +1,24 @@
 <template>
   <!-- Show all properties of a TourItem -->
-  <q-card v-if="itemData" flat bordered class="standout-2 q-ma-sm" v-bind="qProps">
+  <q-card
+    v-if="itemData"
+    flat
+    bordered
+    class="standout-2 q-ma-sm"
+    v-bind="qProps"
+  >
     <q-card-section>
       <div class="row items-center no-wrap">
         <div class="col">
-          <div class="text-subtitle2">{{ itemType }}</div>
+          <div class="text-subtitle2">
+            {{ itemType }}
+          </div>
           <div
             v-if="fieldsToShow.mainField"
             class="text-h6"
-          >{{ (itemData as any)[`${fieldsToShow.mainField.key}`] }}</div>
+          >
+            {{ (itemData as any)[`${fieldsToShow.mainField.key}`] }}
+          </div>
         </div>
       </div>
     </q-card-section>
@@ -20,8 +30,15 @@
           :key="`result-card-${itemType}-${itemId}-${subField.id}`"
           class="row items-center text-subtitle2"
         >
-          <ThemeIcon v-if="subField.icon" :name="subField.icon" color="secondary" />
-          <span v-else color="secondary">{{ subField.label || subField.key }}</span>
+          <ThemeIcon
+            v-if="subField.icon"
+            :name="subField.icon"
+            color="secondary"
+          />
+          <span
+            v-else
+            color="secondary"
+          >{{ subField.label || subField.key }}</span>
           <span>:&nbsp;</span>
           <span>{{ (itemData as any)[`${subField.key}`] }}</span>
         </div>
@@ -46,8 +63,16 @@
       </EditNewOrExistingItemModal>
       <div class="q-space" />
       <div class="col-auto">
-        <ThemeButton color="grey-7" round flat icon="more_vert">
-          <q-menu cover auto-close>
+        <ThemeButton
+          color="grey-7"
+          round
+          flat
+          icon="more_vert"
+        >
+          <q-menu
+            cover
+            auto-close
+          >
             <q-list>
               <q-item clickable>
                 <q-item-section>{{ $t('social.actions.share') }}</q-item-section>
@@ -92,31 +117,31 @@ const fieldsToShow = computed<{
   subFields: fields.FieldData[]
 }>(() =>
 {
-  if(!(Array.isArray(itemFields.value) && itemFields.value.length))
-  {
-    return [];
-  }
+	if(!(Array.isArray(itemFields.value) && itemFields.value.length))
+	{
+		return [];
+	}
 
-  return itemFields.value.reduce((agg, field) =>
-  {
-    if(field.isDefaultSortField || field.isPrimarySearchField)
-    {
-      agg.mainField = field;
-    }
-    else if(field.isSearchable && field.fieldType === fields.FieldType.textarea)
-    {
-      agg.descriptionField = field;
-    }
-    else if(field.isSearchable)
-    {
-      agg.subFields.push(field);
-    }
+	return itemFields.value.reduce((agg, field) =>
+	{
+		if(field.isDefaultSortField || field.isPrimarySearchField)
+		{
+			agg.mainField = field;
+		}
+		else if(field.isSearchable && field.fieldType === fields.FieldType.textarea)
+		{
+			agg.descriptionField = field;
+		}
+		else if(field.isSearchable)
+		{
+			agg.subFields.push(field);
+		}
 
-    return agg;
-  }, {
-    mainField: undefined,
-    descriptionField: undefined,
-    subFields: []
-  } as any);
+		return agg;
+	}, {
+		mainField: undefined,
+		descriptionField: undefined,
+		subFields: []
+	} as any);
 });
 </script>

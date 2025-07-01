@@ -1,9 +1,15 @@
 <template>
   <q-item v-bind="props">
-    <q-item-section v-if="slots.avatar" avatar>
+    <q-item-section
+      v-if="slots.avatar"
+      avatar
+    >
       <slot name="avatar" />
     </q-item-section>
-    <q-item-section v-if="slots.left" side>
+    <q-item-section
+      v-if="slots.left"
+      side
+    >
       <slot name="left" />
     </q-item-section>
     <q-item-section>
@@ -11,11 +17,17 @@
       <q-item-label v-if="slots.label">
         <slot name="label" />
       </q-item-label>
-      <q-item-label v-if="slots.caption" caption>
+      <q-item-label
+        v-if="slots.caption"
+        caption
+      >
         <span><slot name="caption" /></span>
       </q-item-label>
     </q-item-section>
-    <q-item-section v-if="slots.right" side>
+    <q-item-section
+      v-if="slots.right"
+      side
+    >
       <slot name="right" />
     </q-item-section>
   </q-item>
@@ -28,6 +40,6 @@ import { useSlots } from 'vue';
 const slots = useSlots();
 
 const props = withDefaults(defineProps<QItemProps>(), {
-  clickable: true,
+	clickable: true,
 });
 </script>

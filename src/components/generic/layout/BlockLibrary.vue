@@ -34,10 +34,14 @@
         <div
           class="text-bold lato-bold q-mb-sm"
           style="font-size: 1.1em"
-        >{{ $t(`blocks.types.${blockDef.blockType}.title`) }}</div>
+        >
+          {{ $t(`blocks.types.${blockDef.blockType}.title`) }}
+        </div>
         <div
           class="text-caption block-definition-card-description"
-        >{{ $t(`blocks.types.${blockDef.blockType}.description`) }}</div>
+        >
+          {{ $t(`blocks.types.${blockDef.blockType}.description`) }}
+        </div>
         <div class="q-space" />
         <div class="row items-center full-width">
           <div class="q-space" />
@@ -45,11 +49,15 @@
             color="positive"
             class="q-mr-xs"
             outline
-          >{{ $t('blocks.library.moreInfo') }}</ThemeButton>
+          >
+            {{ $t('blocks.library.moreInfo') }}
+          </ThemeButton>
           <ThemeButton
             color="positive"
             @click="() => selectDefinition(blockDef.id)"
-          >{{ $t('blocks.library.selectBlock') }}</ThemeButton>
+          >
+            {{ $t('blocks.library.selectBlock') }}
+          </ThemeButton>
         </div>
       </div>
     </div>
@@ -87,12 +95,12 @@ const emit = defineEmits<{
 
 function selectDefinition(id: string)
 {
-  selectedBlueprintId.value = id;
-  emit('selectedId', id);
+	selectedBlueprintId.value = id;
+	emit('selectedId', id);
 }
 
 const numColumnsToShow = computed(() => (
-  Math.floor($q.screen.width / 350)
+	Math.floor($q.screen.width / 350)
 ));
 
 const searchTerm = ref('');
@@ -100,64 +108,64 @@ const searchResults = ref<Blueprint.BlueprintItem[]>([]);
 const paginationHandler = ref(new dbPagination.PaginationHandler({}));
 const pagination = computed(() => paginationHandler.value.pagination);
 const searchFilters = computed<dbFilters.DbFilters | undefined>(() => (
-  searchTerm.value ?
-    [
-      {
-        group: dbFilters.DbFilterGroupType.or,
-        children: [
-          {
-            key: 'title',
-            operator: dbFilters.DbFilterOperator.fuzzyEqual,
-            value: searchTerm.value,
-          },
-          {
-            key: 'name',
-            operator: dbFilters.DbFilterOperator.fuzzyEqual,
-            value: searchTerm.value,
-          },
-          {
-            key: 'blockType',
-            operator: dbFilters.DbFilterOperator.fuzzyEqual,
-            value: searchTerm.value,
-          },
-        ]
-      }
-    ] :
-    undefined
+	searchTerm.value ?
+		[
+			{
+				group: dbFilters.DbFilterGroupType.or,
+				children: [
+					{
+						key: 'title',
+						operator: dbFilters.DbFilterOperator.fuzzyEqual,
+						value: searchTerm.value,
+					},
+					{
+						key: 'name',
+						operator: dbFilters.DbFilterOperator.fuzzyEqual,
+						value: searchTerm.value,
+					},
+					{
+						key: 'blockType',
+						operator: dbFilters.DbFilterOperator.fuzzyEqual,
+						value: searchTerm.value,
+					},
+				]
+			}
+		] :
+		undefined
 ));
 
 async function searchDefinitions()
 {
-  const {
-    results,
-    totalItems,
-    hasMore,
-  } = await blueprintStore.searchItems({
-    itemType: sharedTypes.KnownItemType.Blueprint,
-    filters: searchFilters.value,
-    pagination: pagination.value,
-  });
+	const {
+		results,
+		totalItems,
+		hasMore,
+	} = await blueprintStore.searchItems({
+		itemType: sharedTypes.KnownItemType.Blueprint,
+		filters: searchFilters.value,
+		pagination: pagination.value,
+	});
 
-  paginationHandler.value.setTotal(totalItems);
+	paginationHandler.value.setTotal(totalItems);
 
-  if(Array.isArray(results))
-  {
-    searchResults.value = results as Blueprint.BlueprintItem[];
-  }
+	if(Array.isArray(results))
+	{
+		searchResults.value = results as Blueprint.BlueprintItem[];
+	}
 }
 
 onMounted(searchDefinitions);
 
 const computedPage = computed<number>({
-  get()
-  {
-    return paginationHandler.value.pagination.page ?? 1;
-  },
-  set(newVal: number)
-  {
-    paginationHandler.value.setPage(newVal);
-    searchDefinitions();
-  }
+	get()
+	{
+		return paginationHandler.value.pagination.page ?? 1;
+	},
+	set(newVal: number)
+	{
+		paginationHandler.value.setPage(newVal);
+		searchDefinitions();
+	}
 });
 
 </script>

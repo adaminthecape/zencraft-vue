@@ -1,6 +1,8 @@
 <template>
-  <SimpleLayout headerBackgroundColor="var(--q-dark)">
-    <template #header-title>{{ $t('login.logIn') }}</template>
+  <SimpleLayout header-background-color="var(--q-dark)">
+    <template #header-title>
+      {{ $t('login.logIn') }}
+    </template>
     <template #header-right>
       <ThemeButton
         v-if="hasJwt"
@@ -23,27 +25,27 @@
               }}</span>
             </q-card-section>
             <q-card-section>
-            <q-fab
-              color="positive"
-              icon="add"
-              class="absolute q-mb-sm"
-              style="top: 0; right: 12px; transform: translateY(-50%);"
-              @click="() => { isRegistered = !isRegistered; }"
-            >
-              <q-tooltip>{{ $t('login.register') }}</q-tooltip>
-            </q-fab>
+              <q-fab
+                color="positive"
+                icon="add"
+                class="absolute q-mb-sm"
+                style="top: 0; right: 12px; transform: translateY(-50%);"
+                @click="() => { isRegistered = !isRegistered; }"
+              >
+                <q-tooltip>{{ $t('login.register') }}</q-tooltip>
+              </q-fab>
               <q-form class="q-px-sm q-pt-xl">
                 <q-input
                   v-if="!isRegistered"
+                  v-model="email"
                   clearable
                   filled
-                  v-model="email"
                   type="email"
                   lazy-rules
                   label="Email"
                   class="q-mb-sm"
                 >
-                  <template v-slot:prepend>
+                  <template #prepend>
                     <ThemeIcon name="email" />
                   </template>
                 </q-input>
@@ -56,7 +58,7 @@
                   :label="$t('login.username')"
                   class="q-mb-sm"
                 >
-                  <template v-slot:prepend>
+                  <template #prepend>
                     <ThemeIcon name="person" />
                   </template>
                 </q-input>
@@ -69,37 +71,36 @@
                   :label="$t('login.password')"
                   class="q-mb-sm"
                 >
-
-                  <template v-slot:prepend>
+                  <template #prepend>
                     <ThemeIcon name="lock" />
                   </template>
-                  <template v-slot:append>
-                <ThemeIcon
-                    :name="isPasswordVisible ? 'visibility_off' : 'visibility'"
-                    class="cursor-pointer"
-                    @click="() => { isPasswordVisible = !isPasswordVisible; }"
-                  />
+                  <template #append>
+                    <ThemeIcon
+                      :name="isPasswordVisible ? 'visibility_off' : 'visibility'"
+                      class="cursor-pointer"
+                      @click="() => { isPasswordVisible = !isPasswordVisible; }"
+                    />
                   </template>
                 </q-input>
                 <q-input
-                    v-if="!isRegistered"
-                    clearable
-                    filled
-                    v-model="confirmPassword"
-                    :type="isPasswordVisible ? 'text' : 'password'"
-                    lazy-rules
-                    :label="$t('login.confirmPassword')"
-                  >
-                  <template v-slot:prepend>
+                  v-if="!isRegistered"
+                  v-model="confirmPassword"
+                  clearable
+                  filled
+                  :type="isPasswordVisible ? 'text' : 'password'"
+                  lazy-rules
+                  :label="$t('login.confirmPassword')"
+                >
+                  <template #prepend>
                     <ThemeIcon name="lock" />
                   </template>
-              <template v-slot:append>
-            <ThemeIcon
-              :name="isPasswordVisible ? 'visibility_off' : 'visibility'"
-              class="cursor-pointer"
-              @click="() => { isPasswordVisible = !isPasswordVisible; }"
-            />
-            </template>
+                  <template #append>
+                    <ThemeIcon
+                      :name="isPasswordVisible ? 'visibility_off' : 'visibility'"
+                      class="cursor-pointer"
+                      @click="() => { isPasswordVisible = !isPasswordVisible; }"
+                    />
+                  </template>
                 </q-input>
               </q-form>
             </q-card-section>
@@ -109,15 +110,18 @@
                 unelevated
                 size="lg"
                 color="secondary"
-                @click="submit"
                 class="full-width text-white"
                 :label="$t('login.submit')"
+                @click="submit"
               />
             </q-card-actions>
             <q-card-section
-                v-if="isRegistered"
-                class="text-center q-pa-sm">
-              <p class="text-grey-6">{{ $t('login.forgotPassword') }}</p>
+              v-if="isRegistered"
+              class="text-center q-pa-sm"
+            >
+              <p class="text-grey-6">
+                {{ $t('login.forgotPassword') }}
+              </p>
             </q-card-section>
           </q-card>
         </div>
@@ -152,30 +156,30 @@ const router = useRouter();
 
 async function submit(): Promise<void>
 {
-  if(!username.value || !password.value)
-  {
-    return;
-  }
+	if(!username.value || !password.value)
+	{
+		return;
+	}
 
-  const success = await login(username.value, password.value);
+	const success = await login(username.value, password.value);
 
-  if(!success)
-  {
-    $q.notify($t('login.toast.failure'));
-  }
-  else
-  {
-    $q.notify($t('login.toast.success'));
-    router.push('/');
-  }
+	if(!success)
+	{
+		$q.notify($t('login.toast.failure'));
+	}
+	else
+	{
+		$q.notify($t('login.toast.success'));
+		router.push('/');
+	}
 }
 
 const hasJwt = computed(() => !!localStorage.getItem('jwt'));
 
 function goHome()
 {
-  router.replace({
-    path: '/'
-  });
+	router.replace({
+		path: '/'
+	});
 }
 </script>

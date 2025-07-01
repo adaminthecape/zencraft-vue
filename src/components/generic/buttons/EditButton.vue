@@ -1,17 +1,21 @@
 <template>
-	<ThemeButton
-		v-if="isEditing"
-		color="secondary"
-		outline
-		@click="emit('toggle', false)"
-	>{{ $t('generic.buttons.isEditing') }}</ThemeButton>
-	<ThemeButton
-		v-else
+  <ThemeButton
+    v-if="isEditing"
+    color="secondary"
+    outline
+    @click="emit('toggle', false)"
+  >
+    {{ $t('generic.buttons.isEditing') }}
+  </ThemeButton>
+  <ThemeButton
+    v-else
     icon="fas fa-pencil"
     color="secondary"
     flat
-		@click="emit('toggle', true)"
-	>{{ $t('generic.buttons.edit') }}</ThemeButton>
+    @click="emit('toggle', true)"
+  >
+    {{ $t('generic.buttons.edit') }}
+  </ThemeButton>
 </template>
 
 <script setup lang="ts">
@@ -27,7 +31,7 @@ const props = defineProps<{
 
 const emit = defineEmits<{
   (e: 'toggle', value: boolean): void;
-}>()
+}>();
 </script>
 
 <style lang="postcss">

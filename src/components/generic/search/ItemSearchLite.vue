@@ -1,13 +1,26 @@
 <template>
-	<div class="item-search-container-lite">
-		<div class="item-search-opts-activator-lite">
-      <slot name="filters" v-bind="{ filters, search }">
-      </slot>
-		</div>
-		<slot name="header" v-bind="{ filters, search }">
-      <div v-if="title" class="text-h6 q-pa-sm">{{ title }}</div>
+  <div class="item-search-container-lite">
+    <div class="item-search-opts-activator-lite">
+      <slot
+        name="filters"
+        v-bind="{ filters, search }"
+      />
+    </div>
+    <slot
+      name="header"
+      v-bind="{ filters, search }"
+    >
+      <div
+        v-if="title"
+        class="text-h6 q-pa-sm"
+      >
+        {{ title }}
+      </div>
     </slot>
-		<slot name="results" v-bind="{ filters, results, isSearching }">
+    <slot
+      name="results"
+      v-bind="{ filters, results, isSearching }"
+    >
       <q-list v-if="isSearching">
         <ListItem
           v-for="r in [...Array(paginationHandler.pagination.pageSize).keys()]"
@@ -35,20 +48,32 @@
             value: result,
           })"
         >
-          <template #left v-if="result.typeId && itemTypeIcons[result.typeId]">
+          <template
+            v-if="result.typeId && itemTypeIcons[result.typeId]"
+            #left
+          >
             <ThemeIcon :name="itemTypeIcons[result.typeId]" />
           </template>
-          <template #label v-if="fieldKeysToShow.title">
+          <template
+            v-if="fieldKeysToShow.title"
+            #label
+          >
             <span>{{ result[fieldKeysToShow.title] }}</span>
           </template>
-          <template #caption v-if="fieldKeysToShow.caption">
+          <template
+            v-if="fieldKeysToShow.caption"
+            #caption
+          >
             <span>{{ result[fieldKeysToShow.caption] }}</span>
           </template>
         </ListItem>
       </q-list>
     </slot>
     <div class="row items-center justify-center full-width">
-      <slot name="pagination" v-bind="{ paginationHandler, computedPage }">
+      <slot
+        name="pagination"
+        v-bind="{ paginationHandler, computedPage }"
+      >
         <q-pagination
           v-model="computedPage"
           :max="paginationHandler.totalPages"
@@ -56,7 +81,7 @@
         />
       </slot>
     </div>
-	</div>
+  </div>
 </template>
 
 <script setup lang="ts">
@@ -85,41 +110,41 @@ export type ItemSearchProps = {
 const props = defineProps<ItemSearchProps>();
 
 const {
-  // itemStore,
-  isSearching,
-  // filterHandler,
-  filters,
-  paginationHandler,
-  computedPage,
-  search,
-  results,
-  updateFilters,
+	// itemStore,
+	isSearching,
+	// filterHandler,
+	filters,
+	paginationHandler,
+	computedPage,
+	search,
+	results,
+	updateFilters,
 } = useItemSearch({
-  itemType: props.itemType,
-  initialFilters: props.initialFilters,
-  initialPagination: props.initialPagination,
+	itemType: props.itemType,
+	initialFilters: props.initialFilters,
+	initialPagination: props.initialPagination,
 });
 
 watch(() => props.initialFilters, (n, o) =>
 {
-  if(n && (JSON.stringify(n) !== JSON.stringify(o || [])))
-  {
-    updateFilters(n);
-  }
+	if(n && (JSON.stringify(n) !== JSON.stringify(o || [])))
+	{
+		updateFilters(n);
+	}
 });
 
 const fieldKeysToShow = computed(() =>
 {
-  return {
-    title: props.fieldKeys?.title || 'title',
-    caption: props.fieldKeys?.caption || 'id',
-  };
+	return {
+		title: props.fieldKeys?.title || 'title',
+		caption: props.fieldKeys?.caption || 'id',
+	};
 });
 
 onMounted(() =>
 {
-  isSearching.value = true;
-  setTimeout(search, 150);
+	isSearching.value = true;
+	setTimeout(search, 150);
 });
 
 const activeResultId = ref();
@@ -130,8 +155,8 @@ const emit = defineEmits<{
 
 function onResultClicked(e: ItemResultClick)
 {
-  activeResultId.value = e?.itemId;
-  emit('resultClicked', e);
+	activeResultId.value = e?.itemId;
+	emit('resultClicked', e);
 }
 </script>
 

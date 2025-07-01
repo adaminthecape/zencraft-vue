@@ -1,17 +1,26 @@
 <template>
   <div class="row items-center justify-center">
     <!-- Update existing if allowed (always allowed?) -->
-    <SimpleModal :custom-styles="{
-      minWidth: '600px'
-    }">
+    <SimpleModal
+      :custom-styles="{
+        minWidth: '600px'
+      }"
+    >
       <template #title>
         <div class="q-mb-sm">
-          <h5 class="q-mb-xs">{{ $t('items.editingItem', { title: editingTitle || row.id }) }}</h5>
+          <h5 class="q-mb-xs">
+            {{ $t('items.editingItem', { title: editingTitle || row.id }) }}
+          </h5>
           <span class="text-caption">{{ row.typeId }}</span>
         </div>
       </template>
       <template #activator="{open}">
-        <ThemeButton icon="edit" dense flat @click="open" />
+        <ThemeButton
+          icon="edit"
+          dense
+          flat
+          @click="open"
+        />
       </template>
       <template #content>
         <EditNewOrExistingItem
@@ -66,6 +75,6 @@ const emit = defineEmits<{
 
 function confirmRemoveFromList()
 {
-  emit('removeFromList', props.row.id);
+	emit('removeFromList', props.row.id);
 }
 </script>

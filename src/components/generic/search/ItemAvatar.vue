@@ -18,7 +18,10 @@
           size="xs"
           rounded
         />
-        <span class="ellipsis" style="overflow: hidden">{{ label }}</span>
+        <span
+          class="ellipsis"
+          style="overflow: hidden"
+        >{{ label }}</span>
       </q-chip>
     </template>
   </EditNewOrExistingItemModal>
@@ -41,18 +44,18 @@ const storeToUse = ref<StoreTypes>();
 
 async function updateStoreAndItem()
 {
-  if(props.itemType)
-  {
-    storeToUse.value = deriveStoreForItemType(props.itemType);
-  }
+	if(props.itemType)
+	{
+		storeToUse.value = deriveStoreForItemType(props.itemType);
+	}
 
-  if(props.itemId)
-  {
-    await storeToUse.value?.loadItem({
-      id: props.itemId,
-      itemType: props.itemType,
-    });
-  }
+	if(props.itemId)
+	{
+		await storeToUse.value?.loadItem({
+			id: props.itemId,
+			itemType: props.itemType,
+		});
+	}
 }
 
 onMounted(updateStoreAndItem);
@@ -61,37 +64,37 @@ watch(() => props.itemId, updateStoreAndItem);
 
 // TODO: Make this get item type icons from the db
 const iconToUse = computed(() => (
-  props.itemType ? itemTypeIcons[props.itemType] ?? 'edit' : 'edit'
+	props.itemType ? itemTypeIcons[props.itemType] ?? 'edit' : 'edit'
 ));
 
 const itemData = computed(() => (
-  props.itemId ?
-    storeToUse.value?.getItem(props.itemId, props.itemType) :
-    undefined
+	props.itemId ?
+		storeToUse.value?.getItem(props.itemId, props.itemType) :
+		undefined
 ));
 
 const label = computed(() =>
 {
-  if(typeof props.labelOverride === 'string')
-  {
-    return props.labelOverride;
-  }
+	if(typeof props.labelOverride === 'string')
+	{
+		return props.labelOverride;
+	}
 
-  if(!(itemTypePrimaryFieldKeys[props.itemType] && itemData.value))
-  {
-    return props.itemType;
-  }
+	if(!(itemTypePrimaryFieldKeys[props.itemType] && itemData.value))
+	{
+		return props.itemType;
+	}
 
-  const validKey = itemTypePrimaryFieldKeys[props.itemType]
-    .find((key) => (key && (itemData.value as any)[key as string]));
+	const validKey = itemTypePrimaryFieldKeys[props.itemType]
+		.find((key) => (key && (itemData.value as any)[key as string]));
 
-  const value = (itemData.value as any)[`${validKey}`];
+	const value = (itemData.value as any)[`${validKey}`];
 
-  if(validKey === 'id')
-  {
-    return value?.split('-')[0];
-  }
+	if(validKey === 'id')
+	{
+		return value?.split('-')[0];
+	}
 
-  return value;
+	return value;
 });
 </script>

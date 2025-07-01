@@ -1,13 +1,15 @@
 export type UUID = `${string}-${string}-${string}-${string}-${string}`;
+
 export type Nullable<T> = (T | null | undefined);
+
 export type CssClassProp = (string | string[] | Record<string, boolean>);
 
 /**
  * Unfortunate relic of a time when the app didn't have a central context store.
  */
 export const contextStoreDefaultOpts = Object.freeze({
-  containerId: 'all',
-  storeId: 'ctx-store-all'
+	containerId: 'all',
+	storeId: 'ctx-store-all'
 });
 
 export type ItemContextOpts = {

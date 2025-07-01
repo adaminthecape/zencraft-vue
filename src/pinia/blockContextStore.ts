@@ -9,213 +9,213 @@ type BlockContextStoreOpts = {
 };
 
 const useBlockContextStore = (
-  opts: BlockContextStoreOpts = contextStoreDefaultOpts
+	opts: BlockContextStoreOpts = contextStoreDefaultOpts
 ) => defineStore(opts.storeId, {
-  state: (): BlockContextStoreState =>
-    ({
-      containerId: opts.containerId,
-      currentPageId: undefined,
-      handlebars: undefined,
-      page: {},
-      context: {
-        itemIdsByType: {},
-        itemDataByType: {},
-      }
-    }),
-  getters: {
-    getContext: (state) => (state.context),
-    getCurrentPageContext: (state) => (
-      !state.currentPageId ?
-        undefined :
-        {
-          itemData: state.page[state.currentPageId]?.itemDataByType,
-          itemIds: state.page[state.currentPageId]?.itemIdsByType,
-        }
-    ),
-    getPageContext: (state) => (pageId: string) => (state.page[pageId]),
-    getSelectedItemOnPage: (state) => (pageId: string | undefined, itemType: string) => (
-      state.page?.[pageId || '']?.itemDataByType?.[itemType]
-    ),
-    getBlockContext: (state) => (pageId: string, blockId: string) => (
-      !blockId ? state.page[pageId] : state.page[pageId]?.block?.[blockId]
-    ),
-    getItemData: (state) => (state.context.itemDataByType),
-    getSelectedItem: (state) => (type: string) => ({
-      itemId: state.context.itemIdsByType[type],
-      itemType: type,
-      itemData: state.context.itemDataByType[type],
-    }),
-    getSelectedItemData: (state) => (type: string) => (state.context.itemDataByType[type]),
-    getDataByPath: (state) => (opts: {
+	state: (): BlockContextStoreState =>
+		({
+			containerId: opts.containerId,
+			currentPageId: undefined,
+			handlebars: undefined,
+			page: {},
+			context: {
+				itemIdsByType: {},
+				itemDataByType: {},
+			}
+		}),
+	getters: {
+		getContext: (state) => (state.context),
+		getCurrentPageContext: (state) => (
+			!state.currentPageId ?
+				undefined :
+				{
+					itemData: state.page[state.currentPageId]?.itemDataByType,
+					itemIds: state.page[state.currentPageId]?.itemIdsByType,
+				}
+		),
+		getPageContext: (state) => (pageId: string) => (state.page[pageId]),
+		getSelectedItemOnPage: (state) => (pageId: string | undefined, itemType: string) => (
+			state.page?.[pageId || '']?.itemDataByType?.[itemType]
+		),
+		getBlockContext: (state) => (pageId: string, blockId: string) => (
+			!blockId ? state.page[pageId] : state.page[pageId]?.block?.[blockId]
+		),
+		getItemData: (state) => (state.context.itemDataByType),
+		getSelectedItem: (state) => (type: string) => ({
+			itemId: state.context.itemIdsByType[type],
+			itemType: type,
+			itemData: state.context.itemDataByType[type],
+		}),
+		getSelectedItemData: (state) => (type: string) => (state.context.itemDataByType[type]),
+		getDataByPath: (state) => (opts: {
       itemType: string;
       itemId?: string;
       dotPath: string;
     }) => (utils.tools.dotPick(
-      state.context.itemDataByType[opts.itemType] || {},
-      opts.dotPath
-    )),
-  },
-  actions: {
-    /** Generate a unique id for a block's context */
-    generateReference(opts?: Partial<ContextReference>): Partial<ContextReference>
-    {
-      return {
-        pageId: opts?.pageId || this.currentPageId,
-        blockId: opts?.blockId,
-      };
-    },
-    resolveReference(reference: Partial<ContextReference>): Record<string, unknown>
-    {
-      const pageId = reference.pageId || this.currentPageId;
-      const blockId = reference.blockId;
+			state.context.itemDataByType[opts.itemType] || {},
+			opts.dotPath
+		)),
+	},
+	actions: {
+		/** Generate a unique id for a block's context */
+		generateReference(opts?: Partial<ContextReference>): Partial<ContextReference>
+		{
+			return {
+				pageId: opts?.pageId || this.currentPageId,
+				blockId: opts?.blockId,
+			};
+		},
+		resolveReference(reference: Partial<ContextReference>): Record<string, unknown>
+		{
+			const pageId = reference.pageId || this.currentPageId;
+			const {blockId} = reference;
 
-      return (pageId && blockId) ? this.getBlockContext(pageId, blockId) || {} : {};
-    },
-    setPageId(pageId: Nullable<string>): void
-    {
-      if(!pageId)
-      {
-        this.currentPageId = undefined;
+			return (pageId && blockId) ? this.getBlockContext(pageId, blockId) || {} : {};
+		},
+		setPageId(pageId: Nullable<string>): void
+		{
+			if(!pageId)
+			{
+				this.currentPageId = undefined;
 
-        return;
-      }
+				return;
+			}
 
-      if(!this.page[pageId])
-      {
-        this.page[pageId] = {};
-      }
+			if(!this.page[pageId])
+			{
+				this.page[pageId] = {};
+			}
 
-      this.currentPageId = pageId;
-    },
-    setHandlebars(hb: unknown): void
-    {
-      this.handlebars = hb;
-    },
-    handlebarsCompile(template: string, data: Record<string, unknown>): string
-    {
-      if(!(this.handlebars))
-      {
-        return template;
-      }
+			this.currentPageId = pageId;
+		},
+		setHandlebars(hb: unknown): void
+		{
+			this.handlebars = hb;
+		},
+		handlebarsCompile(template: string, data: Record<string, unknown>): string
+		{
+			if(!(this.handlebars))
+			{
+				return template;
+			}
 
-      return this.handlebars.compile(template)(data);
-    },
-    compile(template: string)
-    {
-      if(!this.currentPageId)
-      {
-        return template;
-      }
+			return this.handlebars.compile(template)(data);
+		},
+		compile(template: string)
+		{
+			if(!this.currentPageId)
+			{
+				return template;
+			}
 
-      return this.handlebarsCompile(
-        template,
-        this.page[this.currentPageId]?.itemDataByType || {}
-      );
-    },
-    setPageContextData(opts: {
+			return this.handlebarsCompile(
+				template,
+				this.page[this.currentPageId]?.itemDataByType || {}
+			);
+		},
+		setPageContextData(opts: {
       pageId: string;
       blockId: string;
       data: Record<string, unknown>;
     })
-    {
-      const { pageId, blockId, data } = opts;
+		{
+			const { pageId, blockId, data } = opts;
 
-      if(!this.page[pageId])
-      {
-        this.page[pageId] = { block: {} };
-      }
+			if(!this.page[pageId])
+			{
+				this.page[pageId] = { block: {} };
+			}
 
-      if(!this.page[pageId].block)
-      {
-        this.page[pageId].block = {};
-      }
+			if(!this.page[pageId].block)
+			{
+				this.page[pageId].block = {};
+			}
 
-      if(!this.page[pageId].block[blockId])
-      {
-        this.page[pageId].block[blockId] = {};
-      }
+			if(!this.page[pageId].block[blockId])
+			{
+				this.page[pageId].block[blockId] = {};
+			}
 
-      this.page[pageId].block[blockId] = {
-        ...this.page[pageId].block[blockId],
-        ...data
-      };
-    },
-    async ensureItemInStore(opts: ItemContextOpts)
-    {
-      const { itemId, itemType } = opts;
+			this.page[pageId].block[blockId] = {
+				...this.page[pageId].block[blockId],
+				...data
+			};
+		},
+		async ensureItemInStore(opts: ItemContextOpts)
+		{
+			const { itemId, itemType } = opts;
 
-      if(!utils.uuid.isUuid(itemId) || !itemType)
-      {
-        return;
-      }
+			if(!utils.uuid.isUuid(itemId) || !itemType)
+			{
+				return;
+			}
 
-      const store = deriveStoreForItemType(itemType);
+			const store = deriveStoreForItemType(itemType);
 
-      if(!store)
-      {
-        console.warn(`Store not found for item type ${itemType}`);
+			if(!store)
+			{
+				console.warn(`Store not found for item type ${itemType}`);
 
-        return;
-      }
+				return;
+			}
 
-      const item = await store.loadItem({ id: itemId, itemType });
+			const item = await store.loadItem({ id: itemId, itemType });
 
-      if(!item)
-      {
-        console.log(`${itemType} ${itemId} not found in store`);
+			if(!item)
+			{
+				console.log(`${itemType} ${itemId} not found in store`);
 
-        return;
-      }
+				return;
+			}
 
-      // this.setItemData({ ...opts, data: item });
+			// this.setItemData({ ...opts, data: item });
 
-      return store.getItem(itemId, itemType);
-    },
-    selectItem(opts: ItemContextOpts): void
-    {
-      this.context.itemIdsByType[opts.itemType] = opts.itemId;
-      this.ensureItemInStore(opts);
-    },
-    selectItemOnPage(opts: ItemContextOpts & {
+			return store.getItem(itemId, itemType);
+		},
+		selectItem(opts: ItemContextOpts): void
+		{
+			this.context.itemIdsByType[opts.itemType] = opts.itemId;
+			this.ensureItemInStore(opts);
+		},
+		selectItemOnPage(opts: ItemContextOpts & {
       pageId: string | undefined;
     }): void
-    {
-      const { pageId, itemId, itemType } = opts;
+		{
+			const { pageId, itemId, itemType } = opts;
 
-      if(!pageId)
-      {
-        return;
-      }
+			if(!pageId)
+			{
+				return;
+			}
 
-      if(!this.page[pageId])
-      {
-        this.page[pageId] = {};
-      }
+			if(!this.page[pageId])
+			{
+				this.page[pageId] = {};
+			}
 
-      if(!this.page[pageId].itemIdsByType)
-      {
-        this.page[pageId].itemIdsByType = {};
-      }
+			if(!this.page[pageId].itemIdsByType)
+			{
+				this.page[pageId].itemIdsByType = {};
+			}
 
-      if(!this.page[pageId].itemDataByType)
-      {
-        this.page[pageId].itemDataByType = {};
-      }
+			if(!this.page[pageId].itemDataByType)
+			{
+				this.page[pageId].itemDataByType = {};
+			}
 
-      this.page[pageId].itemIdsByType[itemType] = itemId;
+			this.page[pageId].itemIdsByType[itemType] = itemId;
 
-      this.ensureItemInStore(opts).then((item) =>
-      {
-        (this.page[pageId].itemDataByType as Record<string, unknown>)[itemType] = item;
-      });
-    },
-    setItemData(opts: ItemContextOpts & {
+			this.ensureItemInStore(opts).then((item) =>
+			{
+				(this.page[pageId].itemDataByType as Record<string, unknown>)[itemType] = item;
+			});
+		},
+		setItemData(opts: ItemContextOpts & {
       data: Record<string, unknown>;
     }): void
-    {
-      this.context.itemDataByType[opts.itemType] = opts.data;
-    },
-  },
+		{
+			this.context.itemDataByType[opts.itemType] = opts.data;
+		},
+	},
 });
 
 export default useBlockContextStore;

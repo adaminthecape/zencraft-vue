@@ -27,7 +27,9 @@
         color="accent"
         size="sm"
       />
-      <div class="text-h6">{{ $t('tables.permissions.title') }}</div>
+      <div class="text-h6">
+        {{ $t('tables.permissions.title') }}
+      </div>
     </div>
     <q-table
       v-if="permissionsOnPage"
@@ -52,7 +54,7 @@
         </q-td>
       </template>
       <template #body-cell-updatedAt="ctx">
-        <q-td v-if="new Date(ctx.value).getTime() == 0"></q-td>
+        <q-td v-if="new Date(ctx.value).getTime() == 0" />
         <q-td v-else>
           {{ ctx.value?.split('T')[0] }}
           <q-tooltip>{{ ctx.value }}</q-tooltip>
@@ -92,54 +94,54 @@ const permissionsOnPage = ref<unknown[]>([]);
 
 async function getPermissionsFromApi()
 {
-  const api = new ApiHandler({ jwtFn: () => (localStorage.getItem('jwt')) });
-  const permissionsRes = await api.POST('/permission/list', {});
-  const permissions = (permissionsRes?.data as Record<string, unknown>)?.permissions;
+	const api = new ApiHandler({ jwtFn: () => (localStorage.getItem('jwt')) });
+	const permissionsRes = await api.POST('/permission/list', {});
+	const permissions = (permissionsRes?.data as Record<string, unknown>)?.permissions;
 
-  if(!(Array.isArray(permissions) && permissions.length))
-  {
-    permissionsOnPage.value = [];
-  }
-  else
-  {
-    permissionsOnPage.value = permissions;
-  }
+	if(!(Array.isArray(permissions) && permissions.length))
+	{
+		permissionsOnPage.value = [];
+	}
+	else
+	{
+		permissionsOnPage.value = permissions;
+	}
 }
 
 async function getPermissionsFromIndexedDb()
 {
-  const idb = new IndexedDbInterface({});
+	const idb = new IndexedDbInterface({});
 
-  const permissions = await idb.getPermissions();
+	const permissions = await idb.getPermissions();
 
-  if(!(Array.isArray(permissions) && permissions.length))
-  {
-    permissionsOnPage.value = [];
-  }
-  else
-  {
-    permissionsOnPage.value = permissions;
-  }
+	if(!(Array.isArray(permissions) && permissions.length))
+	{
+		permissionsOnPage.value = [];
+	}
+	else
+	{
+		permissionsOnPage.value = permissions;
+	}
 }
 
 async function getPermissions()
 {
-  await withDataSource({
-    api: getPermissionsFromApi,
-    indexedDb: getPermissionsFromIndexedDb,
-  });
+	await withDataSource({
+		api: getPermissionsFromApi,
+		indexedDb: getPermissionsFromIndexedDb,
+	});
 }
 
 onMounted(getPermissions);
 
 const columns = computed<ReturnType<typeof getTableColumns>>(() => (
-  getTableColumns({
-    results: utils.tools.reduceIntoAssociativeArray(
-      permissionsOnPage.value,
-      'id'
-    ),
-    exclude: ['id', 'typeId'],
-  })
+	getTableColumns({
+		results: utils.tools.reduceIntoAssociativeArray(
+			permissionsOnPage.value,
+			'id'
+		),
+		exclude: ['id', 'typeId'],
+	})
 ));
 
 const formValues = ref();
@@ -147,58 +149,58 @@ const formValues = ref();
 const fieldsMap: Record<(
   'permissionType' | 'status' | 'userId' | 'scope'
 ), fields.FieldData> = {
-  userId: {
-    id: utils.uuid.generateUuid(),
-    typeId: sharedTypes.KnownItemType.Field,
-    key: 'userId',
-    fieldType: fields.FieldType.uuid,
-    itemType: 'Person', // TODO create User Item and use it here
-  },
-  permissionType: {
-    id: utils.uuid.generateUuid(),
-    typeId: sharedTypes.KnownItemType.Field,
-    key: 'permissionType',
-    fieldType: fields.FieldType.text,
-  },
-  scope: {
-    id: utils.uuid.generateUuid(),
-    typeId: sharedTypes.KnownItemType.Field,
-    key: 'scope',
-    fieldType: fields.FieldType.uuid,
-  },
-  status:
-  {
-    id: utils.uuid.generateUuid(),
-    typeId: sharedTypes.KnownItemType.Field,
-    key: 'status',
-    fieldType: fields.FieldType.dropdown,
-    options: [0, 1, 2, 3]
-  },
+	userId: {
+		id: utils.uuid.generateUuid(),
+		typeId: sharedTypes.KnownItemType.Field,
+		key: 'userId',
+		fieldType: fields.FieldType.uuid,
+		itemType: 'Person', // TODO create User Item and use it here
+	},
+	permissionType: {
+		id: utils.uuid.generateUuid(),
+		typeId: sharedTypes.KnownItemType.Field,
+		key: 'permissionType',
+		fieldType: fields.FieldType.text,
+	},
+	scope: {
+		id: utils.uuid.generateUuid(),
+		typeId: sharedTypes.KnownItemType.Field,
+		key: 'scope',
+		fieldType: fields.FieldType.uuid,
+	},
+	status:
+	{
+		id: utils.uuid.generateUuid(),
+		typeId: sharedTypes.KnownItemType.Field,
+		key: 'status',
+		fieldType: fields.FieldType.dropdown,
+		options: [0, 1, 2, 3]
+	},
 };
 
 const formFields = ref<fields.FieldData[]>([
-  fieldsMap.userId,
-  fieldsMap.permissionType,
-  fieldsMap.scope,
-  // not including 'status' here as it cannot be set with this action
+	fieldsMap.userId,
+	fieldsMap.permissionType,
+	fieldsMap.scope,
+	// not including 'status' here as it cannot be set with this action
 ]);
 
 async function submitAddPermissionForm()
 {
-  await withDataSource({
-    api: async () =>
-    {
-      const api = new ApiHandler({ jwtFn: () => (localStorage.getItem('jwt')) });
-      const res = await api.POST('/permission/request', {
-        permissionTypes: [formValues.value.permissionType],
-        userId: formValues.value.userId,
-        scope: formValues.value.scope,
-      });
+	await withDataSource({
+		api: async () =>
+		{
+			const api = new ApiHandler({ jwtFn: () => (localStorage.getItem('jwt')) });
+			const res = await api.POST('/permission/request', {
+				permissionTypes: [formValues.value.permissionType],
+				userId: formValues.value.userId,
+				scope: formValues.value.scope,
+			});
 
-      console.log('submit:', res);
-    },
-    // indexedDb: () => {} // TODO
-    // firebase: () => {} // TODO
-  });
+			console.log('submit:', res);
+		},
+		// indexedDb: () => {} // TODO
+		// firebase: () => {} // TODO
+	});
 }
 </script>

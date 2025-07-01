@@ -46,12 +46,12 @@ const input = ref();
 const isErrored = computed(() => (input as any)?.value?.hasError);
 
 const {
-  modelProxy,
-  fieldRules,
-  updateValue,
+	modelProxy,
+	fieldRules,
+	updateValue,
 } = useFormElement<ModelType>({
-  props,
-  emit
+	props,
+	emit
 });
 </script>
 

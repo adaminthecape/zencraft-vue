@@ -69,11 +69,10 @@ function requestItemLoad(
 		// we have already requested to load it
 		return;
 	}
-	else
-	{
-		// we need to request it
-		itemsToLoad[itemType][itemId] = false;
-	}
+
+	// we need to request it
+	itemsToLoad[itemType][itemId] = false;
+
 }
 
 let customItemStore: CustomItemStore;
@@ -450,6 +449,7 @@ hb.registerHelper('first', function (...args)
 	return (args.slice(0, -1)).find((arg) =>
 	{
 		console.log('first:', arg);
+
 		return arg && (arg !== 'false');
 	});
 });
@@ -501,10 +501,12 @@ function generateDateArray(
 	do
 	{
 		const inc = (stepToUse * 24 * 60 * 60 * 1000);
+
 		dates.push({
 			date: (new Date(d)).toISOString().split('T')[0],
 			unix: d / 1000,
 		});
+
 		d += inc;
 	}
 	while(d <= endTime);
@@ -515,7 +517,7 @@ function generateDateArray(
 hb.registerHelper('dateArray', function (
 	startDate: string | number,
 	endDate: string | number,
-	step: number = 1,
+	step = 1,
 )
 {
 	return generateDateArray(startDate, endDate, step);
@@ -541,9 +543,13 @@ function getBtnClasses(opts: {
 	let classes = '';
 
 	if(opts.dense || (typeof opts.dense === 'undefined')) classes += ' q-btn--dense';
+
 	if(opts.round) classes += ' q-btn--round';
+
 	if(opts.color) classes += ` bg-${opts.color}`;
+
 	if(opts.dark) classes += ` text-white`;
+
 	if(opts.size) classes += ` q--size`;
 
 	return `${btnClasses} ${classes}`;
@@ -560,6 +566,7 @@ hb.registerHelper('button', function (
 	setTimeout(() =>
 	{
 		const button = document.getElementById(id);
+
 		if(button)
 		{
 			button.addEventListener('click', () =>
@@ -597,8 +604,8 @@ hb.registerHelper('button', function (
     <span class="q-focus-helper"></span>
     <span class="${(btnSpanClasses)}">
       ${opts.icon ? `<i class="${(btnIconClasses)
-			} ${opts.label ? 'on-left' : ''
-			}" aria-hidden="true" role="img">${(opts.icon)}</i>` : ''}
+	} ${opts.label ? 'on-left' : ''
+	}" aria-hidden="true" role="img">${(opts.icon)}</i>` : ''}
       ${opts.label ? `<span class="block">${(opts.label)}</span>` : ''}
     </span>
   </button>`;

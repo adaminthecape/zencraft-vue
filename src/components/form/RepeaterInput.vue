@@ -28,7 +28,9 @@
       <div
         v-if="!repeaterValues.length"
         class="standout-1 row items-center justify-center borad-6 text-bold q-pa-sm"
-      >{{ $t('forms.repeaters.noItems') }}</div>
+      >
+        {{ $t('forms.repeaters.noItems') }}
+      </div>
       <template #header>
         <span class="text-bold q-my-sm">{{ field.label || field.key || field.id }}</span>
         <div class="q-space" />
@@ -43,7 +45,10 @@
         :key="`repeater-item-${i}-${keyUpdateMap[`index-${i}`]}`"
         class="q-pa-sm q-mb-sm borad-6 standout-1"
       >
-        <div v-if="field.maximumItems != 1" class="row items-center">
+        <div
+          v-if="field.maximumItems != 1"
+          class="row items-center"
+        >
           <!-- Restore entry -->
           <ThemeButton
             v-if="repeaterItem === null"
@@ -75,7 +80,9 @@
             </q-popup-proxy>
           </q-btn>
           <q-separator vertical />
-          <div class="text-bold q-ml-sm">{{ $t('forms.repeaters.itemTitle', { index: i + 1 }) }}</div>
+          <div class="text-bold q-ml-sm">
+            {{ $t('forms.repeaters.itemTitle', { index: i + 1 }) }}
+          </div>
         </div>
         <FormFields
           v-if="Array.isArray(childFields) && repeaterItem"
@@ -137,159 +144,160 @@ const input = ref();
 const isErrored = computed(() => input.value?.hasError);
 
 const {
-  modelProxy,
-  updateValue,
+	modelProxy,
+	updateValue,
 } = useFormElement<unknown>({
-  props,
-  emit
+	props,
+	emit
 });
 
 const fieldStore = deriveStoreForItemType(sharedTypes.KnownItemType.Field);
 
 const childFields = computed(() =>
 {
-  // use the store to get the fields based on their IDs
-  if(!(Array.isArray(props.field?.children) && props.field.children.length))
-  {
-    return [];
-  }
+	// use the store to get the fields based on their IDs
+	if(!(Array.isArray(props.field?.children) && props.field.children.length))
+	{
+		return [];
+	}
 
-  return props.field.children.map((id: string) => fieldStore.getItem(
-    id,
-    sharedTypes.KnownItemType.Field
-  ));
+	return props.field.children.map((id: string) => fieldStore.getItem(
+		id,
+		sharedTypes.KnownItemType.Field
+	));
 });
 
 onMounted(async () =>
 {
-  if(utils.tools.isPopulatedObject(props.initialValue))
-  {
-    repeaterValues.value = [...Object.values(props.initialValue as Record<string, ModelType>)];
-  }
-  else if(Array.isArray(props.initialValue))
-  {
-    repeaterValues.value = [...props.initialValue];
-  }
+	if(utils.tools.isPopulatedObject(props.initialValue))
+	{
+		repeaterValues.value = [...Object.values(props.initialValue as Record<string, ModelType>)];
+	}
+	else if(Array.isArray(props.initialValue))
+	{
+		repeaterValues.value = [...props.initialValue];
+	}
 
-  if(Array.isArray(props.field?.children) && props.field.children.length)
-  {
-    // populate the store with the needed fields
-    await fieldStore.searchItems({
-      itemType: sharedTypes.KnownItemType.Field,
-      filters: [
-        {
-          key: 'itemId',
-          operator: dbFilters.DbFilterOperator.in,
-          value: props.field.children
-        }
-      ]
-    });
-  }
+	if(Array.isArray(props.field?.children) && props.field.children.length)
+	{
+		// populate the store with the needed fields
+		await fieldStore.searchItems({
+			itemType: sharedTypes.KnownItemType.Field,
+			filters: [
+				{
+					key: 'itemId',
+					operator: dbFilters.DbFilterOperator.in,
+					value: props.field.children
+				}
+			]
+		});
+	}
 });
 
 const itemsToShowStep = ref(10);
 const maxItemsToShow = ref(itemsToShowStep.value);
+
 function incrementItemsToShow()
 {
-  maxItemsToShow.value += itemsToShowStep.value;
+	maxItemsToShow.value += itemsToShowStep.value;
 }
 
 onMounted(() =>
 {
-  if(props.field?.maximumItems == 1)
-  {
-    // ensure there is an item in the array
-    if(!repeaterValues.value?.[0])
-    {
-      repeaterValues.value = [{}];
-    }
-  }
+	if(props.field?.maximumItems == 1)
+	{
+		// ensure there is an item in the array
+		if(!repeaterValues.value?.[0])
+		{
+			repeaterValues.value = [{}];
+		}
+	}
 });
 
 const repeaterValues = ref<Record<string, unknown>[]>([]);
 const repeaterValuesComputed = computed(() =>
 {
-  if(!repeaterValues.value?.length || !maxItemsToShow.value)
-  {
-    return repeaterValues.value;
-  }
+	if(!repeaterValues.value?.length || !maxItemsToShow.value)
+	{
+		return repeaterValues.value;
+	}
 
-  if(maxItemsToShow.value < repeaterValues.value?.length)
-  {
-    return repeaterValues.value.slice(0, maxItemsToShow.value);
-  }
+	if(maxItemsToShow.value < repeaterValues.value?.length)
+	{
+		return repeaterValues.value.slice(0, maxItemsToShow.value);
+	}
 
-  return repeaterValues.value;
+	return repeaterValues.value;
 });
 
 function onItemChanged()
 {
-  emit('changed', repeaterValues.value);
+	emit('changed', repeaterValues.value);
 }
 
 function addItem()
 {
-  if(
-    (props.field.maximumItems == 1) &&
+	if(
+		(props.field.maximumItems == 1) &&
     repeaterValues.value.length === 1
-  )
-  {
-    return;
-  }
+	)
+	{
+		return;
+	}
 
-  repeaterValues.value.push({});
+	repeaterValues.value.push({});
 }
 
 const deletedItemsCache = ref<Record<`index-${number}`, unknown>>({});
 
 function removeItem(index: number)
 {
-  if((typeof index === 'number') && !(index < 0))
-  {
-    // archive the item (in case of reversal) and nullify it
+	if((typeof index === 'number') && !(index < 0))
+	{
+		// archive the item (in case of reversal) and nullify it
 
-    deletedItemsCache.value[`index-${index}`] = { ...(repeaterValues.value[index] || {}) };
+		deletedItemsCache.value[`index-${index}`] = { ...(repeaterValues.value[index] || {}) };
 
-    (repeaterValues.value as any)[index] = null;
+		(repeaterValues.value as any)[index] = null;
 
-    updateValue(repeaterValues.value);
-    updateRowKey(index);
-  }
+		updateValue(repeaterValues.value);
+		updateRowKey(index);
+	}
 }
 
 function restoreItem(index: number)
 {
-  if(
-    (typeof index === 'number') &&
+	if(
+		(typeof index === 'number') &&
     !(index < 0) &&
     (deletedItemsCache.value[`index-${index}`])
-  )
-  {
-    (repeaterValues.value as any)[index] = {
-      ...(deletedItemsCache.value[`index-${index}`] || {})
-    };
+	)
+	{
+		(repeaterValues.value as any)[index] = {
+			...(deletedItemsCache.value[`index-${index}`] || {})
+		};
 
-    delete deletedItemsCache.value[`index-${index}`];
+		delete deletedItemsCache.value[`index-${index}`];
 
-    updateValue(repeaterValues.value);
-    updateRowKey(index);
-  }
+		updateValue(repeaterValues.value);
+		updateRowKey(index);
+	}
 }
 
 // TODO: delete this or make it work properly
 function updateRowKey(index: number)
 {
-  if((typeof index === 'number') && !(index < 0))
-  {
-    if(!keyUpdateMap.value[`index-${index}`])
-    {
-      keyUpdateMap.value[`index-${index}`] = 1;
-    }
-    else
-    {
-      keyUpdateMap.value[`index-${index}`] += 1;
-    }
-  }
+	if((typeof index === 'number') && !(index < 0))
+	{
+		if(!keyUpdateMap.value[`index-${index}`])
+		{
+			keyUpdateMap.value[`index-${index}`] = 1;
+		}
+		else
+		{
+			keyUpdateMap.value[`index-${index}`] += 1;
+		}
+	}
 }
 
 const keyUpdateMap = ref<Record<`index-${number}`, number>>({});

@@ -1,39 +1,42 @@
 <template>
-  <q-btn-group class="no-wrap" style="vertical-align: middle;">
+  <q-btn-group
+    class="no-wrap"
+    style="vertical-align: middle;"
+  >
+    <ThemeButton
+      v-for="page in pagesForHub"
+      :key="`page-btn-${page.id}`"
+      unelevated
+      square
+      style="border-radius: 0px;"
+      :color="(currentPage?.id === page.id) ? 'primary' : undefined"
+      @click="() => onPageSelected(page.id)"
+    >
+      <span>{{ page.title }}</span>
       <ThemeButton
-        v-for="page in pagesForHub"
-        :key="`page-btn-${page.id}`"
-        unelevated
+        icon="edit"
+        color="positive"
+        size="xs"
+        class="q-ml-sm"
+        round
+        @click.stop.prevent="(() =>
+        {
+          editItem({ id: page.id, typeId: sharedTypes.KnownItemType.Page });
+        })"
+      />
+    </ThemeButton>
+    <div class="q-space" />
+    <HelpPopover i18n-key="addPageButton">
+      <ThemeButton
+        v-if="adminStore.isEditMode"
+        icon="add"
+        color="accent"
         square
         style="border-radius: 0px;"
-        :color="(currentPage?.id === page.id) ? 'primary' : undefined"
-        @click="() => onPageSelected(page.id)"
-      >
-        <span>{{ page.title }}</span>
-        <ThemeButton
-          icon="edit"
-          color="positive"
-          size="xs"
-          class="q-ml-sm"
-          round
-          @click.stop.prevent="(() =>
-          {
-            editItem({ id: page.id, typeId: sharedTypes.KnownItemType.Page });
-          })"
-        />
-      </ThemeButton>
-      <div class="q-space" />
-      <HelpPopover i18n-key="addPageButton">
-        <ThemeButton
-          v-if="adminStore.isEditMode"
-          icon="add"
-          color="accent"
-          square
-          style="border-radius: 0px;"
-          @click="(e) => helpStore.runIfNotOverlayMode(addPageToHub)(e)"
-        />
-      </HelpPopover>
-    </q-btn-group>
+        @click="(e) => helpStore.runIfNotOverlayMode(addPageToHub)(e)"
+      />
+    </HelpPopover>
+  </q-btn-group>
 </template>
 
 <script setup lang="ts">
@@ -53,94 +56,94 @@ const props = defineProps<{
 const adminStore = useAdminStore();
 
 const {
-  hubStore,
-  pageStore,
-  currentHub,
-  currentPage,
-  navigateToLayout,
+	hubStore,
+	pageStore,
+	currentHub,
+	currentPage,
+	navigateToLayout,
 } = useHubPageNavigation();
 
 const pagesForHub = computed(() => (pageStore.allItems.filter((page) => (
-  currentHub.value?.pageIds?.includes(page?.id as UUID)
+	currentHub.value?.pageIds?.includes(page?.id as UUID)
 ))));
 
 function onPageSelected(pageId: string): void
 {
-  pageStore.setSelectedPage(pageId);
-  navigateToLayout({
-    params: {
-      hubId: `${currentHub.value?.id}`,
-      pageId: pageId,
-    }
-  });
+	pageStore.setSelectedPage(pageId);
+	navigateToLayout({
+		params: {
+			hubId: `${currentHub.value?.id}`,
+			pageId: pageId,
+		}
+	});
 }
 
 const { editItem } = (inject('helpers') as AppHelpers['helpers']) || {};
 
 async function addPageToHub()
 {
-  if(!currentHub.value || !currentPage.value?.id)
-  {
-    throw new Error(`No hub found for page ${currentPage.value?.id}`);
-  }
+	if(!currentHub.value || !currentPage.value?.id)
+	{
+		throw new Error(`No hub found for page ${currentPage.value?.id}`);
+	}
 
-  // create the Page first
-  const newPageId = utils.uuid.generateUuid();
+	// create the Page first
+	const newPageId = utils.uuid.generateUuid();
 
-  await pageStore.saveItem({
-    id: newPageId,
-    itemType: sharedTypes.KnownItemType.Page,
-    data: {},
-    isNew: true,
-  });
+	await pageStore.saveItem({
+		id: newPageId,
+		itemType: sharedTypes.KnownItemType.Page,
+		data: {},
+		isNew: true,
+	});
 
-  // attach the Page to its parent Hub
-  await hubStore.saveItem({
-    id: currentHub.value.id,
-    itemType: sharedTypes.KnownItemType.Hub,
-    data: {
-      pageIds: [
-        ...(currentHub.value.pageIds || []),
-        newPageId
-      ]
-    },
-  });
+	// attach the Page to its parent Hub
+	await hubStore.saveItem({
+		id: currentHub.value.id,
+		itemType: sharedTypes.KnownItemType.Hub,
+		data: {
+			pageIds: [
+				...(currentHub.value.pageIds || []),
+				newPageId
+			]
+		},
+	});
 
-  // open the editing panel for the Page
-  editItem({
-    id: newPageId,
-    typeId: sharedTypes.KnownItemType.Page,
-  });
+	// open the editing panel for the Page
+	editItem({
+		id: newPageId,
+		typeId: sharedTypes.KnownItemType.Page,
+	});
 }
 
 onMounted(async () =>
 {
-  await pageStore?.searchItems({
-    itemType: sharedTypes.KnownItemType.Page
-  });
+	await pageStore?.searchItems({
+		itemType: sharedTypes.KnownItemType.Page
+	});
 
-  setTimeout(() =>
-  {
-    if(!currentPage.value && pagesForHub.value.length)
-    {
-      const selectedHub = hubStore.getItem(
-        props.hubId,
-        sharedTypes.KnownItemType.Hub
-      );
+	setTimeout(() =>
+	{
+		if(!currentPage.value && pagesForHub.value.length)
+		{
+			const selectedHub = hubStore.getItem(
+				props.hubId,
+				sharedTypes.KnownItemType.Hub
+			);
 
-      if(!selectedHub)
-      {
-        console.log(`No data for hub ${props.hubId}`);
+			if(!selectedHub)
+			{
+				console.log(`No data for hub ${props.hubId}`);
 
-        return;
-      }
+				return;
+			}
 
-      if(selectedHub.defaultPageId)
-      {
-        pageStore.setSelectedPage(selectedHub.defaultPageId);
-      }
-    }
-  }, 500);
+			if(selectedHub.defaultPageId)
+			{
+				pageStore.setSelectedPage(selectedHub.defaultPageId);
+			}
+		}
+	}, 500);
 });
 
 const helpStore = useHelpStore({})() as HelpStore;

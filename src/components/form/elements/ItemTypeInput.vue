@@ -50,28 +50,28 @@ const input = ref();
 const isErrored = computed(() => (input as any)?.value?.hasError);
 
 const {
-  modelProxy,
-  fieldRules,
-  updateValue,
+	modelProxy,
+	fieldRules,
+	updateValue,
 } = useFormElement<ModelType>({
-  props,
-  emit
+	props,
+	emit
 });
 
 const multiSelect = computed(() => (
-  (
-    typeof props.field?.multiSelect === 'string' &&
+	(
+		typeof props.field?.multiSelect === 'string' &&
     props.field?.multiSelect === 'true'
-  ) ?
-    true :
-    props.field?.multiSelect
+	) ?
+		true :
+		props.field?.multiSelect
 ));
 
 const customItemStore = useCustomItemStore({})();
 
 const allItemTypes = computed(() => ([
-  ...Object.values(sharedTypes.KnownItemType),
-  ...Object.keys(customItemStore.definitionFieldsMap)
+	...Object.values(sharedTypes.KnownItemType),
+	...Object.keys(customItemStore.definitionFieldsMap)
 ]));
 </script>
 

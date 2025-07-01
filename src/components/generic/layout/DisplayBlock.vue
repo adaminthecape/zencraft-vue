@@ -14,14 +14,18 @@
       class="block-edit-controls row items-center q-ma-xs"
     >
       <!-- Block Icon -->
-      <ThemeIcon size="xs" name="description" class="q-mr-xs" />
+      <ThemeIcon
+        size="xs"
+        name="description"
+        class="q-mr-xs"
+      />
       <!-- Block and Blueprint ID -->
       <div>
-        <span class="text-caption text-muted">{{(
+        <span class="text-caption text-muted">{{ (
           block?.title || (
             blueprintStore.getTitle(block?.blueprintId ?? '')
           ) || block?.id?.split('-')[0] || 'Unknown'
-        )}}</span>
+        ) }}</span>
       </div>
       <div class="q-space" />
       <!-- Echo context -->
@@ -54,10 +58,13 @@
         @click="editBlock"
       />
     </div>
-    <q-separator v-if="isBlockEditMode" class="q-ma-xs" />
+    <q-separator
+      v-if="isBlockEditMode"
+      class="q-ma-xs"
+    />
     <component
-      v-if="componentToUse"
       :is="componentToUse"
+      v-if="componentToUse"
       v-bind="{ itemId, itemType, parentData }"
       :block-id="blockId"
       :parent-id="parentId"
@@ -80,9 +87,15 @@
       </div>
     </div>
   </div>
-  <div v-else class="flex-col items-center justify-center">
+  <div
+    v-else
+    class="flex-col items-center justify-center"
+  >
     <div class="row items-center justify-center full-width">
-      <q-spinner :size="50" color="accent" />
+      <q-spinner
+        :size="50"
+        color="accent"
+      />
     </div>
   </div>
 </template>
@@ -119,29 +132,29 @@ const emit = defineEmits<{
 }>();
 
 const {
-  block,
-  blueprint,
-  blueprintStore,
-  blockStore,
-  blockConfigForType,
-  componentToUse,
-  onItemSelected,
-  isEditMode,
-  mergedContext,
+	block,
+	blueprint,
+	blueprintStore,
+	blockStore,
+	blockConfigForType,
+	componentToUse,
+	onItemSelected,
+	isEditMode,
+	mergedContext,
 } = usePublicComponent({ props, emit });
 
 const isBlockEditMode = computed(() =>
 {
-  if(props.forceEditMode)
-  {
-    return true;
-  }
-  else if(props.forceNoEditMode)
-  {
-    return false;
-  }
+	if(props.forceEditMode)
+	{
+		return true;
+	}
+	else if(props.forceNoEditMode)
+	{
+		return false;
+	}
 
-  return isEditMode.value;
+	return isEditMode.value;
 });
 
 const computedParentId = computed(() => props.blockId);
@@ -150,75 +163,76 @@ const { editItem } = (inject('helpers') as AppHelpers['helpers']) || {};
 const $ctx = inject('$ctxStore') as AppHelpers['$ctxStore'];
 
 const { onBlockDefSelected } = useAddBlock({
-  parentId: computedParentId,
-  editItem
+	parentId: computedParentId,
+	editItem
 });
 
 const containerClasses = computed(() => ([
-  ...(isBlockEditMode.value ? [
-    'block-container',
-    'block-edit-container',
-    'q-ma-xs',
-    'flex-col',
-    'standout-1',
-  ] : [
-    'block-container',
-    'flex-col',
-  ]),
-  ...`${(block.value?.customClasses || [])}`.split(',')
+	...(isBlockEditMode.value ? [
+		'block-container',
+		'block-edit-container',
+		'q-ma-xs',
+		'flex-col',
+		'standout-1',
+	] : [
+		'block-container',
+		'flex-col',
+	]),
+	...`${(block.value?.customClasses || [])}`.split(',')
 ]));
 
 onMounted(async () =>
 {
-  if(props.blockId)
-  {
-    await blockStore.loadItem({
-      id: props.blockId,
-      itemType: sharedTypes.KnownItemType.Block,
-    });
-  }
+	if(props.blockId)
+	{
+		await blockStore.loadItem({
+			id: props.blockId,
+			itemType: sharedTypes.KnownItemType.Block,
+		});
+	}
 
-  if(blueprint.value?.id)
-  {
-    await blueprintStore.loadItem({
-      id: blueprint.value.id,
-      itemType: sharedTypes.KnownItemType.Blueprint,
-    });
-  }
+	if(blueprint.value?.id)
+	{
+		await blueprintStore.loadItem({
+			id: blueprint.value.id,
+			itemType: sharedTypes.KnownItemType.Blueprint,
+		});
+	}
 
-  if(Array.isArray(block.value?.childBlocks) && block.value.childBlocks.length)
-  {
-    await blockStore.loadMultiple({
-      ids: block.value.childBlocks.map((b) => b.id),
-      itemType: sharedTypes.KnownItemType.Block,
-    });
-  }
+	if(Array.isArray(block.value?.childBlocks) && block.value.childBlocks.length)
+	{
+		await blockStore.loadMultiple({
+			ids: block.value.childBlocks.map((b) => b.id),
+			itemType: sharedTypes.KnownItemType.Block,
+		});
+	}
 });
 
 function printContext()
 {
-  const blockRef = `Block ${props.blockId} (${blueprint.value?.blockType})`;
-  console.log(`${blockRef}: block`, { ...block.value });
-  console.log(`${blockRef}: mergedContext`, { ...mergedContext.value });
+	const blockRef = `Block ${props.blockId} (${blueprint.value?.blockType})`;
+
+	console.log(`${blockRef}: block`, { ...block.value });
+	console.log(`${blockRef}: mergedContext`, { ...mergedContext.value });
 }
 
 function editBlock()
 {
-  if(!(block.value?.id && (typeof block.value.id === 'string')))
-  {
-    console.warn('Block not available');
+	if(!(block.value?.id && (typeof block.value.id === 'string')))
+	{
+		console.warn('Block not available');
 
-    return;
-  }
+		return;
+	}
 
-  editItem({
-    id: block.value.id || '',
-    typeId: sharedTypes.KnownItemType.Block,
-    contextReference: $ctx.store.generateReference({
-      blockId: block.value.id,
-      parentId: props.parentId,
-    }),
-  });
+	editItem({
+		id: block.value.id || '',
+		typeId: sharedTypes.KnownItemType.Block,
+		contextReference: $ctx.store.generateReference({
+			blockId: block.value.id,
+			parentId: props.parentId,
+		}),
+	});
 }
 </script>
 

@@ -1,5 +1,8 @@
 <template>
-  <SimpleLayout headerBackgroundColor="var(--q-dark)" :page-offset="50">
+  <SimpleLayout
+    header-background-color="var(--q-dark)"
+    :page-offset="50"
+  >
     <template #header-title>
       <div>Admin Dashboard</div>
     </template>
@@ -9,8 +12,8 @@
         flat
         round
         @click="isDrawerOpen = !isDrawerOpen"
-      ></ThemeButton>
-      </template>
+      />
+    </template>
     <template #body>
       <q-drawer
         v-model="isDrawerOpen"
@@ -41,8 +44,7 @@
       />
       <AvatarControls />
     </template>
-    <template #page-header>
-    </template>
+    <template #page-header />
     <template #page-content>
       <div
         class="q-pa-sm"
@@ -78,15 +80,15 @@ const customItemStore = useCustomItemStore({})();
 
 onMounted(async () =>
 {
-  await archetypeStore.loadAllItems(sharedTypes.KnownItemType.Archetype);
-  await fieldStore.loadAllItems(sharedTypes.KnownItemType.Field);
+	await archetypeStore.loadAllItems(sharedTypes.KnownItemType.Archetype);
+	await fieldStore.loadAllItems(sharedTypes.KnownItemType.Field);
 
-  if('setDefinitionFieldsMap' in fieldStore)
-  {
-    fieldStore.setDefinitionFieldsMap?.();
-  }
+	if('setDefinitionFieldsMap' in fieldStore)
+	{
+		fieldStore.setDefinitionFieldsMap?.();
+	}
 
-  await customItemStore.loadDefinitions();
+	await customItemStore.loadDefinitions();
 });
 
 </script>

@@ -1,7 +1,9 @@
 <template>
   <div :class="customClasses">
     <div>Editing {{ existingItemId ? '' : ' new ' }}{{ itemType }}</div>
-    <div class="text-caption">{{ existingItemId || itemId }}</div>
+    <div class="text-caption">
+      {{ existingItemId || itemId }}
+    </div>
     <q-separator class="q-my-sm" />
     <FormFields
       v-model="formData"
@@ -19,7 +21,10 @@
     />
     <div class="row items-center justify-center">
       <div class="q-space" />
-      <slot name="form-actions" v-bind="{ formData }" />
+      <slot
+        name="form-actions"
+        v-bind="{ formData }"
+      />
       <!--<ThemeButton
         :label="$t('generic.buttons.cancel')"
         class="q-mr-sm"
@@ -44,11 +49,10 @@
 
 <script setup lang="ts">
 import { ContextReference, CssClassProp, UUID } from 'src/types/generic';
-import { Block, Blueprint, sharedTypes, utils } from 'zencraft-core';
+import { Block, Blueprint, sharedTypes, utils , fields } from 'zencraft-core';
 import { computed, onMounted, ref, watch } from 'vue';
 import FormFields from 'src/components/form/FormFields.vue';
 import cloneDeep from 'lodash/cloneDeep';
-import { fields } from 'zencraft-core';
 import { QInputProps, QSelectProps } from 'quasar';
 import { deriveStoreForItemType, StoreTypes } from 'src/logic/utils/stores';
 import useFieldsForItemType from 'src/composables/useFieldsForItemType';
@@ -76,9 +80,9 @@ const emit = defineEmits<{
 
 const fieldsForDefinition = ref<fields.FieldData[] | undefined>();
 const fieldIdsForDefinition = computed(() => (
-  Array.isArray(fieldsForDefinition.value) ?
-    fieldsForDefinition.value.map((f) => f.id) :
-    undefined
+	Array.isArray(fieldsForDefinition.value) ?
+		fieldsForDefinition.value.map((f) => f.id) :
+		undefined
 ));
 
 const { updateQueueKey } = useQueues<{
@@ -89,80 +93,81 @@ const { updateQueueKey } = useQueues<{
     close?: boolean;
   };
 }>({
-  queueKey: `amend_item_form_${props.existingItemId}`,
-  queueAction: (async (opts) =>
-  {
-    if(opts?.actions.amend)
-    {
-      if(utils.tools.isPopulatedObject(opts.data))
-      {
-        formData.value = { ...opts.data };
-        formDataHandler.value?.setData(formData.value);
-      }
-    }
+	queueKey: `amend_item_form_${props.existingItemId}`,
+	queueAction: (async (opts) =>
+	{
+		if(opts?.actions.amend)
+		{
+			if(utils.tools.isPopulatedObject(opts.data))
+			{
+				formData.value = { ...opts.data };
+				formDataHandler.value?.setData(formData.value);
+			}
+		}
 
-    if(opts?.actions.save)
-    {
-      await saveForm();
-    }
+		if(opts?.actions.save)
+		{
+			await saveForm();
+		}
 
-    if(opts?.actions.close)
-    {
-      emit('requestClose');
-    }
-  })
+		if(opts?.actions.close)
+		{
+			emit('requestClose');
+		}
+	})
 });
+
 watch(
-  () => props.existingItemId,
-  (newId) => updateQueueKey(`amend_item_form_${newId}`)
+	() => props.existingItemId,
+	(newId) => updateQueueKey(`amend_item_form_${newId}`)
 );
 
 onMounted(async () =>
 {
-  if(props.itemType === sharedTypes.KnownItemType.Block)
-  {
-    // a Block needs a definition - load its fields and assign them to `config`
-    if(props.existingItemId)
-    {
-      const blockStore = deriveStoreForItemType(sharedTypes.KnownItemType.Block);
+	if(props.itemType === sharedTypes.KnownItemType.Block)
+	{
+		// a Block needs a definition - load its fields and assign them to `config`
+		if(props.existingItemId)
+		{
+			const blockStore = deriveStoreForItemType(sharedTypes.KnownItemType.Block);
 
-      await blockStore.loadItem({
-        id: props.existingItemId,
-        itemType: props.itemType,
-      });
+			await blockStore.loadItem({
+				id: props.existingItemId,
+				itemType: props.itemType,
+			});
 
-      const definitionId = (blockStore.getItem(
-        props.existingItemId,
-        sharedTypes.KnownItemType.Block
-      ) as Block.BlockItem)?.blueprintId;
+			const definitionId = (blockStore.getItem(
+				props.existingItemId,
+				sharedTypes.KnownItemType.Block
+			) as Block.BlockItem)?.blueprintId;
 
-      if(definitionId)
-      {
-        const blueprintStore = deriveStoreForItemType(sharedTypes.KnownItemType.Blueprint);
+			if(definitionId)
+			{
+				const blueprintStore = deriveStoreForItemType(sharedTypes.KnownItemType.Blueprint);
 
-        await blueprintStore.loadItem({
-          id: definitionId,
-          itemType: sharedTypes.KnownItemType.Blueprint,
-        });
+				await blueprintStore.loadItem({
+					id: definitionId,
+					itemType: sharedTypes.KnownItemType.Blueprint,
+				});
 
-        // now we should be able to get its fields
-        const def = blueprintStore.getItem(
-          definitionId,
-          sharedTypes.KnownItemType.Blueprint
-        ) as Blueprint.BlueprintItem | undefined;
+				// now we should be able to get its fields
+				const def = blueprintStore.getItem(
+					definitionId,
+					sharedTypes.KnownItemType.Blueprint
+				) as Blueprint.BlueprintItem | undefined;
 
-        if(def?.attachedFields?.length)
-        {
-          fieldsForDefinition.value = (
-            await Blueprint.BlueprintHandler.loadFields({
-              db: await blueprintStore.getDb(),
-              fieldIds: def.attachedFields,
-            })
-          );
-        }
-      }
-    }
-  }
+				if(def?.attachedFields?.length)
+				{
+					fieldsForDefinition.value = (
+						await Blueprint.BlueprintHandler.loadFields({
+							db: await blueprintStore.getDb(),
+							fieldIds: def.attachedFields,
+						})
+					);
+				}
+			}
+		}
+	}
 });
 
 const itemTypeRef = computed(() => (props.itemType));
@@ -174,24 +179,24 @@ const store = ref<StoreTypes>();
 const itemId = ref<string>(props.existingItemId || utils.uuid.generateUuid());
 const formFieldsToUse = computed<fields.FieldData[]>(() =>
 {
-  // check for definition fields
-  if(Array.isArray(fieldIdsForDefinition.value))
-  {
-    const fieldsToUse = [...(itemFields.value || [])];
+	// check for definition fields
+	if(Array.isArray(fieldIdsForDefinition.value))
+	{
+		const fieldsToUse = [...(itemFields.value || [])];
 
-    const idx = fieldsToUse.findIndex((f) => f.key === 'config');
+		const idx = fieldsToUse.findIndex((f) => f.key === 'config');
 
-    if(idx > -1)
-    {
-      fieldsToUse[idx].children = [...fieldIdsForDefinition.value] as UUID[];
-    }
-  }
+		if(idx > -1)
+		{
+			fieldsToUse[idx].children = [...fieldIdsForDefinition.value] as UUID[];
+		}
+	}
 
-  return [...(itemFields.value || [])];
+	return [...(itemFields.value || [])];
 });
 
 const isNew = computed(() => (
-  props.forceIsNew ?? !props.existingItemId
+	props.forceIsNew ?? !props.existingItemId
 ));
 
 /**
@@ -199,53 +204,53 @@ const isNew = computed(() => (
  */
 async function generateNewOrExistingItemForm()
 {
-  const derivedStore = deriveStoreForItemType(props.itemType);
+	const derivedStore = deriveStoreForItemType(props.itemType);
 
-  if(!derivedStore)
-  {
-    return;
-  }
+	if(!derivedStore)
+	{
+		return;
+	}
 
-  store.value = derivedStore;
+	store.value = derivedStore;
 
-  let derivedHandler;
+	let derivedHandler;
 
-  let itemIdToUse = props.existingItemId || itemId.value;
+	let itemIdToUse = props.existingItemId || itemId.value;
 
-  if(!itemIdToUse)
-  {
-    itemIdToUse = utils.uuid.generateUuid();
-  }
-  else
-  {
-    await derivedStore.loadItem({
-      id: itemIdToUse,
-      itemType: props.itemType,
-    });
-  }
+	if(!itemIdToUse)
+	{
+		itemIdToUse = utils.uuid.generateUuid();
+	}
+	else
+	{
+		await derivedStore.loadItem({
+			id: itemIdToUse,
+			itemType: props.itemType,
+		});
+	}
 
-  // now we have a store, let's get a handler
-  if(itemIdToUse)
-  {
-    derivedHandler = derivedStore.getHandler(itemIdToUse, props.itemType);
+	// now we have a store, let's get a handler
+	if(itemIdToUse)
+	{
+		derivedHandler = derivedStore.getHandler(itemIdToUse, props.itemType);
 
-    if(itemIdToUse && derivedHandler && !isNew.value)
-    {
-      await derivedHandler.load();
-    }
-  }
+		if(itemIdToUse && derivedHandler && !isNew.value)
+		{
+			await derivedHandler.load();
+		}
+	}
 
-  if(derivedHandler)
-  {
-    if(props.initialData)
-    {
-      derivedHandler.setData(props.initialData);
-    }
+	if(derivedHandler)
+	{
+		if(props.initialData)
+		{
+			derivedHandler.setData(props.initialData);
+		}
 
-    formData.value = derivedHandler.getData();
+		formData.value = derivedHandler.getData();
 
-    formDataHandler.value = derivedHandler;
-  }
+		formDataHandler.value = derivedHandler;
+	}
 }
 
 /**
@@ -253,66 +258,68 @@ async function generateNewOrExistingItemForm()
  */
 async function saveForm()
 {
-  if(!utils.tools.isPopulatedObject(formData.value))
-  {
-    console.log('No data to save');
+	if(!utils.tools.isPopulatedObject(formData.value))
+	{
+		console.log('No data to save');
 
-    return;
-  }
+		return;
+	}
 
-  if(!store.value)
-  {
-    console.warn('saveForm() has no store');
+	if(!store.value)
+	{
+		console.warn('saveForm() has no store');
 
-    return;
-  }
+		return;
+	}
 
-  if(!formDataHandler.value)
-  {
-    formDataHandler.value = store.value.getHandler(
-      itemId.value,
-      props.itemType
-    );
-  }
+	if(!formDataHandler.value)
+	{
+		formDataHandler.value = store.value.getHandler(
+			itemId.value,
+			props.itemType
+		);
+	}
 
-  if(!formDataHandler.value)
-  {
-    console.log('Handler not available');
+	if(!formDataHandler.value)
+	{
+		console.log('Handler not available');
 
-    return;
-  }
+		return;
+	}
 
-  formDataHandler.value.setData(formData.value);
+	formDataHandler.value.setData(formData.value);
 
-  await store.value.saveItem({
-    id: itemId.value,
-    itemType: itemTypeRef.value,
-    data: formDataHandler.value.getData(),
-    isNew: props.forceIsNew ?? !props.existingItemId
-  });
+	await store.value.saveItem({
+		id: itemId.value,
+		itemType: itemTypeRef.value,
+		data: formDataHandler.value.getData(),
+		isNew: props.forceIsNew ?? !props.existingItemId
+	});
 
-  emit('saved', {
-    id: formDataHandler.value.id,
-    ...formDataHandler.value.getData()
-  });
+	emit('saved', {
+		id: formDataHandler.value.id,
+		...formDataHandler.value.getData()
+	});
 }
 
 /**
  * This state drives the Reset button functionality
  */
 const initialState = ref<Record<string, unknown>>({});
+
 function saveState()
 {
-  initialState.value = cloneDeep(formData.value);
+	initialState.value = cloneDeep(formData.value);
 }
+
 function resetState()
 {
-  formData.value = cloneDeep(initialState.value);
+	formData.value = cloneDeep(initialState.value);
 }
 
 onMounted(() =>
 {
-    generateNewOrExistingItemForm().then(saveState);
+	generateNewOrExistingItemForm().then(saveState);
 });
 
 // Handle definitions (e.g. Blueprint) and show their fields

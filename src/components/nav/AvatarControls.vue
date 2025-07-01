@@ -4,8 +4,15 @@
     no-caps
     dense
   >
-    <div class="row items-center" style="padding: 1px 4px">
-      <ThemeIcon class="q-mr-xs" name="fas fa-user" size="xs" />
+    <div
+      class="row items-center"
+      style="padding: 1px 4px"
+    >
+      <ThemeIcon
+        class="q-mr-xs"
+        name="fas fa-user"
+        size="xs"
+      />
       <span>{{ $t('user.controls.settings') }}</span>
     </div>
     <q-menu auto-close>
@@ -21,8 +28,12 @@
               color="amber"
             />
           </template>
-          <template #label>{{ $t('user.controls.themeMode.toggle') }}</template>
-          <template #caption>{{ $t('user.controls.themeMode.current', { mode: themeStore.activeTheme }) }}</template>
+          <template #label>
+            {{ $t('user.controls.themeMode.toggle') }}
+          </template>
+          <template #caption>
+            {{ $t('user.controls.themeMode.current', { mode: themeStore.activeTheme }) }}
+          </template>
         </ListItem>
         <ListItem
           v-close-popup
@@ -35,8 +46,12 @@
               color="amber"
             />
           </template>
-          <template #label>{{ $t('user.controls.editMode.toggle') }}</template>
-          <template #caption>{{ $t(`user.controls.editMode.${adminStore.isEditMode ? 'isOn' : 'isOff'}`) }}</template>
+          <template #label>
+            {{ $t('user.controls.editMode.toggle') }}
+          </template>
+          <template #caption>
+            {{ $t(`user.controls.editMode.${adminStore.isEditMode ? 'isOn' : 'isOff'}`) }}
+          </template>
         </ListItem>
       </q-list>
     </q-menu>

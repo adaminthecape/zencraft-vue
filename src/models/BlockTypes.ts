@@ -50,155 +50,155 @@ export type BlockTypeConfigOpts = {
 };
 
 export const blockTypeConfig: Record<BlockType, BlockTypeConfigOpts> = {
-  testBlock: {
-    fields: [],
-    categories: [BlockCategory.admin],
-  },
-  headlessItemSearch: {
-    fields: [],
-    hasChildren: true,
-    categories: [BlockCategory.search],
-    hideAddBlockButton: true,
-  },
-  paletteTester: {
-    fields: [],
-    categories: [BlockCategory.admin],
-  },
-  itemAvatar: {
-    fields: [],
-    categories: [BlockCategory.items],
-  },
-  tourCard: {
-    fields: [],
-    categories: [BlockCategory.items],
-  },
-  contextProvider: {
-    fields: [],
-    hasChildren: true,
-    categories: [BlockCategory.layout, BlockCategory.items],
-  },
-  contextSelector: {
-    fields: [],
-    hasChildren: true,
-    categories: [BlockCategory.layout, BlockCategory.items],
-    hideAddBlockButton: true,
-  },
-  itemInput: {
-    fields: [],
-    categories: [BlockCategory.input, BlockCategory.items],
-  },
-  itemFieldValue: {
-    fields: [],
-    categories: [BlockCategory.layout, BlockCategory.items],
-  },
-  contextVoid: {
-    fields: [],
-    categories: [BlockCategory.layout, BlockCategory.items],
-    hasChildren: true,
-  },
-  tableColumns: {
-    fields: [],
-    categories: [BlockCategory.layout],
-    hasChildren: true,
-    hideAddBlockButton: true,
-  },
-  fieldValueContextProvider: {
-    fields: [],
-    categories: [BlockCategory.layout, BlockCategory.items],
-    hasChildren: true,
-  },
-  itemListValue: {
-    fields: [],
-    categories: [BlockCategory.layout, BlockCategory.items],
-    hasChildren: true,
-    hideAddBlockButton: true,
-  },
-  formFields: {
-    fields: [],
-    categories: [BlockCategory.input, BlockCategory.items],
-    hideAddBlockButton: true,
-  },
-  fieldInput: {
-    defaultAllowedChildren: [],
-    fields: [],
-    hasChildren: false,
-    categories: [
-      BlockCategory.input
-    ],
-    hideAddBlockButton: true
-  },
-  clickableList: {
-    fields: [],
-    hasChildren: true,
-    categories: [
-      BlockCategory.layout,
-      BlockCategory.input
-    ],
-    hideAddBlockButton: true,
-  },
-  htmlContent: {
-    fields: [],
-    hasChildren: false,
-    categories: [
-      BlockCategory.layout,
-      BlockCategory.items
-    ],
-    hideAddBlockButton: true,
-  },
-  newItemContext: {
-    fields: [],
-    hasChildren: false,
-    categories: [
-      BlockCategory.input,
-      BlockCategory.items
-    ],
-    hideAddBlockButton: true
-  },
-  createNewItemAvatar: {
-    fields: [],
-    hasChildren: false,
-    categories: [
-      BlockCategory.input,
-      BlockCategory.items
-    ],
-    hideAddBlockButton: true
-  },
+	testBlock: {
+		fields: [],
+		categories: [BlockCategory.admin],
+	},
+	headlessItemSearch: {
+		fields: [],
+		hasChildren: true,
+		categories: [BlockCategory.search],
+		hideAddBlockButton: true,
+	},
+	paletteTester: {
+		fields: [],
+		categories: [BlockCategory.admin],
+	},
+	itemAvatar: {
+		fields: [],
+		categories: [BlockCategory.items],
+	},
+	tourCard: {
+		fields: [],
+		categories: [BlockCategory.items],
+	},
+	contextProvider: {
+		fields: [],
+		hasChildren: true,
+		categories: [BlockCategory.layout, BlockCategory.items],
+	},
+	contextSelector: {
+		fields: [],
+		hasChildren: true,
+		categories: [BlockCategory.layout, BlockCategory.items],
+		hideAddBlockButton: true,
+	},
+	itemInput: {
+		fields: [],
+		categories: [BlockCategory.input, BlockCategory.items],
+	},
+	itemFieldValue: {
+		fields: [],
+		categories: [BlockCategory.layout, BlockCategory.items],
+	},
+	contextVoid: {
+		fields: [],
+		categories: [BlockCategory.layout, BlockCategory.items],
+		hasChildren: true,
+	},
+	tableColumns: {
+		fields: [],
+		categories: [BlockCategory.layout],
+		hasChildren: true,
+		hideAddBlockButton: true,
+	},
+	fieldValueContextProvider: {
+		fields: [],
+		categories: [BlockCategory.layout, BlockCategory.items],
+		hasChildren: true,
+	},
+	itemListValue: {
+		fields: [],
+		categories: [BlockCategory.layout, BlockCategory.items],
+		hasChildren: true,
+		hideAddBlockButton: true,
+	},
+	formFields: {
+		fields: [],
+		categories: [BlockCategory.input, BlockCategory.items],
+		hideAddBlockButton: true,
+	},
+	fieldInput: {
+		defaultAllowedChildren: [],
+		fields: [],
+		hasChildren: false,
+		categories: [
+			BlockCategory.input
+		],
+		hideAddBlockButton: true
+	},
+	clickableList: {
+		fields: [],
+		hasChildren: true,
+		categories: [
+			BlockCategory.layout,
+			BlockCategory.input
+		],
+		hideAddBlockButton: true,
+	},
+	htmlContent: {
+		fields: [],
+		hasChildren: false,
+		categories: [
+			BlockCategory.layout,
+			BlockCategory.items
+		],
+		hideAddBlockButton: true,
+	},
+	newItemContext: {
+		fields: [],
+		hasChildren: false,
+		categories: [
+			BlockCategory.input,
+			BlockCategory.items
+		],
+		hideAddBlockButton: true
+	},
+	createNewItemAvatar: {
+		fields: [],
+		hasChildren: false,
+		categories: [
+			BlockCategory.input,
+			BlockCategory.items
+		],
+		hideAddBlockButton: true
+	},
 };
 
 export const itemTypeIcons: Record<string, string | undefined> = {
-  Block: 'build',
-  Booking: 'hotel',
-  Field: 'handyman',
-  Hotel: 'house',
-  Item: 'category',
-  Archetype: 'view_module',
-  Hub: 'hub',
-  Page: 'description',
-  Person: 'person',
-  Reminder: 'timer',
-  Room: 'bed',
-  Ticket: 'task',
-  Todo: 'task_alt',
-  Tour: 'route',
-  Blueprint: 'apartment',
-  AccessRole: 'key',
+	Block: 'build',
+	Booking: 'hotel',
+	Field: 'handyman',
+	Hotel: 'house',
+	Item: 'category',
+	Archetype: 'view_module',
+	Hub: 'hub',
+	Page: 'description',
+	Person: 'person',
+	Reminder: 'timer',
+	Room: 'bed',
+	Ticket: 'task',
+	Todo: 'task_alt',
+	Tour: 'route',
+	Blueprint: 'apartment',
+	AccessRole: 'key',
 };
 
 export const itemTypePrimaryFieldKeys: Record<string, string[]> = {
-  Block: ['title', 'id'],
-  Booking: ['internalId', 'id'],
-  Field: ['label', 'key', 'id'],
-  Hotel: ['title', 'id'],
-  Item: ['id'],
-  Archetype: ['id'],
-  Hub: ['title', 'id'],
-  Page: ['title', 'id'],
-  Person: ['firstName', 'id'],
-  Reminder: ['id'],
-  Room: ['id'],
-  Ticket: ['title', 'id'],
-  Todo: ['id'],
-  Tour: ['title', 'id'],
-  Blueprint: ['blockType', 'id'],
-  AccessRole: ['title', 'id'],
+	Block: ['title', 'id'],
+	Booking: ['internalId', 'id'],
+	Field: ['label', 'key', 'id'],
+	Hotel: ['title', 'id'],
+	Item: ['id'],
+	Archetype: ['id'],
+	Hub: ['title', 'id'],
+	Page: ['title', 'id'],
+	Person: ['firstName', 'id'],
+	Reminder: ['id'],
+	Room: ['id'],
+	Ticket: ['title', 'id'],
+	Todo: ['id'],
+	Tour: ['title', 'id'],
+	Blueprint: ['blockType', 'id'],
+	AccessRole: ['title', 'id'],
 };

@@ -1,39 +1,39 @@
 <template>
-	<div class="row no-wrap items-center justify-center full-width">
-		<!-- Dropdown for field key -->
-		<SelectInput
-			v-model="filter.key"
-			:options="dropdownOptsForKey"
-			emit-value
-			dense
-		/>
-		<!-- Dropdown for operator -->
-		<SelectInput
-			v-model="filter.operator"
-			:options="dropdownOptsForOperator"
-			emit-value
-			class="q-ml-xs"
-			dense
-		/>
-		<!-- Input for field value -->
-		<q-input
-			v-model="filter.value"
-			class="q-ml-xs"
-			style="flex-grow: 1"
+  <div class="row no-wrap items-center justify-center full-width">
+    <!-- Dropdown for field key -->
+    <SelectInput
+      v-model="filter.key"
+      :options="dropdownOptsForKey"
+      emit-value
+      dense
+    />
+    <!-- Dropdown for operator -->
+    <SelectInput
+      v-model="filter.operator"
+      :options="dropdownOptsForOperator"
+      emit-value
+      class="q-ml-xs"
+      dense
+    />
+    <!-- Input for field value -->
+    <q-input
+      v-model="filter.value"
+      class="q-ml-xs"
+      style="flex-grow: 1"
       standout
-			dense
-		/>
-		<slot
-			name="cta"
-			v-bind="{ filter }"
-		>
-			<ThemeButton
-				icon="add"
-				class="q-ml-xs"
-				@click="() => emit('change', filter)"
-			/>
-		</slot>
-	</div>
+      dense
+    />
+    <slot
+      name="cta"
+      v-bind="{ filter }"
+    >
+      <ThemeButton
+        icon="add"
+        class="q-ml-xs"
+        @click="() => emit('change', filter)"
+      />
+    </slot>
+  </div>
 </template>
 
 <script setup lang="ts">

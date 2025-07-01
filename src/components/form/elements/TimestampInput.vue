@@ -67,18 +67,18 @@ const isErrored = computed(() => (input as any)?.value?.hasError);
 
 const dateTime = computed(() =>
 {
-  if(!modelProxy.value)
-  {
-    return { date: undefined, time: undefined };
-  }
+	if(!modelProxy.value)
+	{
+		return { date: undefined, time: undefined };
+	}
 
-  const { day, month, year, hour, minute } = getDateParts(modelProxy.value * 1000);
+	const { day, month, year, hour, minute } = getDateParts(modelProxy.value * 1000);
 
-  return {
-    // date: `${`${day}`.padStart(2, '0')} ${(date.ShortMonthNames as any)[month]} ${`${year}`.slice(2)}`,
-    date: `${year}-${`${month}`.padStart(2, '0')}-${`${day}`.padStart(2, '0')}`,
-    time: `${`${hour}`.padStart(2, '0')}:${`${minute}`.padStart(2, '0')}`
-  };
+	return {
+		// date: `${`${day}`.padStart(2, '0')} ${(date.ShortMonthNames as any)[month]} ${`${year}`.slice(2)}`,
+		date: `${year}-${`${month}`.padStart(2, '0')}-${`${day}`.padStart(2, '0')}`,
+		time: `${`${hour}`.padStart(2, '0')}:${`${minute}`.padStart(2, '0')}`
+	};
 });
 
 function updateModelProxy(opts: {
@@ -90,73 +90,74 @@ function updateModelProxy(opts: {
   second?: number;
 })
 {
-  let { year, month, day, hour, minute, second } = opts;
+	let { year, month, day, hour, minute, second } = opts;
 
-  if(dateProxy.value && !(year && month && day))
-  {
-    const dateParts = getDateParts(dateProxy.value);
+	if(dateProxy.value && !(year && month && day))
+	{
+		const dateParts = getDateParts(dateProxy.value);
 
-    year = dateParts.year;
-    month = dateParts.month;
-    day = dateParts.day;
-  }
+		year = dateParts.year;
+		month = dateParts.month;
+		day = dateParts.day;
+	}
 
-  if(timeProxy.value?.includes(':') && !(hour && minute))
-  {
-    [hour, minute] = timeProxy.value.split(':').map((x) => parseInt(x, 10));
-  }
+	if(timeProxy.value?.includes(':') && !(hour && minute))
+	{
+		[hour, minute] = timeProxy.value.split(':').map((x) => parseInt(x, 10));
+	}
 
-  if(!hour) hour = 0;
-  if(!minute) minute = 0;
+	if(!hour) hour = 0;
 
-  const v = getSecondsFromDateAndTime({ year, month, day, hour, minute, second });
+	if(!minute) minute = 0;
 
-  modelProxy.value = v;
+	const v = getSecondsFromDateAndTime({ year, month, day, hour, minute, second });
+
+	modelProxy.value = v;
 }
 
 const dateProxy = computed({
-  get()
-  {
-    return dateTime.value.date;
-  },
-  set(val: string | null | undefined)
-  {
-    if(!val)
-    {
-      return;
-    }
+	get()
+	{
+		return dateTime.value.date;
+	},
+	set(val: string | null | undefined)
+	{
+		if(!val)
+		{
+			return;
+		}
 
-    const [year, month, day] = val.split('-').map((x) => parseInt(x, 10));
+		const [year, month, day] = val.split('-').map((x) => parseInt(x, 10));
 
-    updateModelProxy({ year, month, day });
-  }
+		updateModelProxy({ year, month, day });
+	}
 });
 
 const timeProxy = computed({
-  get()
-  {
-    return dateTime.value.time;
-  },
-  set(val: string | null | undefined)
-  {
-    if(!val)
-    {
-      return;
-    }
+	get()
+	{
+		return dateTime.value.time;
+	},
+	set(val: string | null | undefined)
+	{
+		if(!val)
+		{
+			return;
+		}
 
-    const [hour, minute] = val.split(':').map((x) => parseInt(x, 10));
+		const [hour, minute] = val.split(':').map((x) => parseInt(x, 10));
 
-    updateModelProxy({ hour, minute });
-  }
+		updateModelProxy({ hour, minute });
+	}
 });
 
 const {
-  modelProxy,
-  fieldRules,
-  updateValue,
+	modelProxy,
+	fieldRules,
+	updateValue,
 } = useFormElement<ModelType>({
-  props,
-  emit
+	props,
+	emit
 });
 </script>
 

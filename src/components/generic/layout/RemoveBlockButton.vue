@@ -19,7 +19,9 @@
         </ListItem>
       </q-card>
     </q-popup-proxy>
-    <q-tooltip v-if="tooltip">{{ tooltip }}</q-tooltip>
+    <q-tooltip v-if="tooltip">
+      {{ tooltip }}
+    </q-tooltip>
   </q-btn>
 </template>
 
@@ -50,92 +52,92 @@ const emit = defineEmits<{
 
 async function onBlockRemoved(id: Block.BlockItem['id']): Promise<void>
 {
-  // find the block in its parent's block list
-  const blockStore = deriveStoreForItemType(sharedTypes.KnownItemType.Block);
+	// find the block in its parent's block list
+	const blockStore = deriveStoreForItemType(sharedTypes.KnownItemType.Block);
 
-  const filters = [
-    {
-      key: 'itemId',
-      operator: dbFilters.DbFilterOperator.isEqual,
-      value: props.parentId
-    }
-  ];
+	const filters = [
+		{
+			key: 'itemId',
+			operator: dbFilters.DbFilterOperator.isEqual,
+			value: props.parentId
+		}
+	];
 
-  // is the parent a block?
-  const foundBlock = (await blockStore.searchItems({
-    filters,
-    itemType: sharedTypes.KnownItemType.Block,
-  }))?.results?.[0];
+	// is the parent a block?
+	const foundBlock = (await blockStore.searchItems({
+		filters,
+		itemType: sharedTypes.KnownItemType.Block,
+	}))?.results?.[0];
 
-  if(foundBlock)
-  {
-    const parentBlock = (await blockStore.loadItem({
-      id: props.parentId,
-      itemType: sharedTypes.KnownItemType.Block
-    }) as Block.BlockItem | undefined);
+	if(foundBlock)
+	{
+		const parentBlock = (await blockStore.loadItem({
+			id: props.parentId,
+			itemType: sharedTypes.KnownItemType.Block
+		}) as Block.BlockItem | undefined);
 
-    if(!parentBlock)
-    {
-      throw new Error(`Failed to get handler for page ${props.parentId}`);
-    }
+		if(!parentBlock)
+		{
+			throw new Error(`Failed to get handler for page ${props.parentId}`);
+		}
 
-    parentBlock.childBlocks = (parentBlock.childBlocks || [])?.filter((b) =>
-    {
-      if(props.position)
-      {
-        return !(
-          (props.position.id === b.id) &&
+		parentBlock.childBlocks = (parentBlock.childBlocks || [])?.filter((b) =>
+		{
+			if(props.position)
+			{
+				return !(
+					(props.position.id === b.id) &&
           ((!props.position.col && !b.col) || (props.position.col == b.col)) &&
           ((!props.position.row && !b.row) || (props.position.row == b.row))
-        );
-      }
+				);
+			}
 
-      return b.id !== id;
-    });
+			return b.id !== id;
+		});
 
-    await blockStore.saveItem({
-      id: props.parentId,
-      itemType: sharedTypes.KnownItemType.Block,
-      data: {
-        childBlocks: parentBlock.childBlocks
-      }
-    });
-  }
-  else
-  {
-    const pageStore = deriveStoreForItemType(sharedTypes.KnownItemType.Page) as PageStore;
+		await blockStore.saveItem({
+			id: props.parentId,
+			itemType: sharedTypes.KnownItemType.Block,
+			data: {
+				childBlocks: parentBlock.childBlocks
+			}
+		});
+	}
+	else
+	{
+		const pageStore = deriveStoreForItemType(sharedTypes.KnownItemType.Page) as PageStore;
 
-    const foundPage = (await pageStore.searchItems({
-      filters,
-      itemType: sharedTypes.KnownItemType.Page,
-    }))?.results?.[0];
+		const foundPage = (await pageStore.searchItems({
+			filters,
+			itemType: sharedTypes.KnownItemType.Page,
+		}))?.results?.[0];
 
-    if(foundPage)
-    {
-      const parentPage = await pageStore.loadItem({
-        id: props.parentId,
-        itemType: sharedTypes.KnownItemType.Page,
-      });
+		if(foundPage)
+		{
+			const parentPage = await pageStore.loadItem({
+				id: props.parentId,
+				itemType: sharedTypes.KnownItemType.Page,
+			});
 
-      if(!parentPage)
-      {
-        throw new Error(`Failed to get handler for page ${props.parentId}`);
-      }
+			if(!parentPage)
+			{
+				throw new Error(`Failed to get handler for page ${props.parentId}`);
+			}
 
-      parentPage.blockIds = [...(parentPage.blockIds || [])].filter((id) => (
-        id !== props.blockId
-      ));
+			parentPage.blockIds = [...(parentPage.blockIds || [])].filter((id) => (
+				id !== props.blockId
+			));
 
-      await pageStore.saveItem({
-        id: props.parentId,
-        itemType: sharedTypes.KnownItemType.Page,
-        data: {
-          blockIds: parentPage.blockIds
-        }
-      });
-    }
-  }
+			await pageStore.saveItem({
+				id: props.parentId,
+				itemType: sharedTypes.KnownItemType.Page,
+				data: {
+					blockIds: parentPage.blockIds
+				}
+			});
+		}
+	}
 
-  emit('removed', { id });
+	emit('removed', { id });
 }
 </script>

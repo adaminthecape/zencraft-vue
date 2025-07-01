@@ -1,9 +1,11 @@
 <template>
-	<ThemeButton
-		v-bind="props"
-		color="secondary"
-		@click="saveItem"
-	>{{ $t('generic.buttons.save') }}</ThemeButton>
+  <ThemeButton
+    v-bind="props"
+    color="secondary"
+    @click="saveItem"
+  >
+    {{ $t('generic.buttons.save') }}
+  </ThemeButton>
 </template>
 
 <script setup lang="ts">
@@ -45,17 +47,17 @@ async function saveItem(): Promise<void>
 	}
 	catch(e)
 	{
-    console.log(`Failed to load existing data for item ${props.itemId}`);
+		console.log(`Failed to load existing data for item ${props.itemId}`);
 
-    return;
+		return;
 	}
 
 	// merge new data into it
 	proxyHandler.setData(handler.getData());
 
 	await props.store.saveItem({
-    id: props.itemId as any,
-    itemType: props.itemType,
+		id: props.itemId as any,
+		itemType: props.itemType,
 		data: handler.getData(),
 		isNew: true
 	});

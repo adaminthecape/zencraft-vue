@@ -1,7 +1,13 @@
 <template>
-  <SimpleModal full-width no-padding>
+  <SimpleModal
+    full-width
+    no-padding
+  >
     <template #activator="{open}">
-      <slot name="activator" v-bind="{open}">
+      <slot
+        name="activator"
+        v-bind="{open}"
+      >
         <HelpPopover i18n-key="addBlockButton">
           <ThemeButton
             v-bind="qProps"
@@ -44,8 +50,8 @@ const emit = defineEmits<{
 
 function onBlueprintSelected(id: string, closeModal: () => void): void
 {
-  emit('selected', { id });
-  closeModal?.();
+	emit('selected', { id });
+	closeModal?.();
 }
 
 const helpStore = useHelpStore({})() as HelpStore;

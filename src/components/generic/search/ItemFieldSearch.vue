@@ -12,7 +12,7 @@
       ] : undefined"
     >
       <template #filters>
-        <div></div>
+        <div />
       </template>
       <template #tableDefaultActions="{ row }">
         <!-- ACTIONS: -->
@@ -22,7 +22,9 @@
           color="positive"
           flat
           @click="() => selectItem(row)"
-        ><q-tooltip>Select item</q-tooltip></ThemeButton>
+        >
+          <q-tooltip>Select item</q-tooltip>
+        </ThemeButton>
         <!-- View item details -->
         <EditNewOrExistingItemModal
           v-if="row.id"
@@ -35,16 +37,24 @@
         />
       </template>
       <template #header="{ updateFilters }">
-        <q-card class="q-mb-sm standout-1" flat>
+        <q-card
+          class="q-mb-sm standout-1"
+          flat
+        >
           <ListItem>
             <!-- Filters to be filled out by user -->
-            <div v-if="searchField" class="row items-center full-width">
+            <div
+              v-if="searchField"
+              class="row items-center full-width"
+            >
               <ThemeButton
                 :icon="showAllFields ? 'visibility_off' : 'visibility'"
                 class="q-mb-sm q-mr-sm"
                 flat
                 @click="showAllFields = !showAllFields"
-              ><q-tooltip>{{showAllFields ? 'Hide' : 'Show'}} extra fields</q-tooltip></ThemeButton>
+              >
+                <q-tooltip>{{ showAllFields ? 'Hide' : 'Show' }} extra fields</q-tooltip>
+              </ThemeButton>
               <FormFields
                 v-model="filterFormData"
                 :form-fields="[searchField]"
@@ -92,8 +102,8 @@ const themeStore = useThemeStore();
 const customItemStore = useCustomItemStore({})();
 
 const allItemTypes = computed(() => ([
-  ...Object.values(sharedTypes.KnownItemType),
-  ...Object.keys(customItemStore.definitionFieldsMap)
+	...Object.values(sharedTypes.KnownItemType),
+	...Object.keys(customItemStore.definitionFieldsMap)
 ]));
 
 const props = defineProps<{
@@ -110,102 +120,101 @@ const { fieldsForItemType } = useFieldsForItemType({ itemTypeRef });
 const showAllFields = ref(false);
 
 const searchableFields = computed(() => (
-  showAllFields.value ?
-    fieldsForItemType.value :
-    fieldsForItemType.value?.filter((f) => (f.isSearchable))
+	showAllFields.value ?
+		fieldsForItemType.value :
+		fieldsForItemType.value?.filter((f) => (f.isSearchable))
 ));
 
 const searchField = computed(() =>
 {
-  if(!Array.isArray(fieldsForItemType.value))
-  {
-    return undefined;
-  }
+	if(!Array.isArray(fieldsForItemType.value))
+	{
+		return undefined;
+	}
 
-  const primarySearchField = fieldsForItemType.value.find((f) => (
-    f.isPrimarySearchField
-  ));
+	const primarySearchField = fieldsForItemType.value.find((f) => (
+		f.isPrimarySearchField
+	));
 
-  if(primarySearchField)
-  {
-    return primarySearchField;
-  }
+	if(primarySearchField)
+	{
+		return primarySearchField;
+	}
 
-  const otherSearchFields = fieldsForItemType.value.filter((f) => (
-    f.isSearchable
-  ));
+	const otherSearchFields = fieldsForItemType.value.filter((f) => (
+		f.isSearchable
+	));
 
-  if(otherSearchFields.length)
-  {
-    return otherSearchFields[0];
-  }
+	if(otherSearchFields.length)
+	{
+		return otherSearchFields[0];
+	}
 
-  return fieldsForItemType.value[0];
+	return fieldsForItemType.value[0];
 });
 
 const filterFormData = ref({});
 
 const itemTypeFilter = ref({
-  key: 'typeId',
-  operator: dbFilters.DbFilterOperator.isEqual,
-  value: props.itemType
+	key: 'typeId',
+	operator: dbFilters.DbFilterOperator.isEqual,
+	value: props.itemType
 });
 
 const restrictByItemType = ref<string | undefined>();
 
 const restrictByItemTypeFilter = computed(() =>
 {
-  if(props.itemType && restrictByItemType.value)
-  {
-    switch(props.itemType)
-    {
-      case sharedTypes.KnownItemType.Field:
-        const fieldIds = customItemStore.getFieldIdsForItemType(
-          restrictByItemType.value
-        );
+	if(props.itemType && restrictByItemType.value)
+	{
+		if(props.itemType === sharedTypes.KnownItemType.Field)
+		{
+			const fieldIds = customItemStore.getFieldIdsForItemType(
+				restrictByItemType.value
+			);
 
-        if(!(Array.isArray(fieldIds) && fieldIds.length))
-        {
-          return undefined;
-        }
+			if(!(Array.isArray(fieldIds) && fieldIds.length))
+			{
+				return undefined;
+			}
 
-        return {
-          key: 'itemId',
-          operator: dbFilters.DbFilterOperator.in,
-          value: fieldIds
-        };
-      default:
-        return undefined;
-    }
-  }
+			return {
+				key: 'itemId',
+				operator: dbFilters.DbFilterOperator.in,
+				value: fieldIds
+			};
+		}
 
-  return undefined;
+		return undefined;
+	}
+
+	return undefined;
 });
 
 const primaryFilterValue = computed(() => (
-  (
-    searchField.value?.key &&
+	(
+		searchField.value?.key &&
     (filterFormData.value as any)?.[searchField.value.key]
-  ) ? (filterFormData.value as any)?.[searchField.value.key] : undefined
+	) ? (filterFormData.value as any)?.[searchField.value.key] : undefined
 ));
 
 const primaryFilter = computed(() => (
-  !primaryFilterValue.value ? undefined : {
-    key: searchField.value?.key,
-    operator: dbFilters.DbFilterOperator.fuzzyEqual,
-    value: primaryFilterValue.value
-  }
+	!primaryFilterValue.value ? undefined : {
+		key: searchField.value?.key,
+		operator: dbFilters.DbFilterOperator.fuzzyEqual,
+		value: primaryFilterValue.value
+	}
 ));
 
 const hardcodedFilters = ref();
 
 function setCombinedFilters()
 {
-  hardcodedFilters.value = [
-    itemTypeFilter.value,
-    restrictByItemTypeFilter.value,
-    primaryFilter.value,
-  ].filter((f) => f);
+	hardcodedFilters.value = [
+		itemTypeFilter.value,
+		restrictByItemTypeFilter.value,
+		primaryFilter.value,
+	].filter((f) => f);
 }
 
 watch(restrictByItemType, setCombinedFilters);
@@ -217,29 +226,29 @@ const emit = defineEmits<{
 
 function selectItem(itemData: Record<string, unknown>): void
 {
-  emit('selectedItem', itemData);
+	emit('selectedItem', itemData);
 }
 
 const customOperators = ref<Record<string, string>>({});
 
 function convertFormFieldsToFilters(formData: Record<string, unknown>)
 {
-  const result: dbFilters.DbFilters = [];
+	const result: dbFilters.DbFilters = [];
 
-  Object.entries(formData).forEach(([key, value]) =>
-  {
-    if(value)
-    {
-      const operator = (
-        (customOperators as Record<string, unknown>)[key] ||
+	Object.entries(formData).forEach(([key, value]) =>
+	{
+		if(value)
+		{
+			const operator = (
+				(customOperators as Record<string, unknown>)[key] ||
         dbFilters.DbFilterOperator.fuzzyEqual
-      );
+			);
 
-      result.push({ key, operator, value });
-    }
-  });
+			result.push({ key, operator, value });
+		}
+	});
 
-  return result;
+	return result;
 }
 </script>
 

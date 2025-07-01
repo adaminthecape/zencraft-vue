@@ -1,7 +1,10 @@
 <template>
-	<div class="item-search-container">
-		<div class="item-search-opts-activator">
-      <slot name="filters" v-bind="{ filters, updateFilters, search }">
+  <div class="item-search-container">
+    <div class="item-search-opts-activator">
+      <slot
+        name="filters"
+        v-bind="{ filters, updateFilters, search }"
+      >
         <q-btn-dropdown
           v-if="!disallowChangingFilters"
           outline
@@ -9,14 +12,23 @@
           dropdown-icon="fas fa-cog"
           color="accent"
         >
-          <template #label v-if="isSearching">
-            <q-spinner></q-spinner>
+          <template
+            v-if="isSearching"
+            #label
+          >
+            <q-spinner />
           </template>
           <SimpleModal>
             <template #activator="{ open }">
-              <ListItem clickable @click="open">
+              <ListItem
+                clickable
+                @click="open"
+              >
                 <div class="row items-center">
-                  <ThemeIcon name="fas fa-arrow-down-wide-short" class="q-mr-sm" />
+                  <ThemeIcon
+                    name="fas fa-arrow-down-wide-short"
+                    class="q-mr-sm"
+                  />
                   <span>$t('forms.itemFilters.configure')</span>
                 </div>
               </ListItem>
@@ -29,19 +41,33 @@
               />
             </template>
           </SimpleModal>
-          <ListItem clickable @click="search">
+          <ListItem
+            clickable
+            @click="search"
+          >
             <div class="row items-center">
-              <ThemeIcon name="fas fa-magnifying-glass-arrow-right" class="q-mr-sm" />
+              <ThemeIcon
+                name="fas fa-magnifying-glass-arrow-right"
+                class="q-mr-sm"
+              />
               <span>Run search</span>
             </div>
           </ListItem>
         </q-btn-dropdown>
       </slot>
-		</div>
-		<slot name="header" v-bind="{ filters, updateFilters, search }">
-      <h4 class="q-mb-sm q-pa-md">&nbsp;</h4>
+    </div>
+    <slot
+      name="header"
+      v-bind="{ filters, updateFilters, search }"
+    >
+      <h4 class="q-mb-sm q-pa-md">
+&nbsp;
+      </h4>
     </slot>
-		<slot name="results" v-bind="{ filters, results, isSearching, updateFilters }">
+    <slot
+      name="results"
+      v-bind="{ filters, results, isSearching, updateFilters }"
+    >
       <ItemSearchResultTable
         :store="(store as any)"
         :results="results"
@@ -51,19 +77,33 @@
         @update:pagination:quasar="updatePaginationForSearch"
         @result-clicked="onResultClicked"
       >
-        <template #body-cell-createdAt="ctx">{{ ctx.row }}</template>
+        <template #body-cell-createdAt="ctx">
+          {{ ctx.row }}
+        </template>
         <template #actions="{ row }">
-          <slot name="tableActions" v-bind="{ row }" />
+          <slot
+            name="tableActions"
+            v-bind="{ row }"
+          />
         </template>
         <template #defaultActions="{ row }">
-          <slot name="tableDefaultActions" v-bind="{ row }" />
+          <slot
+            name="tableDefaultActions"
+            v-bind="{ row }"
+          />
         </template>
       </ItemSearchResultTable>
     </slot>
-    <div v-if="useCustomPagination" class="row items-center justify-center full-width">
-      <slot name="pagination" v-bind="{ updatePaginationForSearch, qPagination }" />
+    <div
+      v-if="useCustomPagination"
+      class="row items-center justify-center full-width"
+    >
+      <slot
+        name="pagination"
+        v-bind="{ updatePaginationForSearch, qPagination }"
+      />
     </div>
-	</div>
+  </div>
 </template>
 
 <script setup lang="ts">
@@ -93,41 +133,41 @@ export type ItemSearchProps = {
 const props = defineProps<ItemSearchProps>();
 
 const {
-  isSearching,
-  filterHandler,
-  filters,
-  paginationHandler,
-  search,
-  results,
-  updateFilters,
+	isSearching,
+	filterHandler,
+	filters,
+	paginationHandler,
+	search,
+	results,
+	updateFilters,
 } = useItemSearch({
-  itemType: props.itemType,
-  initialFilters: props.initialFilters,
-  initialPagination: props.initialPagination,
+	itemType: props.itemType,
+	initialFilters: props.initialFilters,
+	initialPagination: props.initialPagination,
 });
 
 const qPagination = computed(() => paginationHandler.value.getQuasarPagination());
 
 function updatePaginationForSearch(newPagination: QTableProps['pagination']): void
 {
-  if(!newPagination) return;
+	if(!newPagination) return;
 
-  if(Number.isInteger(newPagination.page))
-  {
-    paginationHandler.value.setPage(newPagination.page as number);
-  }
+	if(Number.isInteger(newPagination.page))
+	{
+		paginationHandler.value.setPage(newPagination.page as number);
+	}
 
-  if(Number.isInteger(newPagination.rowsPerPage))
-  {
-    paginationHandler.value.setPageSize(newPagination.rowsPerPage as number);
-  }
+	if(Number.isInteger(newPagination.rowsPerPage))
+	{
+		paginationHandler.value.setPageSize(newPagination.rowsPerPage as number);
+	}
 
-  if(newPagination.sortBy)
-  {
-    paginationHandler.value.setSort(newPagination.sortBy);
-  }
+	if(newPagination.sortBy)
+	{
+		paginationHandler.value.setSort(newPagination.sortBy);
+	}
 
-  search();
+	search();
 }
 
 // const store = ref<StoreTypes>(props.store);
@@ -142,60 +182,60 @@ function updatePaginationForSearch(newPagination: QTableProps['pagination']): vo
 
 function deriveFilters(newFilters?: dbFilters.DbFilters)
 {
-  let filterHashes: string[] = [];
+	let filterHashes: string[] = [];
 
-  const filtersToUse = [
-    ...(newFilters || []),
-    ...(props.hardcodedFilters || []),
-    ...(Object.values(props.initialFilters || [])),
-  ].reduce((
-    agg: dbFilters.DbFilters,
-    filter: any
-  ) =>
-  {
-    if(dbFilters.isGroupFilter(filter))
-    {
-      agg.push(filter);
+	const filtersToUse = [
+		...(newFilters || []),
+		...(props.hardcodedFilters || []),
+		...(Object.values(props.initialFilters || [])),
+	].reduce((
+		agg: dbFilters.DbFilters,
+		filter: any
+	) =>
+	{
+		if(dbFilters.isGroupFilter(filter))
+		{
+			agg.push(filter);
 
-      return agg;
-    }
-    else if(dbFilters.isSingleFilter(filter))
-    {
-      const hash = `${filter.key}_${filter.operator}`;
+			return agg;
+		}
+		else if(dbFilters.isSingleFilter(filter))
+		{
+			const hash = `${filter.key}_${filter.operator}`;
 
-      if(!filterHashes.includes(hash))
-      {
-        filterHashes.push(hash);
+			if(!filterHashes.includes(hash))
+			{
+				filterHashes.push(hash);
 
-        agg.push(filter);
-      }
-    }
+				agg.push(filter);
+			}
+		}
 
-    return agg;
-  }, []);
+		return agg;
+	}, []);
 
-  filterHashes = [];
+	filterHashes = [];
 
-  return filtersToUse;
+	return filtersToUse;
 }
 
 onMounted(() =>
 {
 	if(props.initialFilters)
-  {
-    search();
+	{
+		search();
 	}
 });
 
 function mergeUpdatedFilters(n: dbFilters.DbFilters | undefined)
 {
-  if(Array.isArray(n))
-  {
-    updateFilters(
-      filterHandler.value.mergeFilters([filters.value, n])
-        .filter((f) => dbFilters.isGroupFilter(f) || f.value)
-    );
-  }
+	if(Array.isArray(n))
+	{
+		updateFilters(
+			filterHandler.value.mergeFilters([filters.value, n])
+				.filter((f) => dbFilters.isGroupFilter(f) || f.value)
+		);
+	}
 }
 
 watch(() => props.initialFilters, mergeUpdatedFilters);
@@ -207,7 +247,7 @@ const emit = defineEmits<{
 
 function onResultClicked(e: ItemResultClick)
 {
-  emit('resultClicked', e);
+	emit('resultClicked', e);
 }
 </script>
 

@@ -11,43 +11,43 @@ export function useQueues<IActionOpts = Record<string, unknown>>(options: {
   updateQueueKey: (newKey: unknown) => void;
 })
 {
-  const queueStore = useQueueStore();
+	const queueStore = useQueueStore();
 
-  const queueKey = ref(options.queueKey);
+	const queueKey = ref(options.queueKey);
 
-  const queueKeysToDestroy = ref<string[]>([queueKey.value]);
+	const queueKeysToDestroy = ref<string[]>([queueKey.value]);
 
-  function setQueue()
-  {
-    if(queueKey.value)
-    {
-      queueStore.setQueue(
-        queueKey.value,
+	function setQueue()
+	{
+		if(queueKey.value)
+		{
+			queueStore.setQueue(
+				queueKey.value,
         options.queueAction as ((opts: unknown) => void)
-      );
-    }
-  }
+			);
+		}
+	}
 
-  onMounted(setQueue);
+	onMounted(setQueue);
 
-  onBeforeUnmount(() => queueKeysToDestroy.value.forEach((k) =>
-  {
-    queueStore.destroyQueue(k);
-  }));
+	onBeforeUnmount(() => queueKeysToDestroy.value.forEach((k) =>
+	{
+		queueStore.destroyQueue(k);
+	}));
 
-  function updateQueueKey(newKey: unknown): void
-  {
-    if(newKey && typeof newKey === 'string')
-    {
-      queueKey.value = newKey;
-      queueKeysToDestroy.value.push(queueKey.value);
-      setQueue();
-    }
-  }
+	function updateQueueKey(newKey: unknown): void
+	{
+		if(newKey && typeof newKey === 'string')
+		{
+			queueKey.value = newKey;
+			queueKeysToDestroy.value.push(queueKey.value);
+			setQueue();
+		}
+	}
 
-  return {
-    queueStore,
-    queueKey,
-    updateQueueKey,
-  };
-};
+	return {
+		queueStore,
+		queueKey,
+		updateQueueKey,
+	};
+}

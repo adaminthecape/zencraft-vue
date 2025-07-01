@@ -1,5 +1,5 @@
 <template>
-  <SimpleLayout headerBackgroundColor="var(--q-dark)">
+  <SimpleLayout header-background-color="var(--q-dark)">
     <template #header-title>
       <div>{{ $t('layouts.userFacingLayout.title') }}</div>
     </template>
@@ -55,8 +55,14 @@
       </div>
     </template>
     <template #page-content>
-      <div v-if="!areDependenciesLoaded" class="row items-center justify-center">
-        <div class="flex-col items-center justify-center" style="height: 90vh">
+      <div
+        v-if="!areDependenciesLoaded"
+        class="row items-center justify-center"
+      >
+        <div
+          class="flex-col items-center justify-center"
+          style="height: 90vh"
+        >
           <q-spinner :size="100" />
         </div>
       </div>
@@ -117,21 +123,21 @@ const customItemStore = useCustomItemStore({})();
 
 onMounted(async () =>
 {
-  await archetypeStore.loadAllItems(sharedTypes.KnownItemType.Archetype);
-  await fieldStore.loadAllItems(sharedTypes.KnownItemType.Field);
+	await archetypeStore.loadAllItems(sharedTypes.KnownItemType.Archetype);
+	await fieldStore.loadAllItems(sharedTypes.KnownItemType.Field);
 
-  if('setDefinitionFieldsMap' in fieldStore)
-  {
-    fieldStore.setDefinitionFieldsMap?.();
-  }
+	if('setDefinitionFieldsMap' in fieldStore)
+	{
+		fieldStore.setDefinitionFieldsMap?.();
+	}
 
-  await customItemStore.loadDefinitions();
+	await customItemStore.loadDefinitions();
 
-  areDependenciesLoaded.value = true;
+	areDependenciesLoaded.value = true;
 });
 
 const {
-  currentPage,
+	currentPage,
 } = useHubPageNavigation();
 
 const adminStore = useAdminStore();
@@ -141,8 +147,8 @@ const currentPageId = computed(() => currentPage.value?.id);
 const { editItem } = (inject('helpers') as AppHelpers['helpers']) || {};
 
 const { isEditMode, onBlockDefSelected } = useAddBlock({
-  parentId: currentPageId,
-  editItem
+	parentId: currentPageId,
+	editItem
 });
 
 // const themes = [
@@ -169,7 +175,7 @@ const { isEditMode, onBlockDefSelected } = useAddBlock({
 // ];
 
 const blockIdsOnPage = computed(() => (
-  currentPage.value ? currentPage.value.blockIds : undefined
+	currentPage.value ? currentPage.value.blockIds : undefined
 ));
 </script>
 

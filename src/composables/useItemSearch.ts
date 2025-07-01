@@ -22,107 +22,107 @@ export default function useItemSearch(opts: {
   search: DebouncedFunc<() => Promise<void>>;
 })
 {
-  const itemStore = useCustomItemStore({})();
-  const isSearching = ref<boolean>(false);
-  const resultsArray = ref<Array<Record<string, unknown>>>([]);
-  const results = ref<Record<string, Record<string, unknown>>>({});
+	const itemStore = useCustomItemStore({})();
+	const isSearching = ref<boolean>(false);
+	const resultsArray = ref<Array<Record<string, unknown>>>([]);
+	const results = ref<Record<string, Record<string, unknown>>>({});
 
-  const filterHandler = ref<dbFilters.DbFilterHandler>(
-    new dbFilters.DbFilterHandler({
-      filters: opts.initialFilters
-    })
-  );
+	const filterHandler = ref<dbFilters.DbFilterHandler>(
+		new dbFilters.DbFilterHandler({
+			filters: opts.initialFilters
+		})
+	);
 
-  const filters = computed(() => (filterHandler.value.filters));
+	const filters = computed(() => (filterHandler.value.filters));
 
-  function updateFilters(filtersToUpdate: dbFilters.DbFilters)
-  {
-    if(filtersToUpdate)
-    {
-      if(!opts.keepBlankFilters)
-      {
-        filterHandler.value.updateFilters(
-          filtersToUpdate.filter((filter) => (
-            dbFilters.isGroupFilter(filter) ||
+	function updateFilters(filtersToUpdate: dbFilters.DbFilters)
+	{
+		if(filtersToUpdate)
+		{
+			if(!opts.keepBlankFilters)
+			{
+				filterHandler.value.updateFilters(
+					filtersToUpdate.filter((filter) => (
+						dbFilters.isGroupFilter(filter) ||
             filter.value
-          ))
-        );
-      }
-      else
-      {
-        filterHandler.value.updateFilters(filtersToUpdate);
-      }
+					))
+				);
+			}
+			else
+			{
+				filterHandler.value.updateFilters(filtersToUpdate);
+			}
 
-      search();
-    }
-  }
+			search();
+		}
+	}
 
-  const paginationHandler = ref<dbPagination.PaginationHandler>(
-    new dbPagination.PaginationHandler({
-      initialValue: opts.initialPagination
-    })
-  );
+	const paginationHandler = ref<dbPagination.PaginationHandler>(
+		new dbPagination.PaginationHandler({
+			initialValue: opts.initialPagination
+		})
+	);
 
-  const computedPage = computed<number>({
-    get()
-    {
-      return paginationHandler.value.pagination.page ?? 1;
-    },
-    set(newVal: number)
-    {
-      paginationHandler.value.setPage(newVal);
-      search();
-    }
-  });
+	const computedPage = computed<number>({
+		get()
+		{
+			return paginationHandler.value.pagination.page ?? 1;
+		},
+		set(newVal: number)
+		{
+			paginationHandler.value.setPage(newVal);
+			search();
+		}
+	});
 
-  const search = debounce(async function searchDebounce()
-  {
-    isSearching.value = true;
+	const search = debounce(async function searchDebounce()
+	{
+		isSearching.value = true;
 
-    if(!itemStore)
-    {
-      console.warn('No store available');
+		if(!itemStore)
+		{
+			console.warn('No store available');
 
-      return;
-    }
+			return;
+		}
 
-    // console.log('search', JSON.stringify(filterHandler.value.filters), opts.initialFilters);
+		// console.log('search', JSON.stringify(filterHandler.value.filters), opts.initialFilters);
 
-    const searchResultsObj = await itemStore.searchItems({
-      itemType: opts.itemType,
-      filters: filterHandler.value.filters,
-      pagination: paginationHandler.value.pagination
-    });
+		const searchResultsObj = await itemStore.searchItems({
+			itemType: opts.itemType,
+			filters: filterHandler.value.filters,
+			pagination: paginationHandler.value.pagination
+		});
 
-    const searchResults = searchResultsObj?.results;
+		const searchResults = searchResultsObj?.results;
 
-    if(!Array.isArray(searchResults))
-    {
-      isSearching.value = false;
-      resultsArray.value = [];
-      results.value = {};
+		if(!Array.isArray(searchResults))
+		{
+			isSearching.value = false;
+			resultsArray.value = [];
+			results.value = {};
 
-      return;
-    }
+			return;
+		}
 
-    paginationHandler.value.setTotal(searchResultsObj.totalItems);
+		paginationHandler.value.setTotal(searchResultsObj.totalItems);
 
-    resultsArray.value = searchResults as Record<string, unknown>[];
-    results.value = utils.tools.reduceIntoAssociativeArray(resultsArray.value, 'id');
+		resultsArray.value = searchResults as Record<string, unknown>[];
+		results.value = utils.tools.reduceIntoAssociativeArray(resultsArray.value, 'id');
 
-    isSearching.value = false;
-  }, 150);
+		isSearching.value = false;
+	}, 150);
 
-  return {
-    itemStore,
-    isSearching,
-    filterHandler,
-    filters,
-    updateFilters,
-    paginationHandler,
-    computedPage,
-    results,
-    resultsArray,
-    search,
-  };
+	return {
+		itemStore,
+		isSearching,
+		filterHandler,
+		filters,
+		updateFilters,
+		paginationHandler,
+		computedPage,
+		results,
+		resultsArray,
+		search,
+	};
 }

@@ -1,26 +1,26 @@
 <template>
   <div>
     <!-- <slot name="activator" v-bind="{ open, close }">
-      <ThemeButton
-        icon="fas fa-question-circle"
-        color="info"
-        flat
-        @click="open"
-      >
-        Help{{ (helpStore.currentHelpPage > 0) ? ' (active)' : '' }}
-      </ThemeButton>
-    </slot> -->
+			<ThemeButton
+			icon="fas fa-question-circle"
+			color="info"
+			flat
+			@click="open"
+			>
+			Help{{ (helpStore.currentHelpPage > 0) ? ' (active)' : '' }}
+			</ThemeButton>
+		</slot> -->
     <q-dialog
-        v-model="isModalOpen"
-        v-bind="qProps"
-        style="margin: 0;"
-        transition-show="fade"
-        transition-hide="fade"
-        :allow-focus-outside="true"
-        :persistent="true"
-        position="right"
-        @hide="onClose"
-        @before-hide="onBeforeClose"
+      v-model="isModalOpen"
+      v-bind="qProps"
+      style="margin: 0;"
+      transition-show="fade"
+      transition-hide="fade"
+      :allow-focus-outside="true"
+      :persistent="true"
+      position="right"
+      @hide="onClose"
+      @before-hide="onBeforeClose"
     >
       <q-card
         class="flex-col"
@@ -33,10 +33,18 @@
         }"
       >
         <slot name="title">
-          <h4 v-if="title" class="modal-title">{{ title }}</h4>
+          <h4
+            v-if="title"
+            class="modal-title"
+          >
+            {{ title }}
+          </h4>
         </slot>
         <div class="modal-content q-mb-lg">
-          <slot name="content" v-bind="{ open, close, toggle }">
+          <slot
+            name="content"
+            v-bind="{ open, close, toggle }"
+          >
             <HelpWizard />
           </slot>
         </div>
@@ -90,7 +98,10 @@
             />
           </div>
           <div class="q-space" />
-          <slot name="close" v-bind="{ open, close, toggle }">
+          <slot
+            name="close"
+            v-bind="{ open, close, toggle }"
+          >
             <ThemeButton
               label="Close"
               color="negative"
@@ -98,7 +109,10 @@
               @click="close"
             />
           </slot>
-          <slot name="actions" v-bind="{ open, close, toggle }"></slot>
+          <slot
+            name="actions"
+            v-bind="{ open, close, toggle }"
+          />
         </div>
       </q-card>
     </q-dialog>
@@ -121,62 +135,66 @@ const helpStore: HelpStore = useHelpStore({ router })();
 const currentStep = computed(() => helpStore.getCurrentStepData);
 
 const isAwaitingAction = computed(() => (
-  currentStep.value &&
-  helpStore.getIsAwaitingAction(helpStore.currentHelpPage, currentStep.value.id)
+	currentStep.value &&
+	helpStore.getIsAwaitingAction(helpStore.currentHelpPage, currentStep.value.id)
 ));
 
 export type SimpleModalProps = {
-  title?: string;
-  content?: string;
-  fullWidth?: boolean;
-  minWidth?: string;
-  vw?: string;
-  customStyles?: Record<string, unknown>;
-  showCloseButton?: boolean;
-  persistent?: boolean;
-  noPadding?: boolean;
-  openOnMount?: boolean;
-  onClose?: () => void;
-  onBeforeClose?: () => void;
-  qProps?: QDialogProps;
+	title?: string;
+	content?: string;
+	fullWidth?: boolean;
+	minWidth?: string;
+	vw?: string;
+	customStyles?: Record<string, unknown>;
+	showCloseButton?: boolean;
+	persistent?: boolean;
+	noPadding?: boolean;
+	openOnMount?: boolean;
+	onClose?: () => void;
+	onBeforeClose?: () => void;
+	qProps?: QDialogProps;
 };
 
 defineProps<SimpleModalProps>();
 
 const isModalOpen = computed({
-  get()
-  {
-    return helpStore.isModalOpen;
-  },
-  set(value: boolean)
-  {
-    helpStore.toggleModal(value);
-  }
+	get()
+	{
+		return helpStore.isModalOpen;
+	},
+	set(value: boolean)
+	{
+		helpStore.toggleModal(value);
+	}
 });
 
-function close() {
-  isModalOpen.value = false;
+function close()
+{
+	isModalOpen.value = false;
 }
 
-function open() {
-  isModalOpen.value = true;
+function open()
+{
+	isModalOpen.value = true;
 }
 
-function toggle() {
-  isModalOpen.value = !isModalOpen.value;
+function toggle()
+{
+	isModalOpen.value = !isModalOpen.value;
 }
 
 const queueStore = useQueueStore();
 const queueKey = 'help_wizard_first_run';
 const queueAction = (opts: { start?: boolean; }) =>
 {
-  if(opts.start && !isModalOpen.value)
-  {
-    open();
-  }
+	if(opts.start && !isModalOpen.value)
+	{
+		open();
+	}
 
-  queueStore.destroyQueue(queueKey);
+	queueStore.destroyQueue(queueKey);
 };
+
 useQueues<{ start?: boolean; }>({ queueKey, queueAction });
 </script>
 
